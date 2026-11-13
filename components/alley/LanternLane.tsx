@@ -146,7 +146,9 @@ function StallsDoor({ onOpen, className = "" }: { onOpen: () => void; className?
   return (
     <button
       onClick={onOpen}
-      className={`group flex shrink-0 flex-col items-center ${className}`}
+      // A soft panel behind this cell: it marks the stalls as the players' end of the street without
+      // drawing a hard frame the merchants do not have.
+      className={`group flex shrink-0 flex-col items-center rounded-3xl bg-night-950/35 px-5 ring-1 ring-white/10 backdrop-blur-[2px] transition hover:bg-night-950/45 ${className}`}
       aria-label="Beasts' stalls"
       title="Beasts' stalls: shops run by other players' cats"
     >
