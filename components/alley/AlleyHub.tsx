@@ -25,7 +25,7 @@ import { moodFor } from "../BeastCard";
 import ChainTail from "../ChainTail";
 import WorldMenu from "../shell/WorldMenu";
 import Countdown from "../Countdown";
-import EmailSignIn from "../EmailSignIn";
+import GoogleSignIn from "../GoogleSignIn";
 import Prowl from "../Prowl";
 import CloveGuide from "../story/CloveGuide";
 import { Empty, Loading, Notice, Pill, Spinner } from "../ui";
@@ -49,7 +49,10 @@ export default function AlleyHub() {
     return (
       <div className="mx-auto flex max-w-2xl flex-col gap-4">
         <h1 className="text-3xl font-bold">The Alley</h1>
-        <EmailSignIn blurb="Sign in to take your cat out on missions." />
+        <div className="card flex flex-col gap-4 p-5">
+          <p className="text-sm text-mist">Sign in to take your cat out on missions.</p>
+          <GoogleSignIn />
+        </div>
 
       </div>
     );

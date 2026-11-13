@@ -31,7 +31,6 @@ import { useSession } from "@/lib/ui/session";
 import { useAsync } from "@/lib/ui/useAsync";
 import Art from "../Art";
 import ChainTail from "../ChainTail";
-import EmailSignIn from "../EmailSignIn";
 import GoogleSignIn from "../GoogleSignIn";
 import ColdOpen, { introSeen } from "../story/ColdOpen";
 import Dialog, { Spoken } from "../Dialog";
@@ -91,20 +90,17 @@ function Gate() {
               Sign in to move a kitten into your room, or borrow one and look around first.
             </p>
           </header>
-          <div className="grid items-start gap-5 lg:grid-cols-2">
-            <div className="card flex flex-col gap-4 p-5">
+          {/* Equal columns, equal heights: the row stretches and each card fills its cell. */}
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div className="card flex h-full flex-col gap-4 p-5">
               <div>
                 <h3 className="text-lg font-semibold">Sign in</h3>
                 <p className="text-sm text-mist">A kitten moves into your room. No passwords, nothing to install.</p>
               </div>
-              <GoogleSignIn />
-              {/* Google is the quick way in; the code still works if it is blocked or unconfigured. */}
-              <div className="flex items-center gap-3">
-                <span className="h-px flex-1 bg-white/10" />
-                <span className="text-xs uppercase tracking-wider text-mist">or use email</span>
-                <span className="h-px flex-1 bg-white/10" />
+              {/* Centres the button in whatever height the taller card sets. */}
+              <div className="flex flex-1 items-center">
+                <GoogleSignIn />
               </div>
-              <EmailSignIn compact title="" />
             </div>
             <DemoPicker />
           </div>

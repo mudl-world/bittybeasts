@@ -48,17 +48,6 @@ export function session(): { accountId: string; email?: string } | null {
   return s ? { accountId: s.accountId, email: s.email } : null;
 }
 
-export async function startEmailLogin(email: string): Promise<{ sent: boolean; devCode?: string }> {
-  return postJson("/api/auth/start", { email });
-}
-
-export async function verifyEmailLogin(email: string, code: string): Promise<{ accountId: string }> {
-  const kp = newKeyPair();
-  const { accountId } = await postJson<{ accountId: string }>("/api/auth/verify", { email, code, publicKey: kp.publicKey });
-  keys.setPlayer({ accountId, email, secretKey: kp.secretKey });
-  return { accountId };
-}
-
 /** Signs in with a Google ID token. The server verifies it and returns the same player account
     the email code flow would give that address, so either way in reaches the same cat. */
 export async function signInWithGoogle(idToken: string, email?: string): Promise<{ accountId: string }> {

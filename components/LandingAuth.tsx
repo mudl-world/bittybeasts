@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/ui/session";
 import DemoPicker from "./DemoPicker";
-import EmailSignIn from "./EmailSignIn";
+import GoogleSignIn from "./GoogleSignIn";
 import { Spinner } from "./ui";
 
 export default function LandingAuth() {
@@ -28,10 +28,13 @@ export default function LandingAuth() {
     );
   return (
     <div className="flex flex-col gap-4">
-      <EmailSignIn
-        blurb="No passwords, nothing to install. We email you a code, and a kitten moves into your room."
-        onSignedIn={() => router.push("/room")}
-      />
+      <div className="card flex flex-col gap-4 p-5">
+        <div>
+          <h3 className="text-lg font-semibold">Sign in</h3>
+          <p className="text-sm text-mist">No passwords, nothing to install. A kitten moves into your room.</p>
+        </div>
+        <GoogleSignIn onSignedIn={() => router.push("/room")} />
+      </div>
       <DemoPicker />
     </div>
   );

@@ -24,8 +24,6 @@ export {
 } from "./view";
 export {
   session,
-  startEmailLogin,
-  verifyEmailLogin,
   signInWithGoogle,
   signOut,
   listDemoAccounts,

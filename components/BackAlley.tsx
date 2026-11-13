@@ -8,7 +8,7 @@ import { useSession } from "@/lib/ui/session";
 import { useAsync } from "@/lib/ui/useAsync";
 import Art from "./Art";
 import ChainTail from "./ChainTail";
-import EmailSignIn from "./EmailSignIn";
+import GoogleSignIn from "./GoogleSignIn";
 import { Empty, ExplorerLink, Loading, Pill } from "./ui";
 
 export default function BackAlley() {
@@ -19,7 +19,10 @@ export default function BackAlley() {
   if (!session)
     return (
       <Gate>
-        <EmailSignIn compact title="" blurb="Already have a Beast? Sign in first." />
+        <div className="flex flex-col gap-3">
+          <p className="text-sm text-mist">Already have a Beast? Sign in first.</p>
+          <GoogleSignIn />
+        </div>
       </Gate>
     );
   if (mine.loading && !mine.data) return <Loading label="Checking for a cat…" />;

@@ -13,7 +13,7 @@ import { useAsync } from "@/lib/ui/useAsync";
 import Art from "./Art";
 import BeastCard, { Marks } from "./BeastCard";
 import ChainTail from "./ChainTail";
-import EmailSignIn from "./EmailSignIn";
+import GoogleSignIn from "./GoogleSignIn";
 import { Empty, Loading, Notice, Spinner } from "./ui";
 import { useTx } from "./alley/useTx";
 
@@ -50,10 +50,13 @@ export default function WakeFlow() {
         <Art slot={catSlot(b.woken ? "curious" : "sleepy")} size={180} className="rounded-3xl" />
         <h1 className="text-3xl font-bold">{b.woken ? `${b.name} looks up at you` : `${b.name} is fast asleep`}</h1>
         <div className="w-full text-left">
-          <EmailSignIn
-            title={b.woken ? "Sign in to continue" : `Sign in to wake ${b.name}`}
-            blurb="Just your email. We send a code, and keep your Beast's key safe on this phone."
-          />
+          <div className="card flex flex-col gap-4 p-5">
+            <div>
+              <h3 className="text-lg font-semibold">{b.woken ? "Sign in to continue" : `Sign in to wake ${b.name}`}</h3>
+              <p className="text-sm text-mist">One tap. Your Beast&apos;s key stays on this phone.</p>
+            </div>
+            <GoogleSignIn />
+          </div>
         </div>
       </div>
     );

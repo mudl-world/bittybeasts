@@ -1,12 +1,13 @@
 "use client";
-// Google sign-in. Renders Google's own button through Google Identity Services, hands the ID token
-// to the server to verify, and lands the player in the same account the email code flow would give
-// that address. Renders nothing when NEXT_PUBLIC_GOOGLE_CLIENT_ID is unset, so the email flow below
-// it stays the whole story on a server that has not configured Google.
-import { useEffect, useRef, useState } from "react";
+// Google sign-in, in the game's own button. Google's rendered button is an iframe we cannot restyle,
+// so we draw our own and drive the flow ourselves. We ask for an ID token (not an auth code): the
+// token flow needs no client secret, and the server verifies the token's signature against Google's
+// published keys, so nothing the browser claims about who you are is trusted — see lib/server/auth.
+import { useCallback, useEffect, useRef, useState } from "react";
 import { signInWithGoogle } from "@/lib/chain";
 import { friendly } from "@/lib/ui/errors";
 import { notifySession } from "@/lib/ui/session";
+import Art from "./Art";
 import { Notice, Spinner } from "./ui";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -16,7 +17,14 @@ type Credential = { credential?: string };
 type Gsi = {
   accounts: {
     id: {
-      initialize: (o: { client_id: string; callback: (r: Credential) => void; auto_select?: boolean }) => void;
+      initialize: (o: {
+        client_id: string;
+        callback: (r: Credential) => void;
+        auto_select?: boolean;
+        cancel_on_tap_outside?: boolean;
+        use_fedcm_for_prompt?: boolean;
+      }) => void;
+      prompt: () => void;
       renderButton: (el: HTMLElement, o: Record<string, unknown>) => void;
     };
   };
@@ -38,25 +46,39 @@ function loadGsi(): Promise<Gsi> {
   return w.__bbGsi;
 }
 
-export default function GoogleSignIn({ onSignedIn }: { onSignedIn?: (accountId: string) => void }) {
-  const slot = useRef<HTMLDivElement | null>(null);
+export default function GoogleSignIn({
+  label = "Continue with Google",
+  onSignedIn,
+}: {
+  label?: string;
+  onSignedIn?: (accountId: string) => void;
+}) {
+  // Google's own button, rendered into a hidden slot. Our themed button forwards clicks to it:
+  // Google requires their asset for the real gesture, and one-tap `prompt()` is suppressed too
+  // often (FedCM, third-party cookie rules) to be the only way in.
+  const hidden = useRef<HTMLDivElement | null>(null);
+  const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Google's script is blocked in some networks and extensions; keep our own layout until it paints.
-  const [ready, setReady] = useState(false);
+  const live = useRef(true);
 
   useEffect(() => {
-    if (!CLIENT_ID || !slot.current) return;
-    let live = true;
+    live.current = true;
+    return () => {
+      live.current = false;
+    };
+  }, []);
 
+  useEffect(() => {
+    if (!CLIENT_ID || !hidden.current) return;
     loadGsi()
       .then((google) => {
-        if (!live || !slot.current) return;
+        if (!live.current || !hidden.current) return;
         google.accounts.id.initialize({
           client_id: CLIENT_ID,
           callback: async (res: Credential) => {
             if (!res.credential) {
-              setError("Google didn't return a sign-in. Try again, or use your email below.");
+              if (live.current) setError("Google didn't complete that sign-in. Try again.");
               return;
             }
             setBusy(true);
@@ -66,44 +88,39 @@ export default function GoogleSignIn({ onSignedIn }: { onSignedIn?: (accountId: 
               notifySession();
               onSignedIn?.(accountId);
             } catch (err) {
-              setError(friendly(err, "We couldn't finish that Google sign-in. Try again, or use your email below."));
+              if (live.current) setError(friendly(err, "We couldn't finish that Google sign-in. Try again."));
             } finally {
-              if (live) setBusy(false);
+              if (live.current) setBusy(false);
             }
           },
         });
-        google.accounts.id.renderButton(slot.current, {
-          type: "standard",
-          theme: "filled_black",
-          size: "large",
-          shape: "pill",
-          text: "continue_with",
-          logo_alignment: "center",
-          width: 320,
-        });
+        google.accounts.id.renderButton(hidden.current, { type: "standard", size: "large", width: 320 });
         setReady(true);
       })
-      .catch(() => {
-        // Leave `ready` false: the card explains itself and the email form still works.
-        if (live) setError(null);
+      .catch((e: unknown) => {
+        if (live.current) setError(friendly(e, "Google sign-in could not be reached."));
       });
-
-    return () => {
-      live = false;
-    };
   }, [onSignedIn]);
+
+  const start = useCallback(() => {
+    setError(null);
+    // Google renders its button inside this slot (sometimes in an iframe): click whatever is there.
+    const target =
+      hidden.current?.querySelector<HTMLElement>('[role="button"]') ?? hidden.current?.querySelector<HTMLElement>("div > div");
+    target?.click();
+  }, []);
 
   if (!CLIENT_ID) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div ref={slot} className="min-h-[44px]" aria-busy={busy} />
-      {!ready && !error && <p className="text-xs text-mist">Loading Google sign-in…</p>}
-      {busy && (
-        <p className="flex items-center gap-2 text-sm text-mist">
-          <Spinner /> Setting up your room…
-        </p>
-      )}
+    <div className="flex w-full flex-col items-stretch gap-2">
+      <button className="btn btn-lantern w-full" onClick={start} disabled={!ready || busy}>
+        {busy ? <Spinner /> : <Art slot="ui-google" alt="" size={22} />}
+        {busy ? "Setting up your room…" : label}
+      </button>
+      {/* Kept in the layout but visually hidden: display:none stops Google rendering it at all. */}
+      <div ref={hidden} aria-hidden className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0" />
+      {!ready && !error && <p className="text-center text-xs text-mist">Waking the gate…</p>}
       {error && <Notice kind="err">{error}</Notice>}
     </div>
   );

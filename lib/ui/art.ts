@@ -54,6 +54,7 @@ export type ArtSlot =
   | "ui-sound-on"
   | "ui-sound-off"
   | "ui-help"
+  | "ui-google"
   | "ui-map"
   | "mission-safe"
   | "mission-daring"
@@ -212,6 +213,7 @@ export const ART: Record<ArtSlot, ArtSpec> = {
   "ui-back": s("ui-back.png", 256, 256, "UI · back", "Go back"),
   "ui-sound-on": s("ui-sound-on.png", 256, 256, "UI · sound on", "The cat speaks out loud"),
   "ui-sound-off": s("ui-sound-off.png", 256, 256, "UI · sound off", "The cat is quiet"),
+  "ui-google": s("ui-google.svg", 48, 48, "UI · Google", "Google's G mark, for the sign-in button"),
   "ui-help": s("ui-help.png", 256, 256, "UI · help", "What is this?"),
   "ui-map": s("ui-map.png", 256, 256, "UI · map", "Open the map"),
   "ui-verified": s("ui-verified.png", 256, 256, "UI · verified", "Verified by NEAR AI"),

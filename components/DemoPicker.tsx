@@ -25,7 +25,7 @@ export default function DemoPicker({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className={`card flex flex-col gap-3 ${compact ? "p-4" : "p-5"}`}>
+    <div className={`card flex h-full flex-col gap-3 ${compact ? "p-4" : "p-5"}`}>
       <div>
         <p className="font-display text-lg font-semibold">Just looking? Borrow a demo cat</p>
         <p className="text-sm text-mist">Shared demo players. Anyone can pick one, so expect other paws on it.</p>
