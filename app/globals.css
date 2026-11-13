@@ -60,12 +60,12 @@
   color-scheme: dark;
 }
 
-/* Pixelify Sans draws 5 mirrored (it reads as a backwards S) and puts a serif on 7 that makes it
-   look reversed — unreadable on a clock, a price or a stat. Silkscreen, already loaded for titles,
-   draws both correctly, so anything that is mostly numbers wears this. */
+/* Numbers that have to line up or be read at a glance: a clock, a price, a column of amounts.
+   Keeps the game's own face — mixing a second font in mid-sentence reads worse than Pixelify's
+   stylised 5 and 7 ever did — and only fixes the figures to one width so they stop jittering. */
 .num {
-  font-family: var(--font-title-face), var(--font-display-face), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
   letter-spacing: 0.02em;
 }
 
