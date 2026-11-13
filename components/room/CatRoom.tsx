@@ -403,6 +403,9 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
 
   const toggle = (k: Exclude<Sheet, null>) => setSheet(sheet === k ? null : k);
   const line = life.dozing && !life.talking ? "Zzz… *twitches a whisker*" : shown;
+  // The needs ride in the dialog while it is up, and fall back to the HUD when it is not, so they
+  // are always on screen exactly once.
+  const speaking = !sheet && line !== dismissed;
 
   return (
     <>
@@ -445,7 +448,8 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
               style={{ width: "50px", bottom: "-8px" }}
             />
           </Link>
-          {/* Name and tail, then the two needs beside them: no box, so the row keeps one height. */}
+          {/* Name and tail. The needs sit here only when the cat is not speaking: while the dialog
+              is up they ride in it instead, so they never appear twice. */}
           <div className="flex h-14 min-w-0 flex-col justify-center">
             <div className="flex items-center gap-2">
               <span className="title-3d truncate text-lg sm:text-xl">{beast.name}</span>
@@ -455,10 +459,12 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
               </span>
             </div>
           </div>
-          <div className="hidden h-14 flex-col justify-center gap-1 md:flex">
-            <MiniNeed label="Fullness" value={fullness} color="bg-lantern" warn={fullness < 25 ? "hungry" : undefined} />
-            <MiniNeed label="Happiness" value={happiness} color="bg-moss" warn={happiness < 30 ? "lonely" : undefined} />
-          </div>
+          {!speaking && (
+            <div className="hidden h-14 flex-col justify-center gap-1 md:flex">
+              <MiniNeed label="Fullness" value={fullness} color="bg-lantern" warn={fullness < 25 ? "hungry" : undefined} />
+              <MiniNeed label="Happiness" value={happiness} color="bg-moss" warn={happiness < 30 ? "lonely" : undefined} />
+            </div>
+          )}
         </div>
         <div className="pointer-events-auto ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="btn btn-ghost pointer-events-none h-14 shrink-0 gap-1.5 px-3 text-lg text-[#ffc93c]" title="YARN in your cat's purse" aria-label="YARN">
@@ -536,7 +542,7 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
       </nav>
 
       {/* what the cat is saying: an RPG dialog box above the dock (tap to dismiss) */}
-      {!sheet && line !== dismissed && (
+      {speaking && (
         <div className="fixed inset-x-0 bottom-[6.5rem] z-30 flex justify-center px-3 sm:bottom-32">
           <Dialog
             name={beast.name}
@@ -544,14 +550,20 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
             className="w-full max-w-2xl animate-rise"
             onClose={() => setDismissed(line)}
             footer={
-              proof ? (
-                <button
-                  className="inline-flex items-center gap-1.5 self-start text-sm font-semibold text-moss underline decoration-dotted underline-offset-4"
-                  onClick={() => setSheet("proof")}
-                >
-                  <Art slot="ui-verified" size={20} alt="" /> {proof.verified ? "Verified thought" : "Unverified"} · NEAR AI
-                </button>
-              ) : null
+              // The needs live here, under what the cat just said: it is the one panel you are
+              // already reading, and the dialog has the room the HUD strip does not.
+              <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-white/10 pt-2">
+                <MiniNeed label="Fullness" value={fullness} color="bg-lantern" warn={fullness < 25 ? "hungry" : undefined} />
+                <MiniNeed label="Happiness" value={happiness} color="bg-moss" warn={happiness < 30 ? "lonely" : undefined} />
+                {proof && (
+                  <button
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-moss underline decoration-dotted underline-offset-4"
+                    onClick={() => setSheet("proof")}
+                  >
+                    <Art slot="ui-verified" size={20} alt="" /> {proof.verified ? "Verified thought" : "Unverified"} · NEAR AI
+                  </button>
+                )}
+              </div>
             }
           >
             <p>
