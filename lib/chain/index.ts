@@ -26,6 +26,7 @@ export {
   session,
   startEmailLogin,
   verifyEmailLogin,
+  signInWithGoogle,
   signOut,
   listDemoAccounts,
   signInAsDemo,

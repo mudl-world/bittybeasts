@@ -1,5 +1,5 @@
 // Server-only module (imports secrets from env). Never import from client components.
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, createPublicKey, createVerify, timingSafeEqual } from "node:crypto";
 import { KeyPair, PublicKey } from "near-api-js";
 import { rpc } from "@/lib/chain/view";
 
@@ -52,6 +52,73 @@ export async function sendCode(email: string, code: string): Promise<boolean> {
     }),
   });
   return res.ok;
+}
+
+// ---------------------------------------------------------------- Google sign-in
+// The browser gets an ID token from Google Identity Services; we verify it here rather than
+// trusting anything the client says. Verification is the standard set of checks: RS256 signature
+// against Google's published keys, issuer, audience (our client id), expiry, and email_verified.
+// Google asserts the address, so no email has to be delivered for sign-in to be secure.
+
+const GOOGLE_JWKS = "https://www.googleapis.com/oauth2/v3/certs";
+const GOOGLE_ISSUERS = ["https://accounts.google.com", "accounts.google.com"];
+
+type Jwk = { kid: string; n: string; e: string; alg?: string; kty: string };
+let jwksCache: { keys: Jwk[]; at: number } | null = null;
+
+async function googleKeys(): Promise<Jwk[]> {
+  // Google rotates these; an hour is well inside their cache headers.
+  if (jwksCache && Date.now() - jwksCache.at < 60 * 60 * 1000) return jwksCache.keys;
+  const res = await fetch(GOOGLE_JWKS);
+  if (!res.ok) throw new Error("Could not reach Google to check that sign-in");
+  const { keys } = (await res.json()) as { keys: Jwk[] };
+  jwksCache = { keys, at: Date.now() };
+  return keys;
+}
+
+const b64urlToBuf = (s: string) => Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+
+/** Verifies a Google ID token and returns the verified email. Throws if anything fails. */
+export async function verifyGoogleToken(idToken: string): Promise<{ email: string }> {
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  if (!clientId) throw new Error("Google sign-in is not configured on this server");
+
+  const parts = idToken.split(".");
+  if (parts.length !== 3) throw new Error("Malformed Google token");
+  const [rawHeader, rawPayload, rawSig] = parts;
+
+  // Anything unparseable is just a bad token: say so, rather than leaking a parser error.
+  const decode = (part: string, what: string) => {
+    try {
+      return JSON.parse(b64urlToBuf(part).toString()) as Record<string, unknown>;
+    } catch {
+      throw new Error(`Malformed Google token (${what})`);
+    }
+  };
+
+  const header = decode(rawHeader, "header") as { kid?: string; alg?: string };
+  if (header.alg !== "RS256") throw new Error("Unexpected Google token algorithm");
+
+  const jwk = (await googleKeys()).find((k) => k.kid === header.kid);
+  if (!jwk) throw new Error("Unknown Google signing key");
+
+  const key = createPublicKey({ key: { kty: jwk.kty, n: jwk.n, e: jwk.e }, format: "jwk" });
+  const ok = createVerify("RSA-SHA256")
+    .update(`${rawHeader}.${rawPayload}`)
+    .verify(key, new Uint8Array(b64urlToBuf(rawSig)));
+  if (!ok) throw new Error("That Google sign-in could not be verified");
+
+  const claims = decode(rawPayload, "claims") as {
+    iss?: string; aud?: string; exp?: number; email?: string; email_verified?: boolean | string;
+  };
+  if (!claims.iss || !GOOGLE_ISSUERS.includes(claims.iss)) throw new Error("That token did not come from Google");
+  if (claims.aud !== clientId) throw new Error("That Google sign-in was issued for another app");
+  if (!claims.exp || claims.exp * 1000 < Date.now()) throw new Error("That Google sign-in expired. Try again.");
+  // Google sends this as a boolean or the string "true" depending on the flow.
+  if (claims.email_verified !== true && claims.email_verified !== "true") throw new Error("That Google account has no verified email");
+  if (!claims.email) throw new Error("That Google account did not share an email");
+
+  return { email: normalizeEmail(claims.email) };
 }
 
 // ---------------------------------------------------------------- signed requests from players

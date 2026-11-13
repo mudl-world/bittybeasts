@@ -59,6 +59,15 @@ export async function verifyEmailLogin(email: string, code: string): Promise<{ a
   return { accountId };
 }
 
+/** Signs in with a Google ID token. The server verifies it and returns the same player account
+    the email code flow would give that address, so either way in reaches the same cat. */
+export async function signInWithGoogle(idToken: string, email?: string): Promise<{ accountId: string }> {
+  const kp = newKeyPair();
+  const { accountId } = await postJson<{ accountId: string }>("/api/auth/google", { idToken, publicKey: kp.publicKey });
+  keys.setPlayer({ accountId, email, secretKey: kp.secretKey });
+  return { accountId };
+}
+
 export type DemoAccount = {
   accountId: string;
   secretKey: string;
