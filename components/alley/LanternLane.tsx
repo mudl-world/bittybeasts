@@ -106,17 +106,16 @@ export default function LanternLane({ beast, items, yarnBalance, onChanged, onNe
                 </button>
               );
             })}
-            <button
-              onClick={() => setOpen("stalls")}
-              className="group flex shrink-0 flex-col items-center"
-              aria-label="Beasts' stalls"
-              title="Beasts' stalls: shops run by other players' cats"
-            >
-              <Art slot="ui-lane" alt="" className="drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)] transition group-hover:-translate-y-2" style={{ width: "clamp(80px, 12vw, 120px)" }} />
-              <span className="dialog-name !static mt-1 !text-[0.6rem] sm:!text-[0.8rem]">Stalls</span>
-            </button>
+            <StallsDoor onOpen={() => setOpen("stalls")} className="md:hidden" />
           </>
         )}
+      </div>
+
+      {/* On a wide screen the stalls stand apart at the end of the street (below). On a phone the
+          row of cats already scrolls, so a fixed button would sit on top of whichever cat is last;
+          there it rides along in the row instead. Either way it is never a fifth merchant. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-[7.475rem] z-10 hidden justify-end px-4 md:flex xl:bottom-[8.975rem] xl:px-6">
+        <StallsDoor onOpen={() => setOpen("stalls")} className="pointer-events-auto" />
       </div>
 
       {/* stepping into a shop: a full-screen scene, the keeper on the left, the counter on the right */}
@@ -146,6 +145,32 @@ export default function LanternLane({ beast, items, yarnBalance, onChanged, onNe
 }
 
 /** The full-screen shop: the street, dimmed, behind; the keeper on the left; the counter on the right. */
+/** The way into the Beasts' stalls: the same lantern sign the merchants wear, so it belongs on the
+    street, with the market stall above it instead of a cat. */
+function StallsDoor({ onOpen, className = "" }: { onOpen: () => void; className?: string }) {
+  return (
+    <button
+      onClick={onOpen}
+      className={`group flex shrink-0 flex-col items-center ${className}`}
+      aria-label="Beasts' stalls"
+      title="Beasts' stalls: shops run by other players' cats"
+    >
+      <Art
+        slot="ui-lane"
+        alt=""
+        className="drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)] transition group-hover:-translate-y-2"
+        style={{ width: "clamp(72px, 9vw, 104px)" }}
+      />
+      <span className="relative -mt-2 flex items-center justify-center" style={{ width: "clamp(92px, 11vw, 124px)" }}>
+        <Art slot="st-open" alt="" className="w-full" />
+        <span className="absolute bottom-[16%] left-[32%] right-[7%] top-[44%] flex items-center justify-center text-center font-display text-[0.6rem] font-bold leading-none text-[#3a2410] sm:text-[0.72rem]">
+          Stalls
+        </span>
+      </span>
+    </button>
+  );
+}
+
 function ShopScene({ keeper, children, onLeave }: { keeper: React.ReactNode; children: React.ReactNode; onLeave: () => void }) {
   useEffect(() => {
     const esc = (e: KeyboardEvent) => e.key === "Escape" && onLeave();
