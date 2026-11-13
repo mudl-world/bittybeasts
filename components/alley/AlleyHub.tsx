@@ -182,10 +182,14 @@ function Hub({ accountId }: { accountId: string }) {
         </div>
       )}
 
-      {/* the tab's own panel (the Lane draws its street instead) */}
+      {/* The tab's own panel, in the space between the HUD and the dock (the Lane draws its street
+          instead). A short tab is centred in that space rather than clinging to the top; a tall one
+          still scrolls from the top as before. */}
       {tab !== "lane" && (
-        <main className="fixed inset-x-0 bottom-[6.5rem] top-[7.5rem] z-20 overflow-y-auto px-3 sm:bottom-28 sm:top-28">
-          <div className={`mx-auto flex w-full flex-col gap-4 py-2 ${tab === "prowl" ? "max-w-6xl" : "max-w-3xl"}`}>
+        <main className="fixed inset-x-0 bottom-[6.5rem] top-[7.5rem] z-20 flex flex-col overflow-y-auto px-3 sm:bottom-28 sm:top-28">
+          {/* my-auto, not justify-center: it centres a short panel but lets a tall one start at the
+              top, where centring would push its first rows above the scrollable area. */}
+          <div className={`mx-auto my-auto flex w-full shrink-0 flex-col gap-4 py-2 ${tab === "prowl" ? "max-w-6xl" : "max-w-3xl"}`}>
             {needsKey && <KeyPrompt beast={beast} onBound={() => { setNeedsKeyFor(null); refresh(); }} />}
             {beast.lives <= 0 && (
               <Notice kind="info">{beast.name} is resting with no lives lit. Only safe prowls until a daily cuddle in its room lights a link back.</Notice>
