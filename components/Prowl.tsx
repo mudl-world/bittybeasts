@@ -334,7 +334,10 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
         {setup === "how" && (
           <section className="card flex flex-col gap-4 p-5">
             <div>
-              <h2 className="title-3d text-xl">How to play</h2>
+              {/* The run is named here, since the button is now just "Play". */}
+              <h2 className="title-3d text-xl">
+                How to play <span className={daringPicked ? "text-[#ffb3a1]" : "text-lantern"}>· {daringPicked ? "daring" : "safe"} prowl</span>
+              </h2>
               <p className="text-xs text-mist">
                 {daringPicked
                   ? "Every rooftop multiplies the haul. Cash out before you miss a jump."
@@ -350,8 +353,11 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 className={`btn btn-lg ${daringPicked ? "btn-danger" : "btn-lantern"}`}
                 disabled={blocked || (daringPicked && (stray || resting))}
                 onClick={() => start(daringPicked)}
+                // The button no longer names the run, so say which one for screen readers and on hover.
+                aria-label={daringPicked ? "Play: daring prowl" : "Play: safe prowl"}
+                title={daringPicked ? "Daring prowl" : "Safe prowl"}
               >
-                {daringPicked ? "Go daring" : "Go safe"}
+                <Art slot="ctl-dash" alt="" size={26} /> Play
               </button>
             </div>
           </section>
