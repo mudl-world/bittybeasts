@@ -2,7 +2,7 @@
 // The game hub for the signed-in player's Beast.
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   bindKey,
   cancelWander,
@@ -71,6 +71,14 @@ function Hub({ accountId }: { accountId: string }) {
   const [needsKeyFor, setNeedsKeyFor] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
   const [clove, setClove] = useState(false);
+
+  // Escape closes Sister Clove, like any other panel over the scene.
+  useEffect(() => {
+    if (!clove) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setClove(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [clove]);
 
   const list = beasts.data ?? [];
   const beast = list.find((b) => b.token_id === picked) ?? list[0];
@@ -203,9 +211,15 @@ function Hub({ accountId }: { accountId: string }) {
         </>
       )}
 
-      {/* Sister Clove, called up from the dock */}
+      {/* Sister Clove, called up from the dock. She speaks over a scrim: while she is talking the
+          prowl cards and skills behind her are not choices you can make, so they step back. */}
       {clove && (
-        <div className="fixed inset-x-0 bottom-[6.5rem] z-50 flex justify-center px-3 sm:bottom-28">
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-3 pb-[6.5rem] sm:pb-28">
+          <button
+            className="absolute inset-0 cursor-default bg-night-950/80 backdrop-blur-[2px] animate-rise"
+            aria-label="Close Sister Clove"
+            onClick={() => setClove(false)}
+          />
           <div className="relative w-full max-w-2xl animate-rise">
             <button onClick={() => setClove(false)} className="absolute -top-3 right-1 z-10 transition hover:scale-110" aria-label="Close" title="Close">
               <Art slot="ui-close" alt="" size={34} />
