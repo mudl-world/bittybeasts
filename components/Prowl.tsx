@@ -319,8 +319,8 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
             <div className="flex flex-col gap-4">
               <StatsRow stats={stats} />
               <div className="flex items-center justify-between gap-2">
-                <button className="btn btn-ghost btn-sm" onClick={() => setSetup("mode")}>
-                  <Art slot="ui-back" alt="" size={16} /> Back
+                <button className="btn btn-ghost" onClick={() => setSetup("mode")}>
+                  <Art slot="ui-back" alt="" size={20} /> Back
                 </button>
                 <button className="btn btn-lantern" onClick={() => setSetup("how")}>
                   How to play <Art slot="ui-forward" alt="" size={20} />
@@ -346,18 +346,20 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
             </div>
             <Controls />
             <div className="flex items-center justify-between gap-2">
-              <button className="btn btn-ghost btn-sm" onClick={() => setSetup("stats")}>
-                <Art slot="ui-back" alt="" size={16} /> Back
+              <button className="btn btn-ghost" onClick={() => setSetup("stats")}>
+                <Art slot="ui-back" alt="" size={20} /> Back
               </button>
               <button
-                className={`btn btn-lg ${daringPicked ? "btn-danger" : "btn-lantern"}`}
+                className={`btn ${daringPicked ? "btn-danger" : "btn-lantern"}`}
                 disabled={blocked || (daringPicked && (stray || resting))}
                 onClick={() => start(daringPicked)}
                 // The button no longer names the run, so say which one for screen readers and on hover.
                 aria-label={daringPicked ? "Play: daring prowl" : "Play: safe prowl"}
                 title={daringPicked ? "Daring prowl" : "Safe prowl"}
               >
-                <Art slot="ctl-dash" alt="" size={26} /> Play
+                {/* ctl-dash is drawn taller than the UI icons, so cap its height to the line box
+                    rather than let it stretch the button past its neighbour. */}
+                <Art slot="ctl-dash" alt="" size={24} className="max-h-5" /> Play
               </button>
             </div>
           </section>
