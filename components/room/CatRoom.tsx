@@ -427,24 +427,31 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
         />
       </Cover>
 
-      {/* top HUD */}
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between gap-2 p-3 sm:p-5">
-        <div className="pointer-events-auto flex items-start gap-2">
+      {/* top HUD: no frames, every piece the same 56px height as the Map button (as in the alley) */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center gap-2 p-3 drop-shadow-[0_3px_6px_rgba(0,0,0,0.6)] sm:gap-3 sm:p-4">
+        <div className="pointer-events-auto flex min-w-0 items-center gap-2 sm:gap-3">
           <WorldMenu />
-          <div className="glass flex flex-col gap-1.5 px-3 py-2">
+          {/* Name and tail, then the two needs beside them: no box, so the row keeps one height. */}
+          <div className="flex h-14 min-w-0 flex-col justify-center">
             <div className="flex items-center gap-2">
-              <span className="title-3d text-lg sm:text-xl">{beast.name}</span>
+              <span className="title-3d truncate text-lg sm:text-xl">{beast.name}</span>
               <ChainTail lives={beast.lives} size="sm" legend={beast.legend} />
             </div>
+          </div>
+          <div className="hidden h-14 flex-col justify-center gap-1 md:flex">
             <MiniNeed label="Fullness" value={fullness} color="bg-lantern" warn={fullness < 25 ? "hungry" : undefined} />
             <MiniNeed label="Happiness" value={happiness} color="bg-moss" warn={happiness < 30 ? "lonely" : undefined} />
           </div>
         </div>
-        <div className="pointer-events-auto flex flex-col items-end gap-2 sm:flex-row sm:items-center">
-          <span className="glass flex items-center gap-1.5 py-1 pl-1.5 pr-3 font-display text-lg text-[#ffc93c]" title="YARN in your cat's purse" aria-label="YARN">
+        <div className="pointer-events-auto ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+          <span className="btn btn-ghost pointer-events-none h-14 shrink-0 gap-1.5 px-3 text-lg text-[#ffc93c]" title="YARN in your cat's purse" aria-label="YARN">
             <Art slot="item-yarn" size={28} alt="" /> {balance.data !== undefined ? balance.data : "…"}
           </span>
-          <span className="glass flex items-center gap-1.5 py-1 pl-1.5 pr-3 font-display text-lg" title="Thoughts: each thing your cat says costs one (1 YARN, paid from its own purse)" aria-label="Thoughts">
+          <span
+            className="btn btn-ghost pointer-events-none hidden h-14 shrink-0 gap-1.5 px-3 text-lg sm:inline-flex"
+            title="Thoughts: each thing your cat says costs one (1 YARN, paid from its own purse)"
+            aria-label="Thoughts"
+          >
             <Art slot="ui-thought" size={28} alt="" /> {credits}
           </span>
           <button
@@ -683,10 +690,10 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
 
 function MiniNeed({ label, value, warn, color }: { label: string; value: number; warn?: string; color: string }) {
   return (
-    <div className="flex items-center gap-2 text-[11px]">
-      <span className="w-16 text-mist">{label}</span>
-      <Bar value={value} tone={value < 25 ? "ember" : color === "bg-moss" ? "green" : "gold"} className="w-24 sm:w-32" />
-      <span className={warn ? "font-semibold text-[#ffb3a1]" : "text-paper/80"}>{warn ?? value}</span>
+    <div className="flex items-center gap-2 text-[11px] [text-shadow:0_1px_3px_rgb(6_5_26/0.9)]">
+      <span className="w-14 shrink-0 text-mist">{label}</span>
+      <Bar value={value} tone={value < 25 ? "ember" : color === "bg-moss" ? "green" : "gold"} className="w-20 sm:w-28" />
+      <span className={`w-10 shrink-0 ${warn ? "font-semibold text-[#ffb3a1]" : "text-paper/80"}`}>{warn ?? value}</span>
     </div>
   );
 }
