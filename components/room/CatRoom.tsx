@@ -13,6 +13,7 @@ import {
   dressBeast,
   feedBeast,
   getBeastsForOwner,
+  getNight,
   getCare,
   getItemBalances,
   getThoughts,
@@ -333,6 +334,9 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
   const items = useAsync(() => getItemBalances(beast.account_id), [beast.account_id, tick]);
   const balance = useAsync(() => getYarnBalance(beast.account_id), [beast.account_id, tick]);
   const thoughts = useAsync(() => getThoughts(id, 6), [id, tick]);
+  // The contract allows one cuddle per night (alley/src/lib.rs: now - last_boop_ms >= night_ms).
+  // Read the same clock so the button can stop a call the chain would only reject.
+  const night = useAsync(() => getNight(), [tick]);
   const live = useLiveCare(care.data);
 
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -406,6 +410,11 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
   // The needs ride in the dialog while it is up, and fall back to the HUD when it is not, so they
   // are always on screen exactly once.
   const speaking = !sheet && line !== dismissed;
+  // One cuddle per night, the same rule the contract enforces. Without this the second click goes
+  // to chain, costs gas and comes back "Already booped today" — a real failure in the activity list.
+  // Measured against the night's own start, not Date.now(), so it is stable across renders and
+  // flips back by itself when the next night begins.
+  const cuddledTonight = !!night.data && beast.last_boop_ms >= night.data.started_ms;
 
   return (
     <>
@@ -516,7 +525,8 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
           <Action icon="ui-talk" label="Talk" onClick={() => toggle("talk")} active={sheet === "talk"} />
           <Action
             icon="ui-cuddle"
-            label={tx.pending === "cuddle" ? "Cuddling…" : "Cuddle"}
+            label={tx.pending === "cuddle" ? "Cuddling…" : cuddledTonight ? `${beast.name} has had its cuddle tonight` : "Cuddle"}
+            disabled={cuddledTonight || tx.pending === "cuddle"}
             onClick={async () => {
               pet();
               if (
@@ -749,14 +759,31 @@ export function Need({ label, value, warn, color }: { label: string; value: numb
   );
 }
 
-function Action({ icon, label, onClick, active }: { icon: ArtSlot; label: string; onClick: () => void; active?: boolean }) {
+function Action({
+  icon,
+  label,
+  onClick,
+  active,
+  disabled,
+}: {
+  icon: ArtSlot;
+  label: string;
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+}) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       aria-label={label}
       title={label}
       className={`flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl border-[3px] px-1 py-1.5 font-display text-xs tracking-wide transition sm:text-base ${
-        active ? "border-[#1a0b2e] bg-[#ffc93c] text-[#1a0b2e] shadow-[0_3px_0_#1a0b2e]" : "border-transparent text-paper hover:-translate-y-0.5 hover:bg-white/5"
+        active
+          ? "border-[#1a0b2e] bg-[#ffc93c] text-[#1a0b2e] shadow-[0_3px_0_#1a0b2e]"
+          : disabled
+            ? "cursor-not-allowed border-transparent text-paper/50 opacity-50"
+            : "border-transparent text-paper hover:-translate-y-0.5 hover:bg-white/5"
       }`}
     >
       <Art slot={icon} alt="" className="h-11 w-11 transition hover:scale-110 sm:h-14 sm:w-14" />

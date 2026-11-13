@@ -21,6 +21,19 @@ type Tx = {
   ok: boolean | null;
 };
 
+/** Why a call of this kind usually gets rejected. The indexer only tells us a call failed, not
+    why, so these say the common cause in plain words instead of a bare "failed" — and the row
+    still links to the explorer for the contract's exact message. */
+const WHY_FAILED: Record<string, string> = {
+  boop: "already cuddled tonight",
+  settle_run: "run already settled",
+  close_night: "night already closed",
+  settle: "nothing to settle yet",
+  tug: "already checked in",
+  wander: "cat is busy",
+  adopt: "no longer up for adoption",
+};
+
 /** Plain words for each contract method, and an icon. */
 const METHODS: Record<string, [string, ArtSlot]> = {
   settle_run: ["Prowl settled", "ui-missions"],
@@ -176,7 +189,9 @@ export default function Activity() {
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-display">{label}</span>
                       {method && <code className="rounded bg-white/5 px-1.5 text-xs text-mist">{method}</code>}
-                      {t.ok === false && <Pill tone="ember">failed</Pill>}
+                      {t.ok === false && (
+                        <Pill tone="ember">{(method && WHY_FAILED[method]) ?? "didn't go through"}</Pill>
+                      )}
                     </div>
                     <span className="truncate text-xs text-mist" title={`${t.signer} → ${t.receiver}`}>
                       {who(t.signer)} → {who(t.receiver)}
