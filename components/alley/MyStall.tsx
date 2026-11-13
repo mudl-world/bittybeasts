@@ -127,7 +127,7 @@ function StallHeader({ stall, rent, beast, tx, onChanged }: { stall: StallView; 
       </p>
       {stall.lanterns <= 0 && <Notice kind="info">Lights out. Pay rent to relight the stall.</Notice>}
       <div className="flex flex-wrap items-center gap-2">
-        <input className="input w-28" inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} aria-label="Rent in YARN" />
+        <input className="input num w-28" inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} aria-label="Rent in YARN" />
         <button
           className="btn btn-lantern btn-sm"
           disabled={!!tx.pending || !num(amount)}
@@ -266,7 +266,7 @@ function RulesEditor({
       </div>
       <label className="flex flex-wrap items-center gap-2 text-sm">
         <span className="text-mist">Spend at most</span>
-        <input className="input w-24 py-1" inputMode="numeric" placeholder="0" value={d.budget} onChange={(e) => setD({ ...d, budget: digits(e.target.value) })} />
+        <input className="input num w-24 py-1" inputMode="numeric" placeholder="0" value={d.budget} onChange={(e) => setD({ ...d, budget: digits(e.target.value) })} />
         <span className="text-mist">YARN a night on bargains</span>
       </label>
       <div className="flex flex-wrap items-center gap-2">

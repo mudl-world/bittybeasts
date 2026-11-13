@@ -156,7 +156,8 @@ function ShopScene({ keeper, children, onLeave }: { keeper: React.ReactNode; chi
     <div className="fixed inset-0 z-[60] animate-rise overflow-hidden">
       <Art slot="hero-bg" alt="" className="absolute inset-0 h-full w-full scale-105 object-cover blur-[3px] brightness-[0.55] saturate-[0.8]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_60%,transparent_25%,rgb(6_5_26/0.75)_80%)]" />
-      <button onClick={onLeave} className="btn btn-ghost absolute left-3 top-3 z-20 h-14 w-14 p-1 sm:left-5 sm:top-5" aria-label="Back to the street" title="Back to the street">
+      {/* btn-sq, like every other icon tile: the pill's thick border would eat the arrow. */}
+      <button onClick={onLeave} className="btn btn-ghost btn-sq absolute left-3 top-3 z-20 h-14 w-14 p-1 sm:left-5 sm:top-5" aria-label="Back to the street" title="Back to the street">
         <Art slot="ui-back" alt="" size={40} />
       </button>
       <div className="relative flex h-full flex-col md:flex-row">
@@ -256,7 +257,7 @@ function MerchantStall({
             Lights out. Needs <b className="text-lantern">{REVIVE_SUGGESTED} YARN</b> to relight a lantern or three.
           </p>
           <div className="flex gap-2">
-            <input className="input w-28" inputMode="numeric" value={reviveAmt} onChange={(e) => setReviveAmt(e.target.value.replace(/\D/g, ""))} aria-label="YARN to put in" />
+            <input className="input num w-28" inputMode="numeric" value={reviveAmt} onChange={(e) => setReviveAmt(e.target.value.replace(/\D/g, ""))} aria-label="YARN to put in" />
             <button
               className="btn btn-lantern btn-sm"
               disabled={!!tx.pending || !num(reviveAmt)}

@@ -2,7 +2,7 @@
 // The game hub for the signed-in player's Beast.
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   bindKey,
   cancelWander,
@@ -309,8 +309,26 @@ function WanderControls({ beast, onChanged }: { beast: Beast; onChanged: () => v
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState("5");
   const wandering = !!beast.wander;
+  const box = useRef<HTMLDivElement | null>(null);
+
+  // A popover should close when you go and do something else: a click outside it, or Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (!box.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    // Capture, so it still fires when the thing you clicked stops the event itself.
+    window.addEventListener("pointerdown", onDown, true);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onDown, true);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={box}>
       <button
         onClick={() => setOpen((o) => !o)}
         className={`btn btn-sq h-14 w-14 shrink-0 p-1 ${wandering ? "btn-lantern" : "btn-ghost"}`}
@@ -345,7 +363,7 @@ function WanderControls({ beast, onChanged }: { beast: Beast; onChanged: () => v
             <>
               <p className="font-display text-base">Let {beast.name} wander to a new home</p>
               <div className="flex items-center gap-2">
-                <input className="input w-24 py-1" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.]/g, ""))} aria-label="Asking price in NEAR" />
+                <input className="input num w-24 py-1" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.]/g, ""))} aria-label="Asking price in NEAR" />
                 <span className="font-display">NEAR</span>
                 <button
                   className="btn btn-lantern btn-sm"
