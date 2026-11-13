@@ -189,7 +189,7 @@ function Hub({ accountId }: { accountId: string }) {
         <main className="fixed inset-x-0 bottom-[6.5rem] top-[7.5rem] z-20 flex flex-col overflow-y-auto px-3 sm:bottom-28 sm:top-28">
           {/* my-auto, not justify-center: it centres a short panel but lets a tall one start at the
               top, where centring would push its first rows above the scrollable area. */}
-          <div className={`mx-auto my-auto flex w-full shrink-0 flex-col gap-4 py-2 ${tab === "prowl" ? "max-w-6xl" : "max-w-3xl"}`}>
+          <div className={`mx-auto my-auto flex w-full shrink-0 flex-col gap-4 py-2 ${tab === "stall" ? "max-w-[min(100%,110rem)]" : tab === "prowl" ? "max-w-6xl" : "max-w-3xl"}`}>
             {needsKey && <KeyPrompt beast={beast} onBound={() => { setNeedsKeyFor(null); refresh(); }} />}
             {beast.lives <= 0 && (
               <Notice kind="info">{beast.name} is resting with no lives lit. Only safe prowls until a daily cuddle in its room lights a link back.</Notice>

@@ -59,8 +59,8 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
 
       {/* The stall on the left, its receipts on the right: both fit without scrolling past one to
           reach the other, and the receipts column scrolls on its own when it is long. */}
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-stretch">
-      <div className="flex h-full flex-col gap-4 [&>.card]:h-full">
+      <div className={`grid gap-4 ${!mine ? "lg:grid-cols-2 lg:items-stretch" : "lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start"}`}>
+      <div className={`flex flex-col gap-4 ${!mine ? "h-full [&>.card]:h-full" : ""}`}>
       {!mine ? (
         <div className="card flex flex-col gap-3 p-5">
           <h3 className="text-lg font-semibold">Open a stall on Lantern Lane</h3>
@@ -230,14 +230,17 @@ function RulesEditor({
       </p>
       <div className="flex flex-col divide-y divide-white/5">
         {ITEMS.map((item) => (
-          <div key={item} className="flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center">
-            <div className="flex w-40 items-center gap-2">
+          <div
+            key={item}
+            className="flex flex-col gap-2 py-2.5 sm:grid sm:items-center sm:gap-x-5 sm:[grid-template-columns:minmax(7rem,14rem)_auto_auto_1fr]"
+          >
+            <div className="flex items-center gap-2">
               <Art slot={`item-${item}`} size={24} alt="" />
               <span className="font-display font-semibold">{ITEM_LABEL[item]}</span>
               <span className="text-xs text-mist">×{items?.[item] ?? 0}</span>
             </div>
             <label className="flex items-center gap-2 text-sm">
-              <span className={d.never[item] ? "text-mist/50" : "text-mist"}>Sell for at least</span>
+              <span className={`whitespace-nowrap ${d.never[item] ? "text-mist/50" : "text-mist"}`}>Sell for at least</span>
               <input
                 className="input w-20 py-1"
                 inputMode="numeric"
@@ -255,10 +258,10 @@ function RulesEditor({
                 checked={d.never[item]}
                 onChange={(e) => setD({ ...d, never: { ...d.never, [item]: e.target.checked } })}
               />
-              <span className="text-mist">Never sell</span>
+              <span className="whitespace-nowrap text-mist">Never sell</span>
             </label>
-            <label className="flex items-center gap-2 text-sm sm:ml-auto">
-              <span className="text-mist">Buy if under</span>
+            <label className="flex items-center gap-2 text-sm sm:justify-self-start">
+              <span className="whitespace-nowrap text-mist">Buy if under</span>
               <input
                 className="input w-20 py-1"
                 inputMode="numeric"
