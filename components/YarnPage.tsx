@@ -20,7 +20,7 @@ import { useAsync } from "@/lib/ui/useAsync";
 import { useTx } from "./alley/useTx";
 import ChainTail from "./ChainTail";
 import Countdown from "./Countdown";
-import { Bar, Empty, ExplorerLink, Loading, Notice, Pager, Pill, Spinner, Tabs } from "./ui";
+import { Bar, Donut, Empty, ExplorerLink, Loading, Notice, Pager, Pill, Spinner, Tabs } from "./ui";
 
 const LOG_LABEL: Record<YarnLogEntry["kind"], string> = {
   mint: "Minted",
@@ -188,20 +188,37 @@ export default function YarnPage() {
 
       {/* ------------------------------------------------------------------ about */}
       {tab === "about" && (
-        <div role="tabpanel" id="panel-about" aria-labelledby="tab-about" className="flex flex-col gap-5">
+        <div role="tabpanel" id="panel-about" aria-labelledby="tab-about" className="grid gap-5 lg:grid-cols-2 lg:items-start">
           <section className="card flex flex-col gap-3 p-5">
             <h3 className="text-lg font-semibold">What $YARN is</h3>
-            <p className="max-w-2xl text-sm text-mist">
+            <p className="text-sm text-mist">
               A NEP-141 token on NEAR with no admin. Every finished prowl and every daily boop gives the alley a tug. If enough Beasts tug
               in a night, fresh YARN is spun for everyone who did. Miss a night and the alley loses a life and a little of the treasury
               burns. Lose all nine and the streak starts over.
             </p>
-            <p className="max-w-2xl text-sm text-mist">
+            <p className="text-sm text-mist">
               When the alley&apos;s ninth life goes out, the Long Dark ends the Age.{" "}
               <Link href="/ledger" className="text-lantern underline decoration-dotted underline-offset-4">
                 The Ages so far →
               </Link>
             </p>
+            {/* The two rules that are percentages, as rings: the shape carries the number. */}
+            {params.data && (
+              <div className="mt-1 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
+                <Donut
+                  value={params.data.target_bps / 100}
+                  label="Target"
+                  caption="of registered Beasts must tug"
+                  tone="gold"
+                />
+                <Donut
+                  value={params.data.burn_bps / 100}
+                  label="Burn on a miss"
+                  caption="of the treasury"
+                  tone="ember"
+                />
+              </div>
+            )}
           </section>
 
           <section className="card p-5">
@@ -243,7 +260,7 @@ export default function YarnPage() {
               <img
                 src="/yarn-sim.svg"
                 alt="Modelled $YARN supply over 60 nights in three scenarios"
-                className="w-full rounded-xl bg-paper"
+                className="w-full rounded-xl"
                 onError={() => setChartOk(false)}
               />
             ) : (

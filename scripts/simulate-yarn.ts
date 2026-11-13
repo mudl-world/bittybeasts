@@ -111,7 +111,14 @@ const summaries: Summary[] = results.map(({ scenario, rows }) => {
 // Line chart of total supply (one line per scenario, labelled at the line end),
 // plus a "night strip" per scenario: a filled cell for a good night, a hollow
 // cell for a miss, and an R above the night the alley ran out of lives.
-const COLORS: Record<string, string> = { steady: "#2a78d6", fading: "#eb6834", weekend: "#1baf7a" };
+// Night-market palette, matching the @theme tokens in app/globals.css so the chart sits inside the
+// game's UI instead of on a white card. Series keep a blue/amber/green split for colour-blind safety.
+const COLORS: Record<string, string> = { steady: "#8ab6ff", fading: "#ff8a1f", weekend: "#7ed6a0" };
+const PANEL = "#15123d";        // --color-night-800, the chart's own ground
+const GRID = "#332d7a";         // --color-night-600
+const TEXT = "#fff3dc";         // --color-paper
+const MUTED = "#a9a4e0";        // --color-mist
+const LANTERN = "#ffb547";      // --color-lantern
 const W = 1000;
 const plot = { left: 64, right: 760, top: 56, bottom: 330 };
 const stripTop = 412;
@@ -128,19 +135,19 @@ const svg: string[] = [];
 svg.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-labelledby="t d">`);
 svg.push(`<title id="t">$YARN total supply over 60 nights, three scenarios</title>`);
 svg.push(`<desc id="d">${summaries.map((s) => `${s.label}: ends at ${fmt(s.final)} YARN, ${s.misses} missed nights, ${s.resets} resets`).join("; ")}.</desc>`);
-svg.push(`<rect width="${W}" height="${H}" fill="#fcfcfb"/>`);
-svg.push(`<text x="${plot.left}" y="26" font-size="17" font-weight="600" fill="#0b0b0b">$YARN total supply, 60 nights</text>`);
-svg.push(`<text x="${plot.left}" y="44" font-size="12" fill="#52514e">Good night: +10 YARN per tugger. Missed night: -1 alley life, 5% of treasury burned. 0 lives: streak resets.</text>`);
+svg.push(`<rect width="${W}" height="${H}" fill="${PANEL}" rx="14"/>`);
+svg.push(`<text x="${plot.left}" y="26" font-size="17" font-weight="700" fill="${LANTERN}">$YARN total supply, 60 nights</text>`);
+svg.push(`<text x="${plot.left}" y="44" font-size="12" fill="${MUTED}">Good night: +10 YARN per tugger. Missed night: -1 alley life, 5% of treasury burned. 0 lives: streak resets.</text>`);
 
 // Grid + y axis
 for (let v = 0; v <= yMax; v += yMax / 5) {
-  svg.push(`<line x1="${plot.left}" x2="${plot.right}" y1="${y(v)}" y2="${y(v)}" stroke="#e7e6e2" stroke-width="1"/>`);
-  svg.push(`<text x="${plot.left - 8}" y="${y(v) + 4}" font-size="11" fill="#6f6e69" text-anchor="end">${fmt(v)}</text>`);
+  svg.push(`<line x1="${plot.left}" x2="${plot.right}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}" stroke-width="1"/>`);
+  svg.push(`<text x="${plot.left - 8}" y="${y(v) + 4}" font-size="11" fill="${MUTED}" text-anchor="end">${fmt(v)}</text>`);
 }
 for (let n = 1; n <= NIGHTS; n += n === 1 ? 9 : 10) {
-  svg.push(`<text x="${x(n)}" y="${plot.bottom + 18}" font-size="11" fill="#6f6e69" text-anchor="middle">${n}</text>`);
+  svg.push(`<text x="${x(n)}" y="${plot.bottom + 18}" font-size="11" fill="${MUTED}" text-anchor="middle">${n}</text>`);
 }
-svg.push(`<text x="${(plot.left + plot.right) / 2}" y="${plot.bottom + 36}" font-size="11" fill="#6f6e69" text-anchor="middle">Night</text>`);
+svg.push(`<text x="${(plot.left + plot.right) / 2}" y="${plot.bottom + 36}" font-size="11" fill="${MUTED}" text-anchor="middle">Night</text>`);
 
 // Lines with direct end labels (nudged apart if they collide).
 const ends = results.map(({ scenario, rows }) => ({ id: scenario.id, label: scenario.label, value: rows[rows.length - 1].state.total_supply, ly: y(rows[rows.length - 1].state.total_supply) }));
@@ -150,34 +157,34 @@ for (const { scenario, rows } of results) {
   const d = rows.map((r, i) => `${i === 0 ? "M" : "L"}${x(r.night).toFixed(1)},${y(r.state.total_supply).toFixed(1)}`).join(" ");
   svg.push(`<path d="${d}" fill="none" stroke="${COLORS[scenario.id]}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`);
   for (const r of rows.filter((r) => !r.outcome.hit)) {
-    svg.push(`<circle cx="${x(r.night)}" cy="${y(r.state.total_supply)}" r="3.5" fill="#fcfcfb" stroke="${COLORS[scenario.id]}" stroke-width="2"><title>${scenario.label}, night ${r.night}: missed, ${r.outcome.burned} YARN burned</title></circle>`);
+    svg.push(`<circle cx="${x(r.night)}" cy="${y(r.state.total_supply)}" r="3.5" fill="${PANEL}" stroke="${COLORS[scenario.id]}" stroke-width="2"><title>${scenario.label}, night ${r.night}: missed, ${r.outcome.burned} YARN burned</title></circle>`);
   }
 }
 for (const e of ends) {
   svg.push(`<circle cx="${plot.right + 10}" cy="${e.ly - 4}" r="4" fill="${COLORS[e.id]}"/>`);
-  svg.push(`<text x="${plot.right + 20}" y="${e.ly}" font-size="12" font-weight="600" fill="#0b0b0b">${e.label}</text>`);
-  svg.push(`<text x="${plot.right + 20}" y="${e.ly + 14}" font-size="11" fill="#52514e">${fmt(e.value)} YARN</text>`);
+  svg.push(`<text x="${plot.right + 20}" y="${e.ly}" font-size="12" font-weight="600" fill="${TEXT}">${e.label}</text>`);
+  svg.push(`<text x="${plot.right + 20}" y="${e.ly + 14}" font-size="11" fill="${MUTED}">${fmt(e.value)} YARN</text>`);
 }
 
 // Night strips
-svg.push(`<text x="${plot.left}" y="${stripTop - 14}" font-size="12" font-weight="600" fill="#0b0b0b">Night by night</text>`);
-svg.push(`<text x="${plot.left + 98}" y="${stripTop - 14}" font-size="11" fill="#52514e">filled = good night, hollow = miss (hollow dots on the lines above), R = out of lives, streak reset</text>`);
+svg.push(`<text x="${plot.left}" y="${stripTop - 14}" font-size="12" font-weight="600" fill="${TEXT}">Night by night</text>`);
+svg.push(`<text x="${plot.left + 98}" y="${stripTop - 14}" font-size="11" fill="${MUTED}">filled = good night, hollow = miss (hollow dots on the lines above), R = out of lives, streak reset</text>`);
 const cellW = (plot.right - plot.left) / NIGHTS;
 results.forEach(({ scenario, rows }, i) => {
   const top = stripTop + i * stripRow;
   const s = summaries[i];
-  svg.push(`<text x="${plot.left - 8}" y="${top + 13}" font-size="11" fill="#52514e" text-anchor="end">${scenario.id}</text>`);
+  svg.push(`<text x="${plot.left - 8}" y="${top + 13}" font-size="11" fill="${MUTED}" text-anchor="end">${scenario.id}</text>`);
   for (const r of rows) {
     const cx = plot.left + (r.night - 1) * cellW;
     const tip = `${scenario.label}, night ${r.night}: ${r.outcome.tugs}/${r.outcome.registered} tugged (needed ${r.outcome.target}); streak ${r.state.streak}, lives ${r.state.lives}`;
     if (r.outcome.hit) {
       svg.push(`<rect x="${cx + 1}" y="${top + 2}" width="${cellW - 2}" height="14" rx="2" fill="${COLORS[scenario.id]}"><title>${tip}</title></rect>`);
     } else {
-      svg.push(`<rect x="${cx + 1.5}" y="${top + 2.5}" width="${cellW - 3}" height="13" rx="2" fill="#fcfcfb" stroke="${COLORS[scenario.id]}" stroke-width="1.5"><title>${tip}; ${r.outcome.burned} YARN burned</title></rect>`);
+      svg.push(`<rect x="${cx + 1.5}" y="${top + 2.5}" width="${cellW - 3}" height="13" rx="2" fill="${PANEL}" stroke="${COLORS[scenario.id]}" stroke-width="1.5"><title>${tip}; ${r.outcome.burned} YARN burned</title></rect>`);
     }
-    if (r.outcome.reset) svg.push(`<text x="${cx + cellW / 2}" y="${top - 1}" font-size="9" font-weight="700" fill="#0b0b0b" text-anchor="middle">R</text>`);
+    if (r.outcome.reset) svg.push(`<text x="${cx + cellW / 2}" y="${top - 1}" font-size="9" font-weight="700" fill="${TEXT}" text-anchor="middle">R</text>`);
   }
-  svg.push(`<text x="${plot.right + 10}" y="${top + 13}" font-size="11" fill="#52514e">longest ${s.longest} · ${s.misses} misses · ${s.resets} reset${s.resets === 1 ? "" : "s"}</text>`);
+  svg.push(`<text x="${plot.right + 10}" y="${top + 13}" font-size="11" fill="${MUTED}">longest ${s.longest} · ${s.misses} misses · ${s.resets} reset${s.resets === 1 ? "" : "s"}</text>`);
 });
 svg.push(`</svg>`);
 

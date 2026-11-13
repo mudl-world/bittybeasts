@@ -178,3 +178,52 @@ export function Pager({
     </div>
   );
 }
+
+/** A percentage as a ring, drawn in the game's palette. Pure SVG: no chart library, no theme clash.
+    The value is announced for screen readers; the ring itself is decorative. */
+export function Donut({
+  value,
+  label,
+  caption,
+  tone = "gold",
+  size = 104,
+}: {
+  /** 0–100. */
+  value: number;
+  label: string;
+  caption?: string;
+  tone?: "gold" | "ember" | "green";
+  size?: number;
+}) {
+  const v = Math.max(0, Math.min(100, value));
+  const stroke = 11;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const colors = { gold: "#ffb547", ember: "#ff5e3a", green: "#7ed6a0" } as const;
+  return (
+    <figure className="flex flex-col items-center gap-1.5 text-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden className="-rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#211d57" strokeWidth={stroke} />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            fill="none"
+            stroke={colors[tone]}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${(v / 100) * c} ${c}`}
+          />
+        </svg>
+        <span className="absolute inset-0 flex items-center justify-center font-display text-xl font-bold text-paper">
+          {v}%
+        </span>
+      </div>
+      <figcaption className="text-xs">
+        <span className="font-display font-semibold text-paper">{label}</span>
+        {caption && <span className="mt-0.5 block text-mist">{caption}</span>}
+      </figcaption>
+    </figure>
+  );
+}
