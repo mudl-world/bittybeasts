@@ -61,18 +61,22 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
       </div>
       {blocked && <Notice kind="info">{beast.name} is wandering, so the stall can&apos;t be changed right now.</Notice>}
 
+      {/* The stall on the left, its receipts on the right: both fit without scrolling past one to
+          reach the other, and the receipts column scrolls on its own when it is long. */}
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="flex flex-col gap-4">
       {!mine ? (
         <div className="card flex flex-col gap-3 p-5">
           <h3 className="text-lg font-semibold">Open a stall on Lantern Lane</h3>
           <p className="text-sm text-mist">Pick a free slot. Each stall has nine lanterns; miss a night&apos;s rent and one goes out.</p>
           {all.length ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {all.map((s) => {
                 const free = !s.token_id;
                 return (
                   <button
                     key={s.slot}
-                    className={`btn btn-sm ${free ? "btn-lantern" : "btn-ghost"}`}
+                    className={`btn btn-sm w-full ${free ? "btn-lantern" : "btn-ghost"}`}
                     disabled={!free || !!tx.pending || blocked}
                     onClick={async () => {
                       if (await tx.run(`open-${s.slot}`, () => openStall(beast.token_id, s.slot), `Stall #${s.slot} is yours. Set your rules and pay some rent.`)) refresh();
@@ -96,15 +100,20 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
         </>
       )}
 
-      <div className="card p-4 sm:p-5">
-        <h3 className="mb-2 text-lg font-semibold">Receipts</h3>
-        {history.data ? (
-          <DiaryList entries={history.data} filter={(e) => /stall|rent|sale|sold|sell|buy|bought|revive|trade/i.test(`${e.kind} ${e.text}`)} />
-        ) : history.error ? (
-          <p className="text-sm text-mist">{QUIET}</p>
-        ) : (
-          <Loading label="Reading receipts…" />
-        )}
+      </div>
+
+      <div className="card flex max-h-[min(70dvh,640px)] flex-col p-4 sm:p-5">
+        <h3 className="mb-2 shrink-0 text-lg font-semibold">Receipts</h3>
+        <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto">
+          {history.data ? (
+            <DiaryList entries={history.data} filter={(e) => /stall|rent|sale|sold|sell|buy|bought|revive|trade/i.test(`${e.kind} ${e.text}`)} />
+          ) : history.error ? (
+            <p className="text-sm text-mist">{QUIET}</p>
+          ) : (
+            <Loading label="Reading receipts…" />
+          )}
+        </div>
+      </div>
       </div>
     </div>
   );

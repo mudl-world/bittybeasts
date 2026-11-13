@@ -106,16 +106,11 @@ export default function LanternLane({ beast, items, yarnBalance, onChanged, onNe
                 </button>
               );
             })}
-            <StallsDoor onOpen={() => setOpen("stalls")} className="md:hidden" />
+            {/* The stalls are the players' end of the street, so they sit a little apart from the
+                four merchants — but inside the same row, so the whole street centres as one. */}
+            <StallsDoor onOpen={() => setOpen("stalls")} className="ml-2 md:ml-[4vw]" />
           </>
         )}
-      </div>
-
-      {/* On a wide screen the stalls stand apart at the end of the street (below). On a phone the
-          row of cats already scrolls, so a fixed button would sit on top of whichever cat is last;
-          there it rides along in the row instead. Either way it is never a fifth merchant. */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-[7.475rem] z-10 hidden justify-end px-4 md:flex xl:bottom-[8.975rem] xl:px-6">
-        <StallsDoor onOpen={() => setOpen("stalls")} className="pointer-events-auto" />
       </div>
 
       {/* stepping into a shop: a full-screen scene, the keeper on the left, the counter on the right */}
@@ -155,13 +150,18 @@ function StallsDoor({ onOpen, className = "" }: { onOpen: () => void; className?
       aria-label="Beasts' stalls"
       title="Beasts' stalls: shops run by other players' cats"
     >
-      <Art
-        slot="ui-lane"
-        alt=""
-        className="drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)] transition group-hover:-translate-y-2"
-        style={{ width: "clamp(72px, 9vw, 104px)" }}
-      />
-      <span className="relative -mt-2 flex items-center justify-center" style={{ width: "clamp(92px, 11vw, 124px)" }}>
+      {/* Same box as a merchant cat, so the stall sits at their height and the signs line up as
+          one row rather than this cell hanging low. The art is wider than it is tall, so it is
+          centred in that box instead of stretched to fill it. */}
+      <span className="flex items-end justify-center" style={{ width: "clamp(96px, 16vw, 150px)", height: "calc(clamp(96px, 16vw, 150px) * 1.5)" }}>
+        <Art
+          slot="ui-lane"
+          alt=""
+          className="max-h-full drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)] transition group-hover:-translate-y-2"
+          style={{ width: "clamp(82px, 13vw, 124px)" }}
+        />
+      </span>
+      <span className="relative -mt-2 flex items-center justify-center" style={{ width: "clamp(110px, 15vw, 150px)" }}>
         <Art slot="st-open" alt="" className="w-full" />
         <span className="absolute bottom-[16%] left-[32%] right-[7%] top-[44%] flex items-center justify-center text-center font-display text-[0.6rem] font-bold leading-none text-[#3a2410] sm:text-[0.72rem]">
           Stalls
