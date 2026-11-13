@@ -278,7 +278,6 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 art="mission-safe"
                 title="Safe prowl"
                 tip="Low roofs, small gaps. Miss a jump and the run just ends."
-                lines={["Low roofs. Keep what you find, risk nothing."]}
                 onPlay={() => {
                   setPending(false);
                   setSetup("stats");
@@ -291,7 +290,6 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 art="mission-daring"
                 title="Daring prowl"
                 tip="High roofs, narrow gaps. Every rooftop multiplies the haul. Cash out any time."
-                lines={["High roofs, rarer loot. Every roof multiplies it — but a fall costs a life."]}
                 onPlay={() => {
                   setPending(true);
                   setSetup("stats");
@@ -307,25 +305,27 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
 
         {/* 2. Who is doing it? */}
         {setup === "stats" && (
-          <section className="card flex flex-col gap-4 p-5">
-            <div className="flex items-center gap-3">
-              <Art slot={beast ? catSlot(moodFor(beast)) : "cat-neutral"} alt="" size={64} className="shrink-0 rounded-xl" />
-              <div className="min-w-0">
-                <h2 className="title-3d text-xl">{name} is ready</h2>
-                <p className="text-xs text-mist">
-                  {daringPicked ? "A daring run: high roofs, and a fall costs a life." : "A safe run: nothing at risk."} These skills are fixed
-                  for each cat, and they change how the prowl plays.
-                </p>
-              </div>
+          /* The cat on the left, its numbers on the right: the bars no longer run the whole width,
+             and the cat is big enough to be the thing you are looking at. */
+          <section className="card grid gap-5 p-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] sm:items-center">
+            <div className="flex flex-col items-center gap-2 text-center">
+              <Art slot={beast ? catSlot(moodFor(beast)) : "cat-neutral"} alt="" size={150} className="rounded-2xl" />
+              <h2 className="title-3d text-xl">{name} is ready</h2>
+              <p className="max-w-[26ch] text-xs text-mist">
+                {daringPicked ? "A daring run: high roofs, and a fall costs a life." : "A safe run: nothing at risk."} These skills are fixed
+                for each cat, and they change how the prowl plays.
+              </p>
             </div>
-            <StatsRow stats={stats} />
-            <div className="flex items-center justify-between gap-2">
-              <button className="btn btn-ghost btn-sm" onClick={() => setSetup("mode")}>
-                <Art slot="ui-back" alt="" size={16} /> Back
-              </button>
-              <button className="btn btn-lantern" onClick={() => setSetup("how")}>
-                How to play <Art slot="ui-forward" alt="" size={20} />
-              </button>
+            <div className="flex flex-col gap-4">
+              <StatsRow stats={stats} />
+              <div className="flex items-center justify-between gap-2">
+                <button className="btn btn-ghost btn-sm" onClick={() => setSetup("mode")}>
+                  <Art slot="ui-back" alt="" size={16} /> Back
+                </button>
+                <button className="btn btn-lantern" onClick={() => setSetup("how")}>
+                  How to play <Art slot="ui-forward" alt="" size={20} />
+                </button>
+              </div>
             </div>
           </section>
         )}
@@ -347,7 +347,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 <Art slot="ui-back" alt="" size={16} /> Back
               </button>
               <button
-                className={`btn ${daringPicked ? "btn-danger" : "btn-lantern"} px-8 py-3 text-xl`}
+                className={`btn btn-lg ${daringPicked ? "btn-danger" : "btn-lantern"}`}
                 disabled={blocked || (daringPicked && (stray || resting))}
                 onClick={() => start(daringPicked)}
               >
@@ -486,7 +486,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
 }
 
 /** A mission poster from the artist's art: the picture, its button on the parchment plate, three short lines. */
-function Poster(props: { art: ArtSlot; title: string; tip: string; lines: string[]; onPlay: () => void; disabled: boolean; cta: string; tone: string; note?: string }) {
+function Poster(props: { art: ArtSlot; title: string; tip: string; onPlay: () => void; disabled: boolean; cta: string; tone: string; note?: string }) {
   return (
     // Width follows the screen height so both posters and their lines fit between the HUD and the dock.
     <div className="flex flex-col items-center gap-2" style={{ width: "min(42vw, 320px, calc((100dvh - 18rem) * 0.72))" }} title={props.tip}>
@@ -498,11 +498,11 @@ function Poster(props: { art: ArtSlot; title: string; tip: string; lines: string
           </button>
         </div>
       </div>
-      {/* One line, not three: the poster art already carries the mood, so this only has to say
-          what is different about this run. */}
-      <p className="max-w-[22ch] text-center font-display text-sm leading-snug text-paper/85 drop-shadow">
-        {props.note ?? props.lines.join(" · ")}
-      </p>
+      {/* Only the blocked reason ("Strays play it safe") appears here. What each run IS gets said on
+          the next step, over the cat that has to do it, so it is not said twice. */}
+      {props.note && (
+        <p className="max-w-[22ch] text-center font-display text-sm leading-snug text-[#ffb3a1] drop-shadow">{props.note}</p>
+      )}
     </div>
   );
 }
@@ -647,7 +647,7 @@ function Result({
         ) : settle.state === "err" ? (
           <Notice kind="err">{settle.text}</Notice>
         ) : null}
-        <button className="btn btn-lantern mt-1 px-8 py-3 text-xl" onClick={onAgain} disabled={settle.state === "pending"}>
+        <button className="btn btn-lantern btn-lg mt-1" onClick={onAgain} disabled={settle.state === "pending"}>
           Prowl again
         </button>
       </div>

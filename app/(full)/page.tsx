@@ -20,10 +20,10 @@ export default function Home() {
           A cat with a mind of its own. <span className="text-[#ffc93c]">Nine lives to spend.</span>
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/room" className="btn btn-lantern px-8 py-3 text-xl">
+          <Link href="/room" className="btn btn-lantern btn-lg">
             Meet your cat
           </Link>
-          <Link href="/story" className="btn btn-ghost px-6 py-3 text-xl">
+          <Link href="/story" className="btn btn-ghost btn-lg">
             Watch the story
           </Link>
         </div>

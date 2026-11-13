@@ -153,7 +153,7 @@ function ScanAction({ beast, me, tokenId, secret, reload }: { beast: Beast; me: 
         <p className="text-sm text-mist">One boop a day wins a life back, and checks your cat in for the night.</p>
         <ChainTail lives={beast.lives} legend={beast.legend} size="lg" />
         <button
-          className="btn btn-lantern px-10 py-4 text-xl"
+          className="btn btn-lantern btn-lg"
           disabled={!!tx.pending}
           onClick={async () => {
             if (await tx.run("boop", () => boop(tokenId, secret))) {

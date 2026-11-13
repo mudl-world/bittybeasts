@@ -155,6 +155,9 @@ h1,
 .btn-danger { border-image-source: var(--kit-btn-coral); color: var(--color-ink); text-shadow: 0 1px 0 rgb(255 255 255 / 0.35); }
 .btn-danger:active:not(:disabled) { border-image-source: var(--kit-btn-coral-down); }
 .btn-sm { min-height: 2.1rem; padding: 0.1rem 0.4rem; font-size: 0.92rem; border-width: 11px 15px; border-image-width: 11px 15px; }
+/* A bigger button for the one call to action on a screen. The kit's frame is 9-slice art, so the
+   border grows with the button: padding alone stretches the drawn corners and the pill goes slack. */
+.btn-lg { min-height: 3.4rem; padding: 0.3rem 1.1rem; font-size: 1.3rem; border-width: 18px 26px; border-image-width: 18px 26px; }
 /* Square icon buttons (the kit's purple tile). Gold stays a gold pill. */
 /* The frame art is drawn 16px wide but the box keeps a thin border, so the icon gets the whole tile. */
 .btn-sq { border-width: 4px; border-image: var(--kit-sq) var(--kit-sq-slice) fill / 16px stretch; padding: 0; }
