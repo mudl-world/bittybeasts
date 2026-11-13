@@ -269,8 +269,6 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
         )}
         {blocked && <Notice kind="info">{name} is wandering (up for adoption), so it can&apos;t prowl right now.</Notice>}
 
-        <Steps step={setup} />
-
         {/* 1. Which run? */}
         {setup === "mode" && (
           <section className="flex flex-col items-center gap-3">
@@ -280,7 +278,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 art="mission-safe"
                 title="Safe prowl"
                 tip="Low roofs, small gaps. Miss a jump and the run just ends."
-                lines={["Low roofs, easy gaps", "Keep your haul", "No lives at risk"]}
+                lines={["Low roofs. Keep what you find, risk nothing."]}
                 onPlay={() => {
                   setPending(false);
                   setSetup("stats");
@@ -293,7 +291,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 art="mission-daring"
                 title="Daring prowl"
                 tip="High roofs, narrow gaps. Every rooftop multiplies the haul. Cash out any time."
-                lines={["High roofs, rare loot", "Haul grows each roof", "Fall = lose a life"]}
+                lines={["High roofs, rarer loot. Every roof multiplies it — but a fall costs a life."]}
                 onPlay={() => {
                   setPending(true);
                   setSetup("stats");
@@ -491,7 +489,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
 function Poster(props: { art: ArtSlot; title: string; tip: string; lines: string[]; onPlay: () => void; disabled: boolean; cta: string; tone: string; note?: string }) {
   return (
     // Width follows the screen height so both posters and their lines fit between the HUD and the dock.
-    <div className="flex flex-col items-center gap-1.5" style={{ width: "min(40vw, 250px, calc((100dvh - 22rem) * 0.72))" }} title={props.tip}>
+    <div className="flex flex-col items-center gap-2" style={{ width: "min(42vw, 320px, calc((100dvh - 18rem) * 0.72))" }} title={props.tip}>
       <div className="relative w-full drop-shadow-[0_14px_24px_rgba(0,0,0,0.55)]">
         <Art slot={props.art} alt={props.title} className="w-full" />
         <div className="absolute inset-x-[12%] top-[78%] flex h-[13%] items-center justify-center">
@@ -500,11 +498,11 @@ function Poster(props: { art: ArtSlot; title: string; tip: string; lines: string
           </button>
         </div>
       </div>
-      <ul className="flex flex-col items-center font-display text-sm leading-snug text-paper/90 drop-shadow">
-        {(props.note ? [props.note] : props.lines).map((l) => (
-          <li key={l}>{l}</li>
-        ))}
-      </ul>
+      {/* One line, not three: the poster art already carries the mood, so this only has to say
+          what is different about this run. */}
+      <p className="max-w-[22ch] text-center font-display text-sm leading-snug text-paper/85 drop-shadow">
+        {props.note ?? props.lines.join(" · ")}
+      </p>
     </div>
   );
 }
@@ -549,33 +547,6 @@ function Key({ children }: { children: React.ReactNode }) {
     <kbd className="inline-flex min-w-[2rem] items-center justify-center rounded-md border-[3px] border-[#1a0b2e] bg-[#ffc93c] px-2 py-0.5 font-display text-sm font-bold text-[#2a1600] shadow-[0_2px_0_#1a0b2e]">
       {children}
     </kbd>
-  );
-}
-
-/** Where you are in the three steps before a run. */
-function Steps({ step }: { step: "mode" | "stats" | "how" }) {
-  const all = [
-    { key: "mode", label: "The run" },
-    { key: "stats", label: "Your cat" },
-    { key: "how", label: "How to play" },
-  ] as const;
-  const at = all.findIndex((s) => s.key === step);
-  return (
-    <ol className="flex items-center justify-center gap-2 text-xs" aria-label={`Step ${at + 1} of 3`}>
-      {all.map((s, i) => (
-        <li key={s.key} className="flex items-center gap-2">
-          <span
-            className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 font-display ${
-              i === at ? "bg-[#ffc93c] text-[#2a1600]" : i < at ? "text-moss" : "text-mist"
-            }`}
-            aria-current={i === at ? "step" : undefined}
-          >
-            <span className="font-bold">{i < at ? "✓" : i + 1}</span> {s.label}
-          </span>
-          {i < all.length - 1 && <span className="h-px w-4 bg-white/15" aria-hidden />}
-        </li>
-      ))}
-    </ol>
   );
 }
 
