@@ -110,7 +110,7 @@ function Gate() {
                     <p className="mt-1 text-sm text-mist">A kitten of your own moves in, and remembers you. Nothing to install.</p>
                   </div>
                 </div>
-                <GoogleSignIn label="Continue with Google" />
+                <GoogleSignIn />
               </div>
 
               <div className="card flex h-full flex-col gap-4 p-5 text-center">

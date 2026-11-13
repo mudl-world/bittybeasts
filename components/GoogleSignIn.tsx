@@ -3,11 +3,10 @@
 // so we draw our own and drive the flow ourselves. We ask for an ID token (not an auth code): the
 // token flow needs no client secret, and the server verifies the token's signature against Google's
 // published keys, so nothing the browser claims about who you are is trusted — see lib/server/auth.
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signInWithGoogle } from "@/lib/chain";
 import { friendly } from "@/lib/ui/errors";
 import { notifySession } from "@/lib/ui/session";
-import Art from "./Art";
 import { Notice, Spinner } from "./ui";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -46,13 +45,7 @@ function loadGsi(): Promise<Gsi> {
   return w.__bbGsi;
 }
 
-export default function GoogleSignIn({
-  label = "Continue with Google",
-  onSignedIn,
-}: {
-  label?: string;
-  onSignedIn?: (accountId: string) => void;
-}) {
+export default function GoogleSignIn({ onSignedIn }: { onSignedIn?: (accountId: string) => void }) {
   // Google's own button, rendered into a hidden slot. Our themed button forwards clicks to it:
   // Google requires their asset for the real gesture, and one-tap `prompt()` is suppressed too
   // often (FedCM, third-party cookie rules) to be the only way in.
@@ -94,7 +87,15 @@ export default function GoogleSignIn({
             }
           },
         });
-        google.accounts.id.renderButton(hidden.current, { type: "standard", size: "large", width: 320 });
+        google.accounts.id.renderButton(hidden.current, {
+          type: "standard",
+          theme: "filled_blue",
+          size: "large",
+          shape: "pill",
+          text: "continue_with",
+          logo_alignment: "left",
+          width: 300,
+        });
         setReady(true);
       })
       .catch((e: unknown) => {
@@ -102,25 +103,22 @@ export default function GoogleSignIn({
       });
   }, [onSignedIn]);
 
-  const start = useCallback(() => {
-    setError(null);
-    // Google renders its button inside this slot (sometimes in an iframe): click whatever is there.
-    const target =
-      hidden.current?.querySelector<HTMLElement>('[role="button"]') ?? hidden.current?.querySelector<HTMLElement>("div > div");
-    target?.click();
-  }, []);
-
   if (!CLIENT_ID) return null;
 
   return (
     <div className="flex w-full flex-col items-stretch gap-2">
-      <button className="btn btn-lantern w-full" onClick={start} disabled={!ready || busy}>
-        {busy ? <Spinner /> : <Art slot="ui-google" alt="" size={22} />}
-        {busy ? "Setting up your room…" : label}
-      </button>
-      {/* Kept in the layout but visually hidden: display:none stops Google rendering it at all. */}
-      <div ref={hidden} aria-hidden className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0" />
+      {/* Google's own button, shown rather than proxied.
+          A themed button of ours that forwards the click only works while Google renders a DOM
+          [role=button]: in production it renders an <iframe> instead, and nothing can synthesise a
+          click inside a cross-origin frame — the button looked right and did nothing. So this is
+          Google's real button, centred and sized to the card. */}
+      <div ref={hidden} className="flex min-h-[44px] w-full justify-center [color-scheme:light]" aria-busy={busy} />
       {!ready && !error && <p className="text-center text-xs text-mist">Waking the gate…</p>}
+      {busy && (
+        <p className="flex items-center justify-center gap-2 text-sm text-mist">
+          <Spinner /> Setting up your room…
+        </p>
+      )}
       {error && <Notice kind="err">{error}</Notice>}
     </div>
   );
