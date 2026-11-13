@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CONFIG, settleRun, type Beast, type Item, type RunResult, type Stats } from "@/lib/chain";
-import { markSlot, type ArtSlot } from "@/lib/ui/art";
+import { catSlot, markSlot, type ArtSlot } from "@/lib/ui/art";
 import { friendly, isMissingKey } from "@/lib/ui/errors";
 import { ITEM_LABEL } from "@/lib/ui/format";
 import {
@@ -27,6 +27,7 @@ import {
   type Sprites,
 } from "@/lib/ui/prowl-engine";
 import Art from "./Art";
+import { moodFor } from "./BeastCard";
 import ChainTail from "./ChainTail";
 import { Bar, Notice, Pill, Spinner } from "./ui";
 
@@ -57,6 +58,10 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
   const blocked = !!beast?.wander;
 
   const [phase, setPhase] = useState<"choose" | "running" | "done">("choose");
+  // Inside "choose", three steps rather than one crowded screen: pick the run, meet the cat that
+  // has to do it, then learn the controls. `pending` remembers the choice until the player starts.
+  const [setup, setSetup] = useState<"mode" | "stats" | "how">("mode");
+  const [pending, setPending] = useState<boolean | null>(null);
 
   // The run is full screen: stop the page underneath from scrolling while it's up.
   useEffect(() => {
@@ -254,17 +259,21 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
 
   if (phase === "choose") {
     const name = beast?.name ?? "Your stray";
+    const daringPicked = pending === true;
     return (
-      // One screen, no scrolling: pick a prowl on the left, your cat's skills and the controls on the right.
-      <div className="flex flex-col gap-3">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
         {stray && (
           <Notice kind="info">
             Stray mode: safe runs only and nothing is kept. <Link href="/" className="underline">Sign in</Link> to keep your haul.
           </Notice>
         )}
         {blocked && <Notice kind="info">{name} is wandering (up for adoption), so it can&apos;t prowl right now.</Notice>}
-        <div className="grid items-start gap-4 lg:grid-cols-[1fr_340px]">
-          <section className="flex flex-col items-center gap-2">
+
+        <Steps step={setup} />
+
+        {/* 1. Which run? */}
+        {setup === "mode" && (
+          <section className="flex flex-col items-center gap-3">
             <h2 className="title-3d text-xl">Choose tonight&apos;s prowl</h2>
             <div className="flex items-start justify-center gap-4 sm:gap-6">
               <Poster
@@ -272,7 +281,10 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 title="Safe prowl"
                 tip="Low roofs, small gaps. Miss a jump and the run just ends."
                 lines={["Low roofs, easy gaps", "Keep your haul", "No lives at risk"]}
-                onPlay={() => start(false)}
+                onPlay={() => {
+                  setPending(false);
+                  setSetup("stats");
+                }}
                 disabled={blocked}
                 cta="Go safe"
                 tone="btn-lantern"
@@ -282,7 +294,10 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
                 title="Daring prowl"
                 tip="High roofs, narrow gaps. Every rooftop multiplies the haul. Cash out any time."
                 lines={["High roofs, rare loot", "Haul grows each roof", "Fall = lose a life"]}
-                onPlay={() => start(true)}
+                onPlay={() => {
+                  setPending(true);
+                  setSetup("stats");
+                }}
                 disabled={stray || resting || blocked}
                 cta="Go daring"
                 tone="btn-danger"
@@ -290,22 +305,62 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
               />
             </div>
           </section>
-          <aside className="card flex flex-col gap-4 p-1">
-            <div>
-              <h2 className="title-3d text-lg">{name}&apos;s skills</h2>
-              <p className="text-xs text-mist">Fixed for each cat. They change how its prowls play.</p>
+        )}
+
+        {/* 2. Who is doing it? */}
+        {setup === "stats" && (
+          <section className="card flex flex-col gap-4 p-5">
+            <div className="flex items-center gap-3">
+              <Art slot={beast ? catSlot(moodFor(beast)) : "cat-neutral"} alt="" size={64} className="shrink-0 rounded-xl" />
+              <div className="min-w-0">
+                <h2 className="title-3d text-xl">{name} is ready</h2>
+                <p className="text-xs text-mist">
+                  {daringPicked ? "A daring run: high roofs, and a fall costs a life." : "A safe run: nothing at risk."} These skills are fixed
+                  for each cat, and they change how the prowl plays.
+                </p>
+              </div>
             </div>
             <StatsRow stats={stats} />
+            <div className="flex items-center justify-between gap-2">
+              <button className="btn btn-ghost btn-sm" onClick={() => setSetup("mode")}>
+                <Art slot="ui-back" alt="" size={16} /> Back
+              </button>
+              <button className="btn btn-lantern" onClick={() => setSetup("how")}>
+                How to play <Art slot="ui-forward" alt="" size={20} />
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* 3. How do I play it? */}
+        {setup === "how" && (
+          <section className="card flex flex-col gap-4 p-5">
             <div>
-              <h2 className="title-3d text-lg">How to play</h2>
+              <h2 className="title-3d text-xl">How to play</h2>
+              <p className="text-xs text-mist">
+                {daringPicked
+                  ? "Every rooftop multiplies the haul. Cash out before you miss a jump."
+                  : "Miss a jump and the run just ends; whatever you picked up is yours."}
+              </p>
             </div>
             <Controls />
-          </aside>
-        </div>
+            <div className="flex items-center justify-between gap-2">
+              <button className="btn btn-ghost btn-sm" onClick={() => setSetup("stats")}>
+                <Art slot="ui-back" alt="" size={16} /> Back
+              </button>
+              <button
+                className={`btn ${daringPicked ? "btn-danger" : "btn-lantern"} px-8 py-3 text-xl`}
+                disabled={blocked || (daringPicked && (stray || resting))}
+                onClick={() => start(daringPicked)}
+              >
+                {daringPicked ? "Go daring" : "Go safe"}
+              </button>
+            </div>
+          </section>
+        )}
       </div>
     );
   }
-
 
   const haul = hud?.haul;
   const hold = (on: boolean) => {
@@ -420,7 +475,11 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
           through the art and read as a crop on the cat. */}
       {phase === "done" && outcome && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-night-950">
-          <Result outcome={outcome} beast={beast} settle={settle} stray={stray} onAgain={() => setPhase("choose")} />
+          <Result outcome={outcome} beast={beast} settle={settle} stray={stray} onAgain={() => {
+              setSetup("mode");
+              setPending(null);
+              setPhase("choose");
+            }} />
         </div>
       )}
     </div>,
@@ -477,26 +536,69 @@ function StatsRow({ stats }: { stats: Stats }) {
   );
 }
 
-const CONTROLS: { art: ArtSlot; name: string; how: string }[] = [
-  { art: "ctl-dash", name: "Dash", how: "tap / Space" },
-  { art: "ctl-whip", name: "Whip", how: "swipe right / →" },
-  { art: "ctl-bind", name: "Bind", how: "hold / ↓" },
-  { art: "ctl-cashout", name: "Cash out", how: "daring runs" },
+const CONTROLS: { art: ArtSlot; name: string; keys: string[]; touch: string; what: string }[] = [
+  { art: "ctl-dash", name: "Dash", keys: ["Space"], touch: "tap", what: "Jump the next gap" },
+  { art: "ctl-whip", name: "Whip", keys: ["→"], touch: "swipe right", what: "Snatch trinkets off ledges" },
+  { art: "ctl-bind", name: "Bind", keys: ["↓"], touch: "hold", what: "Catch a rat running past" },
+  { art: "ctl-cashout", name: "Cash out", keys: ["Enter"], touch: "tap the pouch", what: "Take the haul home (daring only)" },
 ];
+
+/** A keyboard key, drawn as a key. */
+function Key({ children }: { children: React.ReactNode }) {
+  return (
+    <kbd className="inline-flex min-w-[2rem] items-center justify-center rounded-md border-[3px] border-[#1a0b2e] bg-[#ffc93c] px-2 py-0.5 font-display text-sm font-bold text-[#2a1600] shadow-[0_2px_0_#1a0b2e]">
+      {children}
+    </kbd>
+  );
+}
+
+/** Where you are in the three steps before a run. */
+function Steps({ step }: { step: "mode" | "stats" | "how" }) {
+  const all = [
+    { key: "mode", label: "The run" },
+    { key: "stats", label: "Your cat" },
+    { key: "how", label: "How to play" },
+  ] as const;
+  const at = all.findIndex((s) => s.key === step);
+  return (
+    <ol className="flex items-center justify-center gap-2 text-xs" aria-label={`Step ${at + 1} of 3`}>
+      {all.map((s, i) => (
+        <li key={s.key} className="flex items-center gap-2">
+          <span
+            className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 font-display ${
+              i === at ? "bg-[#ffc93c] text-[#2a1600]" : i < at ? "text-moss" : "text-mist"
+            }`}
+            aria-current={i === at ? "step" : undefined}
+          >
+            <span className="font-bold">{i < at ? "✓" : i + 1}</span> {s.label}
+          </span>
+          {i < all.length - 1 && <span className="h-px w-4 bg-white/15" aria-hidden />}
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 function Controls() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <ul className="flex flex-col gap-2">
       {CONTROLS.map((c) => (
-        <div key={c.name} className="flex items-center gap-1.5 font-display text-sm" title={`${c.name}: ${c.how}`}>
-          <Art slot={c.art} alt="" size={34} className="shrink-0" />
-          <span className="leading-tight">
-            {c.name}
-            <span className="block text-[0.72rem] text-mist">{c.how}</span>
+        <li key={c.name} className="flex items-center gap-3 rounded-xl bg-white/5 p-2">
+          <Art slot={c.art} alt="" size={40} className="shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-sm font-semibold">{c.name}</p>
+            <p className="text-[0.72rem] leading-snug text-mist">{c.what}</p>
+          </div>
+          {/* Keys on a desktop, the gesture on a touch screen: whichever one the player has. */}
+          <span className="hidden shrink-0 items-center gap-1 md:inline-flex">
+            {c.keys.map((k) => (
+              <Key key={k}>{k}</Key>
+            ))}
           </span>
-        </div>
+          <span className="shrink-0 font-display text-[0.72rem] text-mist md:hidden">{c.touch}</span>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
