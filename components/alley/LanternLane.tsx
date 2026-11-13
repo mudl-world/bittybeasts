@@ -342,7 +342,7 @@ function ItemRow({
           <button className="transition hover:scale-110 disabled:opacity-40" aria-label="Fewer" onClick={() => setAmount((a) => Math.max(1, a - 1))} disabled={amount <= 1}>
             <Art slot="st-minus" alt="" size={34} />
           </button>
-          <span className="w-6 text-center tabular-nums">{amount}</span>
+          <span className="num w-6 text-center">{amount}</span>
           <button className="transition hover:scale-110" aria-label="More" onClick={() => setAmount((a) => Math.min(20, a + 1))}>
             <Art slot="st-plus" alt="" size={34} />
           </button>

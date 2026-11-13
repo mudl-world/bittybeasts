@@ -61,9 +61,9 @@ export default function Countdown({
     return (
       <span className={shell} title={`Night ${night.night}`}>
         <Art slot="st-clock" alt="" size={26} className={`shrink-0 ${ending ? "animate-pulse" : ""}`} />
-        <span className="font-display text-sm text-mist">Night {night.night}</span>
+        <span className="font-display text-sm text-lantern">Night <span className="num">{night.night}</span></span>
         {left > 0 ? (
-          <b className={`font-display text-lg tabular-nums ${ending ? "text-ember" : "text-paper"}`}>{duration(left)}</b>
+          <b className={`num text-lg ${ending ? "text-ember" : "text-paper"}`}>{duration(left)}</b>
         ) : (
           <b className="font-display text-sm text-lantern">needs closing</b>
         )}
@@ -75,7 +75,7 @@ export default function Countdown({
       <Art slot="st-clock" alt="" size={30} className={ending ? "animate-pulse" : ""} />
       {left > 0 ? (
         <span>
-          Night {night.night} · next night in <b className="font-display text-paper tabular-nums">{duration(left)}</b>
+          Night {night.night} · next night in <b className="num text-paper">{duration(left)}</b>
         </span>
       ) : (
         <span>Night {night.night} is over · waiting for someone to close it</span>

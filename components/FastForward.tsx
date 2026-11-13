@@ -182,7 +182,7 @@ export default function FastForward() {
                     {meta.trades.map((it) => (
                       <span key={it} className="flex items-center gap-1">
                         <span className="inline-block h-0.5 w-3 rounded" style={{ background: ITEM_COLOR[it] }} />
-                        {ITEM_LABEL[it]} <b className="tabular-nums text-paper">{cur.prices[id]?.[it] ?? 0}</b>
+                        {ITEM_LABEL[it]} <b className="num text-paper">{cur.prices[id]?.[it] ?? 0}</b>
                         {cur.buyPrices?.[id]?.[it] ? <span className="text-mist">/ {cur.buyPrices[id][it]}</span> : null}
                       </span>
                     ))}

@@ -296,7 +296,7 @@ export default function YarnPage() {
                     <tbody className="divide-y divide-white/5">
                       {shown.map((e, i) => (
                         <tr key={`${e.night}-${e.kind}-${page}-${i}`}>
-                          <td className="py-1.5 pr-2 tabular-nums">{e.night}</td>
+                          <td className="num py-1.5 pr-2">{e.night}</td>
                           <td className="py-1.5 pr-2">
                             <span
                               className={
@@ -310,11 +310,11 @@ export default function YarnPage() {
                               {LOG_LABEL[e.kind] ?? e.kind}
                             </span>
                           </td>
-                          <td className="py-1.5 pr-2 text-right tabular-nums">
+                          <td className="num py-1.5 pr-2 text-right">
                             {e.kind === "mint" ? "+" : e.kind === "burn" ? "−" : ""}
                             {yarn(e.amount)}
                           </td>
-                          <td className="py-1.5 pr-2 text-right tabular-nums">{e.accounts || ""}</td>
+                          <td className="num py-1.5 pr-2 text-right">{e.accounts || ""}</td>
                           <td className="py-1.5 text-xs text-mist">{formatDateTime(e.at_ms)}</td>
                         </tr>
                       ))}

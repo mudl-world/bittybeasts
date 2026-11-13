@@ -398,7 +398,7 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
           <div className="flex items-start justify-between gap-3">
             <div className="glass pointer-events-auto flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 sm:max-w-2xl">
               <div className="flex min-w-36 flex-1 items-center gap-2">
-                <span className="font-display text-lg tabular-nums text-paper">{Math.ceil(hud.left)}s</span>
+                <span className="num text-lg text-paper">{Math.ceil(hud.left)}s</span>
                 <Bar value={(hud.left / RUN_SECONDS) * 100} className="flex-1" />
               </div>
               <span className="font-display text-mist">

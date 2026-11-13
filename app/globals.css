@@ -60,6 +60,15 @@
   color-scheme: dark;
 }
 
+/* Pixelify Sans draws 5 mirrored (it reads as a backwards S) and puts a serif on 7 that makes it
+   look reversed — unreadable on a clock, a price or a stat. Silkscreen, already loaded for titles,
+   draws both correctly, so anything that is mostly numbers wears this. */
+.num {
+  font-family: var(--font-title-face), var(--font-display-face), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
 html,
 body {
   background: var(--color-night-950);

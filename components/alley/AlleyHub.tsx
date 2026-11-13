@@ -261,8 +261,15 @@ function Hub({ accountId }: { accountId: string }) {
             aria-pressed={clove}
             className={`rounded-2xl border-[3px] px-1 py-1.5 transition ${clove ? "border-[#1a0b2e] bg-[#ffc93c] shadow-[0_3px_0_#1a0b2e]" : "border-transparent hover:-translate-y-0.5 hover:bg-white/5"}`}
           >
-            <span className="flex h-11 w-11 items-start justify-center overflow-hidden sm:h-14 sm:w-14">
-              <Art slot="merchant-clove" alt="" style={{ width: "120%", maxWidth: "none" }} />
+            {/* Clove is full-body art. Show her head and shoulders whole — ears included — and let
+                the tail fall past the bottom of the tile rather than cropping the top of her head. */}
+            <span className="relative block h-11 w-11 overflow-hidden sm:h-14 sm:w-14">
+              <Art
+                slot="merchant-clove"
+                alt=""
+                className="absolute left-1/2 top-0 max-w-none -translate-x-1/2"
+                style={{ width: "100%" }}
+              />
             </span>
           </button>
         </div>
