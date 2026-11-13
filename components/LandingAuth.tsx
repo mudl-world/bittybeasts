@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/ui/session";
+import Art from "./Art";
 import DemoPicker from "./DemoPicker";
 import GoogleSignIn from "./GoogleSignIn";
 import { Spinner } from "./ui";
@@ -22,7 +23,7 @@ export default function LandingAuth() {
           Welcome back{session.email ? <>, <b className="text-paper">{session.email}</b></> : null}.
         </p>
         <Link href="/room" className="btn btn-lantern self-start">
-          To your cat →
+          To your cat <Art slot="ui-forward" alt="" size={22} />
         </Link>
       </div>
     );

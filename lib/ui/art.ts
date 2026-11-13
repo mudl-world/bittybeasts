@@ -51,6 +51,7 @@ export type ArtSlot =
   | "ui-signout"
   | "ui-close"
   | "ui-back"
+  | "ui-forward"
   | "ui-sound-on"
   | "ui-sound-off"
   | "ui-help"
@@ -211,6 +212,7 @@ export const ART: Record<ArtSlot, ArtSpec> = {
   "ui-signout": s("ui-signout.png", 256, 256, "UI · sign out", "Sign out"),
   "ui-close": s("ui-close.png", 256, 256, "UI · close", "Close a panel or the map"),
   "ui-back": s("ui-back.png", 256, 256, "UI · back", "Go back"),
+  "ui-forward": s("ui-forward.png", 256, 256, "UI · forward", "Go on / continue"),
   "ui-sound-on": s("ui-sound-on.png", 256, 256, "UI · sound on", "The cat speaks out loud"),
   "ui-sound-off": s("ui-sound-off.png", 256, 256, "UI · sound off", "The cat is quiet"),
   "ui-google": s("ui-google.svg", 48, 48, "UI · Google", "Google's G mark, for the sign-in button"),

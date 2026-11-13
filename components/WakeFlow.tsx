@@ -176,7 +176,7 @@ function ScanAction({ beast, me, tokenId, secret, reload }: { beast: Beast; me: 
           </button>
         </div>
         <Link href="/alley" className="btn btn-ghost btn-sm">
-          Into the alley →
+          Into the alley <Art slot="ui-forward" alt="" size={18} />
         </Link>
       </div>
     );
@@ -238,7 +238,7 @@ function Celebration({ beast, kind }: { beast: Beast; kind: "wake" | "boop" | "a
           {kind !== "wake" && <Marks beast={beast} />}
           <div className="mt-2 flex flex-wrap justify-center gap-2">
             <Link href="/alley" className="btn btn-lantern">
-              {kind === "wake" ? "First prowl →" : "Into the alley →"}
+              {kind === "wake" ? "First prowl" : "Into the alley"} <Art slot="ui-forward" alt="" size={22} />
             </Link>
             <Link href={`/beast/${beast.token_id}`} className="btn btn-ghost">
               Life story

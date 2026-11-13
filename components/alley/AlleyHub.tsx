@@ -248,7 +248,9 @@ function Hub({ accountId }: { accountId: string }) {
                 tab === t.key ? "border-[#1a0b2e] bg-[#ffc93c] shadow-[0_3px_0_#1a0b2e]" : "border-transparent hover:-translate-y-0.5 hover:bg-white/5"
               }`}
             >
-              <Art slot={t.icon} alt="" className="h-11 w-11 sm:h-14 sm:w-14" />
+              {/* The Diary scroll is drawn narrow and tall, so it fits its box by height and reads
+                  smaller than the wide icons beside it. Let it overflow a little to match them. */}
+              <Art slot={t.icon} alt="" className={`h-11 w-11 sm:h-14 sm:w-14 ${t.icon === "ui-ledger" ? "scale-125" : ""}`} />
             </button>
           ))}
           <span className="h-10 w-[3px] rounded bg-[#1a0b2e]" aria-hidden />

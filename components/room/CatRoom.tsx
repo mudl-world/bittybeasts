@@ -121,7 +121,7 @@ function Gate() {
                   </div>
                 </div>
                 <button className="btn btn-ghost w-full" onClick={() => setStep("demo")}>
-                  See the cats →
+                  See the cats <Art slot="ui-forward" alt="" size={22} />
                 </button>
               </div>
             </div>

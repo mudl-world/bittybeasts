@@ -1,4 +1,5 @@
 // Small shared presentational bits: spinner, notices, empty states.
+import Art from "./Art";
 
 export function Spinner({ className = "" }: { className?: string }) {
   return <span className={`spinner ${className}`} role="status" aria-label="Working" />;
@@ -169,10 +170,10 @@ export function Pager({
       </p>
       <div className="flex gap-2">
         <button className="btn btn-ghost btn-sm" onClick={() => onPage(page - 1)} disabled={page === 0}>
-          ← Newer
+          <Art slot="ui-back" alt="" size={16} /> Newer
         </button>
         <button className="btn btn-ghost btn-sm" onClick={() => onPage(page + 1)} disabled={page >= pages - 1}>
-          Older →
+          Older <Art slot="ui-forward" alt="" size={16} />
         </button>
       </div>
     </div>

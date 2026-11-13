@@ -415,12 +415,12 @@ export default function Prowl({ beast, onSettled, onNeedsKey }: Props) {
         </div>
       )}
 
-      {/* the result, over the scene */}
+      {/* The result: the whole screen, not a box in the middle of it. The backdrop is fully opaque
+          because the prowl canvas stays mounted underneath — at any transparency its rooftops show
+          through the art and read as a crop on the cat. */}
       {phase === "done" && outcome && (
-        <div className="fixed inset-0 flex items-center justify-center overflow-y-auto bg-night-950/70 p-4 backdrop-blur-sm">
-          <div className="glass w-full max-w-lg animate-rise p-5">
-            <Result outcome={outcome} beast={beast} settle={settle} stray={stray} onAgain={() => setPhase("choose")} />
-          </div>
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-night-950">
+          <Result outcome={outcome} beast={beast} settle={settle} stray={stray} onAgain={() => setPhase("choose")} />
         </div>
       )}
     </div>,
@@ -521,50 +521,63 @@ function Result({
   const keptHaul = !(reason === "fell" && daring);
   const awnings = Object.values(result.whips_on_awning).reduce((a, b) => a + b, 0);
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-3 text-center animate-rise">
-      <Art slot={reason === "fell" ? "result-fall" : reason === "cashout" ? "result-cashout" : "result-haul"} alt="" size={200} />
-      <h3 className="title-3d text-2xl">{title}</h3>
-      <p className="text-sm text-mist">
-        {result.rooftops} rooftops{daring ? ` · ×${multiplier({ daring, rooftops: result.rooftops }).toFixed(2)}` : ""} · {result.binds} rats bound
-        {awnings ? ` · ${awnings} bits of mischief` : ""}
-      </p>
-      {result.haul.length ? (
-        <div className={`flex flex-wrap justify-center gap-2 ${keptHaul ? "" : "opacity-40 line-through"}`}>
-          {result.haul.map(([k, n]) => (
-            <span key={k} className="flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-sm">
-              <Art slot={`item-${k}`} size={20} alt="" /> {n} {ITEM_LABEL[k] ?? k}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-mist">Paws empty this time.</p>
-      )}
-      {lostLife && (
-        <div className="flex flex-col items-center gap-2">
-          <ChainTail lives={livesAfter} legend={beast?.legend} flash={livesAfter} size="sm" />
-          <p className="text-sm text-[#ffb3a1]">
-            A link went dark{result.mark ? ` and left a mark: ${result.mark.replace("-", " ")}` : ""}. The haul tumbled into the alley
-            {" "}(unless a charm caught it).
-          </p>
-          {result.mark && <Art slot={markSlot(result.mark)} size={56} className="animate-pop" />}
-        </div>
-      )}
-      {stray ? (
-        <p className="text-xs text-mist">Strays keep nothing. Scan a Beast to keep your haul.</p>
-      ) : reason === "quit" ? (
-        <p className="text-xs text-mist">Stopped runs aren&apos;t recorded.</p>
-      ) : settle.state === "pending" ? (
-        <p className="flex items-center gap-2 text-sm text-mist">
-          <Spinner /> Writing it in the diary…
+    // Art on the left, what happened on the right: the screen is wide, so the cat gets room to be
+    // looked at instead of being squeezed into a dialog above a wall of text. Stacks on phones.
+    <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col items-center gap-6 px-4 py-10 animate-rise md:flex-row md:items-center md:gap-12 md:px-10">
+      <div className="flex w-full shrink-0 justify-center md:w-[42%]">
+        <Art
+          slot={reason === "fell" ? "result-fall" : reason === "cashout" ? "result-cashout" : "result-haul"}
+          alt=""
+          className="w-[min(72vw,340px)] drop-shadow-[0_12px_28px_rgba(0,0,0,0.6)] md:w-full md:max-w-[420px]"
+        />
+      </div>
+
+      <div className="flex w-full min-w-0 flex-col items-center gap-3 text-center md:items-start md:text-left">
+        <h3 className="title-3d text-2xl sm:text-3xl">{title}</h3>
+        <p className="text-sm text-mist">
+          {result.rooftops} rooftops{daring ? ` · ×${multiplier({ daring, rooftops: result.rooftops }).toFixed(2)}` : ""} · {result.binds} rats bound
+          {awnings ? ` · ${awnings} bits of mischief` : ""}
         </p>
-      ) : settle.state === "ok" ? (
-        <Notice kind="ok">Saved to {beast?.name ?? "your Beast"}&apos;s diary, and counted in tonight&apos;s check-in.</Notice>
-      ) : settle.state === "err" ? (
-        <Notice kind="err">{settle.text}</Notice>
-      ) : null}
-      <button className="btn btn-lantern" onClick={onAgain} disabled={settle.state === "pending"}>
-        Prowl again
-      </button>
+        {result.haul.length ? (
+          <div className={`flex flex-wrap justify-center gap-2 md:justify-start ${keptHaul ? "" : "opacity-40 line-through"}`}>
+            {result.haul.map(([k, n]) => (
+              <span key={k} className="flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-sm">
+                <Art slot={`item-${k}`} size={20} alt="" /> {n} {ITEM_LABEL[k] ?? k}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-mist">Paws empty this time.</p>
+        )}
+        {lostLife && (
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <ChainTail lives={livesAfter} legend={beast?.legend} flash={livesAfter} size="sm" />
+            <div className="flex items-center gap-3">
+              {result.mark && <Art slot={markSlot(result.mark)} size={48} className="shrink-0 animate-pop" />}
+              <p className="text-sm text-[#ffb3a1]">
+                A link went dark{result.mark ? ` and left a mark: ${result.mark.replace("-", " ")}` : ""}. The haul tumbled into the alley
+                {" "}(unless a charm caught it).
+              </p>
+            </div>
+          </div>
+        )}
+        {stray ? (
+          <p className="text-xs text-mist">Strays keep nothing. Scan a Beast to keep your haul.</p>
+        ) : reason === "quit" ? (
+          <p className="text-xs text-mist">Stopped runs aren&apos;t recorded.</p>
+        ) : settle.state === "pending" ? (
+          <p className="flex items-center gap-2 text-sm text-mist">
+            <Spinner /> Writing it in the diary…
+          </p>
+        ) : settle.state === "ok" ? (
+          <Notice kind="ok">Saved to {beast?.name ?? "your Beast"}&apos;s diary, and counted in tonight&apos;s check-in.</Notice>
+        ) : settle.state === "err" ? (
+          <Notice kind="err">{settle.text}</Notice>
+        ) : null}
+        <button className="btn btn-lantern mt-1 px-8 py-3 text-xl" onClick={onAgain} disabled={settle.state === "pending"}>
+          Prowl again
+        </button>
+      </div>
     </div>
   );
 }

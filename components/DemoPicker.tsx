@@ -120,7 +120,9 @@ function CatChoice({ row, busy, onPick }: { row: Row; busy: boolean; onPick: () 
         <p className="text-[11px] text-mist">Still asleep</p>
       )}
 
-      <span className="mt-0.5 font-display text-xs font-semibold text-lantern">{busy ? "Opening the door…" : "Play as this cat →"}</span>
+      <span className="mt-0.5 flex items-center gap-1 font-display text-xs font-semibold text-lantern">
+        {busy ? "Opening the door…" : <>Play as this cat <Art slot="ui-forward" alt="" size={14} /></>}
+      </span>
     </button>
   );
 }
