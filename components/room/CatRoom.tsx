@@ -28,7 +28,7 @@ import {
 } from "@/lib/chain";
 import { catSlot, type ArtSlot, type Expression } from "@/lib/ui/art";
 import { QUIET } from "@/lib/ui/errors";
-import { useSession } from "@/lib/ui/session";
+import { signOut, useSession } from "@/lib/ui/session";
 import { useAsync } from "@/lib/ui/useAsync";
 import Art from "../Art";
 import ChainTail from "../ChainTail";
@@ -494,6 +494,16 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
             title={voice ? "Mute your cat" : "Let your cat speak out loud"}
           >
             <Art slot={voice ? "ui-sound-on" : "ui-sound-off"} alt="" size={40} />
+          </button>
+          {/* Sign out lived only inside the map, two clicks deep. Switching accounts is a thing you
+              do often enough — demoing, or handing the phone over — that it belongs in the HUD. */}
+          <button
+            className="btn btn-ghost btn-sq h-14 w-14 p-1"
+            onClick={() => signOut()}
+            aria-label="Sign out"
+            title="Sign out"
+          >
+            <Art slot="ui-signout" alt="" size={40} />
           </button>
         </div>
       </header>

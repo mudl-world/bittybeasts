@@ -17,7 +17,7 @@ import {
 import { catSlot, type ArtSlot } from "@/lib/ui/art";
 import { QUIET } from "@/lib/ui/errors";
 import { ITEM_LABEL, yoctoToNear, yarn } from "@/lib/ui/format";
-import { useSession } from "@/lib/ui/session";
+import { signOut, useSession } from "@/lib/ui/session";
 import { useAsync } from "@/lib/ui/useAsync";
 import Art from "../Art";
 import DemoKeychain from "../DemoKeychain";
@@ -170,6 +170,16 @@ function Hub({ accountId }: { accountId: string }) {
           </span>
           <DemoKeychain tokenId={beast.token_id} />
           <WanderControls beast={beast} onChanged={refresh} />
+          {/* ui-home, not ui-signout: the wander button beside this already wears the door, and two
+              doors meaning different things is how you end up putting your cat up for resale. */}
+          <button
+            className="btn btn-ghost btn-sq h-14 w-14 shrink-0 p-1"
+            onClick={() => signOut()}
+            aria-label="Sign out"
+            title="Sign out"
+          >
+            <Art slot="ui-home" alt="" size={40} />
+          </button>
         </div>
       </header>
       {list.length > 1 && (
