@@ -166,7 +166,7 @@ function Hub({ accountId }: { accountId: string }) {
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="hidden xl:block">
-            <Countdown />
+            <Countdown framed />
           </span>
           <DemoKeychain tokenId={beast.token_id} />
           <WanderControls beast={beast} onChanged={refresh} />
