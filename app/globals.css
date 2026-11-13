@@ -275,18 +275,46 @@ h1,
   text-transform: uppercase;
   box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.35);
 }
+/* The portrait frame is a backdrop, not a crop: the character is drawn whole and breaks out of the
+   top of the tile so it reads as popping forward out of the dialog. The tile keeps its own size in
+   the flex row (the art is absolutely positioned, so it never pushes the text around). */
 .dialog-portrait {
+  position: relative;
   flex-shrink: 0;
+  align-self: flex-start;
   width: 5.5rem;
   height: 5.5rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  overflow: hidden;
   background: #2f2370;
   border: 3px solid var(--color-ink);
   border-radius: 6px;
   box-shadow: inset 0 0 0 2px rgb(255 201 60 / 0.4);
+}
+/* A soft floor under the character, so it looks lifted off the tile rather than pasted on. */
+.dialog-portrait::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 6%;
+  height: 10%;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.38);
+  filter: blur(3px);
+}
+.dialog-portrait img {
+  position: absolute;
+  left: 50%;
+  /* Hung from the top edge: the head and shoulders rise clear of the frame and the body runs down
+     behind it, so the character reads as leaning out of the tile towards the reader. */
+  top: -38%;
+  max-width: none;
+  transform: translateX(-50%);
+  /* Lifts the art off the tile and casts it over the dialog behind. */
+  filter: drop-shadow(0 5px 5px rgb(0 0 0 / 0.5));
+  pointer-events: none;
+  /* The head overflows the top but the body stops at the tile's floor. overflow:hidden on the frame
+     would clip both ends, so the image masks itself — the mask is set inline in Dialog.tsx, because
+     Tailwind v4 owns `mask-image` as a utility and drops a plain declaration made here. */
 }
 
 /* Progress bars from the kit: a wooden frame and a glossy fill. */

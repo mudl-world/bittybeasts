@@ -125,7 +125,7 @@ export default function CloveGuide({ beast, items, refreshKey = 0 }: { beast: Be
     <div className="flex flex-col gap-6">
       {away.length > 0 && (
         <section className="card flex gap-3 p-4">
-          <Art slot="ui-ledger" alt="" size={52} className="shrink-0 self-start" />
+          <Art slot="ui-ledger" alt="" size={52} className="shrink-0" style={{ alignSelf: "flex-start" }} />
           <div className="flex min-w-0 flex-col gap-1">
             <p className="title-3d text-sm">While you were away · {night! - since!} night{night! - since! === 1 ? "" : "s"}</p>
             <ul className="flex flex-col gap-0.5">

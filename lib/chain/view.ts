@@ -78,6 +78,8 @@ export const getYarnBalance = async (accountId: string) =>
 export const getYarnParams = () => view<YarnParams>(CONFIG.yarn, "params");
 export const getYarnState = () => view<YarnState>(CONFIG.yarn, "state");
 export const getYarnLog = (from = 0, limit = 200) => view<YarnLogEntry[]>(CONFIG.yarn, "log", { from, limit });
+/** How many entries the log holds. The contract pages from the oldest, so the UI needs this to reach the newest. */
+export const getYarnLogLen = () => view<number>(CONFIG.yarn, "log_len", {});
 export const getTuggedTonight = (beastAccount: string) =>
   view<boolean>(CONFIG.yarn, "tugged_tonight", { beast_account: beastAccount });
 

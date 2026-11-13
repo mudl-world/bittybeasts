@@ -15,6 +15,7 @@ export {
   getYarnParams,
   getYarnState,
   getYarnLog,
+  getYarnLogLen,
   getTuggedTonight,
   getCare,
   getThoughts,

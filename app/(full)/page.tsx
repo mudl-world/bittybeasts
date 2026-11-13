@@ -10,7 +10,10 @@ export default function Home() {
       <Cover ratio={1622 / 913}>
         <Art slot="hero-bg" alt="Lantern Lane at night, under the Great Yarn" className="h-full w-full object-cover" />
       </Cover>
-      <div className="pointer-events-none fixed inset-0 bg-gradient-to-t from-night-950 via-night-950/20 to-night-950/40" />
+      {/* Dark backdrop over the Lane so the logo, tagline and buttons stay legible:
+          a flat scrim plus a bottom-weighted gradient where the copy sits. */}
+      <div className="pointer-events-none fixed inset-0 bg-night-950/45" />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-t from-night-950 via-night-950/60 to-night-950/30" />
       <main className="fixed inset-0 flex flex-col items-center justify-end gap-5 px-4 pb-[8dvh] text-center">
         <Art slot="logo" alt="Bitty Beasts" className="pointer-events-none w-[min(88vw,720px)] drop-shadow-[0_10px_40px_rgba(0,0,0,0.7)]" />
         <p className="title-3d title-3d-light max-w-2xl text-xl sm:text-3xl">

@@ -2,6 +2,9 @@
 import type { ArtSlot } from "@/lib/ui/art";
 import Art from "./Art";
 
+/** Where the frame's bottom edge falls across the portrait: the art is sized so its floor sits here. */
+const MASK = "linear-gradient(to bottom, #000 0 62%, rgb(0 0 0 / 0) 65%)";
+
 export default function Dialog({
   name,
   portrait,
@@ -21,8 +24,23 @@ export default function Dialog({
     <div className={`dialog ${className}`}>
       <span className="dialog-name">{name}</span>
       <div className="dialog-portrait">
-        {/* zoomed to the face: portraits are full-body art, so show the head and shoulders */}
-        <Art slot={portrait} alt="" className="max-w-none" style={{ width: "150%", marginTop: "2%" }} />
+        {/* The whole character, standing on the frame and breaking out of the top of it.
+            Art sets its own width/aspect-ratio inline, so the pop-out sizing is passed here as
+            inline style (Art spreads `style` last) rather than left to .dialog-portrait img. */}
+        <Art
+          slot={portrait}
+          alt=""
+          className="dialog-pop"
+          style={{
+            width: "150%",
+            height: "auto",
+            aspectRatio: "auto",
+            // Cuts the art off at the tile's floor so only the head and shoulders escape the frame.
+            // Inline because Tailwind v4 claims `mask-image` and drops the same rule in globals.css.
+            WebkitMaskImage: MASK,
+            maskImage: MASK,
+          }}
+        />
       </div>
       <div className={`flex min-w-0 flex-1 flex-col gap-2 ${onClose ? "pr-8" : "pr-1"} text-[1.05rem] leading-snug sm:text-lg`}>
         {children}

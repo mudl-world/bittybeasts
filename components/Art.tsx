@@ -25,8 +25,12 @@ export default function Art({ slot, className, alt, size, style }: Props) {
       height={spec.h}
       draggable={false}
       className={className}
-      // Backgrounds sized by class (h-full / object-cover) keep their box; everything else keeps its aspect ratio.
-      style={fills(className) ? style : { width: size ?? undefined, height: "auto", aspectRatio: `${spec.w} / ${spec.h}`, ...style }}
+      // Backgrounds sized by class (h-full / object-cover) keep their box; everything else keeps its
+      // aspect ratio. alignSelf:"center" stops a flex/grid parent stretching the art on the cross axis
+      // (align-items defaults to stretch, which beats height:auto and distorts it). "center" rather than
+      // "start" so a column parent's items-center still centres the art horizontally; a parent that wants
+      // a different cross-axis position sets it per item (e.g. self-start) and that wins over this.
+      style={fills(className) ? style : { width: size ?? undefined, height: "auto", aspectRatio: `${spec.w} / ${spec.h}`, alignSelf: "center", flexShrink: 0, objectFit: "contain", ...style }}
     />
   );
 }

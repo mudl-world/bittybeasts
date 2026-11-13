@@ -94,7 +94,7 @@ export default function FastForward() {
     feedRef.current?.scrollTo({ top: 0 });
   }, [feed.length]);
 
-  if (failed) return <p className="text-mist">The simulator couldn&apos;t run in this browser.</p>;
+  if (failed) return <p className="text-mist">The dry run couldn&apos;t play in this browser.</p>;
   if (!snaps || !cur) return <p className="text-mist">Setting up the week…</p>;
 
   const marks = snaps

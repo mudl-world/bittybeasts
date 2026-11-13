@@ -9,11 +9,12 @@ export default function Page() {
       <header>
         <h1 className="text-4xl font-bold">A week on Lantern Lane, in a minute</h1>
         <p className="mt-1 inline-block rounded-full bg-lantern/15 px-3 py-1 text-xs font-semibold text-lantern">
-          Simulation — same pricing.ts and events.ts as the live alley
+          Dry run — the real pricing and event rules, played out on invented cats
         </p>
         <p className="mt-2 max-w-2xl text-sm text-mist">
-          Two dozen pretend Beasts prowl and trade for seven nights. Watch merchants change their prices, lanterns go out and get revived,
-          and $YARN get spun on good nights and burned on missed ones. Same seed, same week, every time.
+          Twenty-four made-up Beasts prowl and trade for seven nights, using the same pricing and event code the live alley runs on.
+          Watch merchants change their prices, lanterns go out and get revived, and $YARN get spun on good nights and burned on missed ones.
+          Nothing here touches the chain or your cat: it runs in your browser from a fixed seed, so it plays the same week every time.
         </p>
       </header>
       <FastForward />

@@ -44,18 +44,18 @@ export default function About() {
                 <Art slot="ui-close" alt="" size={38} />
               </button>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
               {POINTS.map((p) => (
-                <div key={p.title} className="flex gap-3">
-                  <Art slot={p.icon} size={52} alt="" className="shrink-0" />
-                  <div>
+                <div key={p.title} className="flex items-start gap-3">
+                  <Art slot={p.icon} size={52} alt="" className="shrink-0" style={{ alignSelf: "flex-start" }} />
+                  <div className="min-w-0">
                     <h3 className="font-display font-semibold text-lantern">{p.title}</h3>
-                    <p className="text-sm text-mist">{p.body}</p>
+                    <p className="mt-0.5 text-sm leading-snug text-mist">{p.body}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-5 flex flex-wrap gap-2 text-sm">
+            <div className="mt-6 flex flex-col items-stretch gap-2.5 border-t border-white/10 pt-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
               <Link href="/ledger" className="btn btn-ghost btn-sm">
                 Tonight&apos;s Ledger
               </Link>
