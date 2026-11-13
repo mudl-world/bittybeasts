@@ -1,0 +1,286 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 554" width="1000" height="554" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">$YARN total supply over 60 nights, three scenarios</title>
+<desc id="d">Steady community: ends at 52,188 YARN, 3 missed nights, 0 resets; Slowly fading: ends at 22,390 YARN, 35 missed nights, 3 resets; Weekend dips: ends at 40,639 YARN, 17 missed nights, 1 resets.</desc>
+<rect width="1000" height="554" fill="#fcfcfb"/>
+<text x="64" y="26" font-size="17" font-weight="600" fill="#0b0b0b">$YARN total supply, 60 nights</text>
+<text x="64" y="44" font-size="12" fill="#52514e">Good night: +10 YARN per tugger. Missed night: -1 alley life, 5% of treasury burned. 0 lives: streak resets.</text>
+<line x1="64" x2="760" y1="330" y2="330" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="334" font-size="11" fill="#6f6e69" text-anchor="end">0</text>
+<line x1="64" x2="760" y1="275.2" y2="275.2" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="279.2" font-size="11" fill="#6f6e69" text-anchor="end">11,000</text>
+<line x1="64" x2="760" y1="220.39999999999998" y2="220.39999999999998" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="224.39999999999998" font-size="11" fill="#6f6e69" text-anchor="end">22,000</text>
+<line x1="64" x2="760" y1="165.6" y2="165.6" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="169.6" font-size="11" fill="#6f6e69" text-anchor="end">33,000</text>
+<line x1="64" x2="760" y1="110.79999999999998" y2="110.79999999999998" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="114.79999999999998" font-size="11" fill="#6f6e69" text-anchor="end">44,000</text>
+<line x1="64" x2="760" y1="56" y2="56" stroke="#e7e6e2" stroke-width="1"/>
+<text x="56" y="60" font-size="11" fill="#6f6e69" text-anchor="end">55,000</text>
+<text x="64" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">1</text>
+<text x="170.16949152542372" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">10</text>
+<text x="288.13559322033893" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">20</text>
+<text x="406.10169491525426" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">30</text>
+<text x="524.0677966101696" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">40</text>
+<text x="642.0338983050848" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">50</text>
+<text x="760" y="348" font-size="11" fill="#6f6e69" text-anchor="middle">60</text>
+<text x="412" y="366" font-size="11" fill="#6f6e69" text-anchor="middle">Night</text>
+<path d="M64.0,237.6 L75.8,234.8 L87.6,231.7 L99.4,228.8 L111.2,225.9 L123.0,223.3 L134.8,220.6 L146.6,217.7 L158.4,214.9 L170.2,211.9 L182.0,209.0 L193.8,206.1 L205.6,203.0 L217.4,200.1 L229.2,197.0 L240.9,194.0 L252.7,190.7 L264.5,187.6 L276.3,184.6 L288.1,187.6 L299.9,184.5 L311.7,181.6 L323.5,178.6 L335.3,175.2 L347.1,172.1 L358.9,169.0 L370.7,165.5 L382.5,162.3 L394.3,159.2 L406.1,156.3 L417.9,153.1 L429.7,149.9 L441.5,153.2 L453.3,150.2 L465.1,146.9 L476.9,143.7 L488.7,140.6 L500.5,137.3 L512.3,134.2 L524.1,130.7 L535.9,127.1 L547.7,123.8 L559.5,120.6 L571.3,117.3 L583.1,114.0 L594.8,111.0 L606.6,114.5 L618.4,110.7 L630.2,107.2 L642.0,103.7 L653.8,100.2 L665.6,96.7 L677.4,93.6 L689.2,90.1 L701.0,86.4 L712.8,83.4 L724.6,80.3 L736.4,76.6 L748.2,73.1 L760.0,70.0" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="288.13559322033893" cy="187.60469090909092" r="3.5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Steady community, night 20: missed, 597 YARN burned</title></circle>
+<circle cx="441.49152542372883" cy="153.1554181818182" r="3.5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Steady community, night 33: missed, 645 YARN burned</title></circle>
+<circle cx="606.6440677966102" cy="114.49650909090909" r="3.5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Steady community, night 47: missed, 710 YARN burned</title></circle>
+<path d="M64.0,237.0 L75.8,233.1 L87.6,229.3 L99.4,225.4 L111.2,221.9 L123.0,218.6 L134.8,214.7 L146.6,211.3 L158.4,207.7 L170.2,204.2 L182.0,200.6 L193.8,197.2 L205.6,193.7 L217.4,190.0 L229.2,186.6 L240.9,183.1 L252.7,186.0 L264.5,182.7 L276.3,179.7 L288.1,176.4 L299.9,172.9 L311.7,169.6 L323.5,166.5 L335.3,163.4 L347.1,166.4 L358.9,163.4 L370.7,160.3 L382.5,163.3 L394.3,166.1 L406.1,168.8 L417.9,171.4 L429.7,173.9 L441.5,176.4 L453.3,178.7 L465.1,180.9 L476.9,183.1 L488.7,185.2 L500.5,187.2 L512.3,189.1 L524.1,191.0 L535.9,192.8 L547.7,194.5 L559.5,196.2 L571.3,197.9 L583.1,199.5 L594.8,201.0 L606.6,202.5 L618.4,203.9 L630.2,205.3 L642.0,206.7 L653.8,208.0 L665.6,209.3 L677.4,210.6 L689.2,211.8 L701.0,213.0 L712.8,214.1 L724.6,215.2 L736.4,216.3 L748.2,217.4 L760.0,218.5" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="252.74576271186442" cy="186.0404" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 17: missed, 583 YARN burned</title></circle>
+<circle cx="347.11864406779665" cy="166.422" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 25: missed, 602 YARN burned</title></circle>
+<circle cx="382.50847457627117" cy="163.28345454545453" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 28: missed, 590 YARN burned</title></circle>
+<circle cx="394.3050847457627" cy="166.10814545454545" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 29: missed, 567 YARN burned</title></circle>
+<circle cx="406.10169491525426" cy="168.82323636363637" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 30: missed, 545 YARN burned</title></circle>
+<circle cx="417.89830508474574" cy="171.43370909090908" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 31: missed, 524 YARN burned</title></circle>
+<circle cx="429.69491525423734" cy="173.94454545454545" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 32: missed, 504 YARN burned</title></circle>
+<circle cx="441.49152542372883" cy="176.36072727272727" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 33: missed, 485 YARN burned</title></circle>
+<circle cx="453.2881355932203" cy="178.68723636363637" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 34: missed, 467 YARN burned</title></circle>
+<circle cx="465.08474576271186" cy="180.92905454545453" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 35: missed, 450 YARN burned</title></circle>
+<circle cx="476.88135593220335" cy="183.09116363636363" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 36: missed, 434 YARN burned</title></circle>
+<circle cx="488.67796610169495" cy="185.17356363636364" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 37: missed, 418 YARN burned</title></circle>
+<circle cx="500.47457627118644" cy="187.18123636363637" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 38: missed, 403 YARN burned</title></circle>
+<circle cx="512.2711864406779" cy="189.11916363636362" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 39: missed, 389 YARN burned</title></circle>
+<circle cx="524.0677966101696" cy="190.99232727272727" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 40: missed, 376 YARN burned</title></circle>
+<circle cx="535.8644067796611" cy="192.80072727272727" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 41: missed, 363 YARN burned</title></circle>
+<circle cx="547.6610169491526" cy="194.54934545454546" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 42: missed, 351 YARN burned</title></circle>
+<circle cx="559.457627118644" cy="196.24316363636365" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 43: missed, 340 YARN burned</title></circle>
+<circle cx="571.2542372881355" cy="197.88218181818183" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 44: missed, 329 YARN burned</title></circle>
+<circle cx="583.0508474576271" cy="199.4664" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 45: missed, 318 YARN burned</title></circle>
+<circle cx="594.8474576271186" cy="201.0008" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 46: missed, 308 YARN burned</title></circle>
+<circle cx="606.6440677966102" cy="202.49036363636364" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 47: missed, 299 YARN burned</title></circle>
+<circle cx="618.4406779661017" cy="203.9350909090909" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 48: missed, 290 YARN burned</title></circle>
+<circle cx="630.2372881355933" cy="205.3349818181818" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 49: missed, 281 YARN burned</title></circle>
+<circle cx="642.0338983050848" cy="206.69501818181817" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 50: missed, 273 YARN burned</title></circle>
+<circle cx="653.8305084745763" cy="208.0201818181818" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 51: missed, 266 YARN burned</title></circle>
+<circle cx="665.6271186440678" cy="209.3054909090909" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 52: missed, 258 YARN burned</title></circle>
+<circle cx="677.4237288135594" cy="210.55592727272727" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 53: missed, 251 YARN burned</title></circle>
+<circle cx="689.2203389830509" cy="211.77149090909091" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 54: missed, 244 YARN burned</title></circle>
+<circle cx="701.0169491525423" cy="212.95716363636365" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 55: missed, 238 YARN burned</title></circle>
+<circle cx="712.8135593220338" cy="214.11294545454547" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 56: missed, 232 YARN burned</title></circle>
+<circle cx="724.6101694915254" cy="215.23883636363638" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 57: missed, 226 YARN burned</title></circle>
+<circle cx="736.4067796610169" cy="216.3398181818182" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 58: missed, 221 YARN burned</title></circle>
+<circle cx="748.2033898305085" cy="217.41090909090912" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 59: missed, 215 YARN burned</title></circle>
+<circle cx="760" cy="218.4570909090909" r="3.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Slowly fading, night 60: missed, 210 YARN burned</title></circle>
+<path d="M64.0,237.0 L75.8,233.2 L87.6,229.6 L99.4,225.9 L111.2,222.5 L123.0,225.2 L134.8,227.7 L146.6,224.2 L158.4,220.6 L170.2,217.0 L182.0,213.3 L193.8,209.8 L205.6,212.3 L217.4,214.8 L229.2,211.2 L240.9,207.6 L252.7,210.0 L264.5,206.3 L276.3,202.9 L288.1,205.2 L299.9,207.5 L311.7,204.0 L323.5,200.1 L335.3,196.4 L347.1,193.1 L358.9,189.5 L370.7,191.8 L382.5,194.0 L394.3,190.9 L406.1,187.2 L417.9,183.6 L429.7,180.1 L441.5,176.7 L453.3,178.9 L465.1,181.2 L476.9,177.3 L488.7,173.5 L500.5,170.2 L512.3,166.8 L524.1,163.4 L535.9,165.7 L547.7,167.9 L559.5,164.2 L571.3,160.5 L583.1,156.7 L594.8,153.0 L606.6,149.7 L618.4,152.0 L630.2,154.2 L642.0,151.1 L653.8,147.8 L665.6,144.0 L677.4,140.5 L689.2,137.3 L701.0,139.6 L712.8,141.9 L724.6,138.5 L736.4,135.0 L748.2,131.2 L760.0,127.5" fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="122.98305084745763" cy="225.16261818181817" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 6: missed, 526 YARN burned</title></circle>
+<circle cx="134.77966101694915" cy="227.67345454545455" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 7: missed, 504 YARN burned</title></circle>
+<circle cx="205.55932203389833" cy="212.31949090909092" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 13: missed, 508 YARN burned</title></circle>
+<circle cx="217.35593220338984" cy="214.7506181818182" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 14: missed, 488 YARN burned</title></circle>
+<circle cx="252.74576271186442" cy="209.9630909090909" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 17: missed, 479 YARN burned</title></circle>
+<circle cx="288.13559322033893" cy="205.23534545454544" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 20: missed, 471 YARN burned</title></circle>
+<circle cx="299.93220338983053" cy="207.49210909090908" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 21: missed, 453 YARN burned</title></circle>
+<circle cx="370.7118644067797" cy="191.8193090909091" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 27: missed, 464 YARN burned</title></circle>
+<circle cx="382.50847457627117" cy="194.0412" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 28: missed, 446 YARN burned</title></circle>
+<circle cx="453.2881355932203" cy="178.94629090909092" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 34: missed, 460 YARN burned</title></circle>
+<circle cx="465.08474576271186" cy="181.15323636363635" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 35: missed, 443 YARN burned</title></circle>
+<circle cx="535.8644067796611" cy="165.6597818181818" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 41: missed, 460 YARN burned</title></circle>
+<circle cx="547.6610169491526" cy="167.86672727272727" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 42: missed, 443 YARN burned</title></circle>
+<circle cx="618.4406779661017" cy="151.98469090909092" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 48: missed, 462 YARN burned</title></circle>
+<circle cx="630.2372881355933" cy="154.20658181818183" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 49: missed, 446 YARN burned</title></circle>
+<circle cx="701.0169491525423" cy="139.64472727272727" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 55: missed, 467 YARN burned</title></circle>
+<circle cx="712.8135593220338" cy="141.89152727272727" r="3.5" fill="#fcfcfb" stroke="#1baf7a" stroke-width="2"><title>Weekend dips, night 56: missed, 451 YARN burned</title></circle>
+<circle cx="770" cy="66.00887272727272" r="4" fill="#2a78d6"/>
+<text x="780" y="70.00887272727272" font-size="12" font-weight="600" fill="#0b0b0b">Steady community</text>
+<text x="780" y="84.00887272727272" font-size="11" fill="#52514e">52,188 YARN</text>
+<circle cx="770" cy="123.54389090909092" r="4" fill="#1baf7a"/>
+<text x="780" y="127.54389090909092" font-size="12" font-weight="600" fill="#0b0b0b">Weekend dips</text>
+<text x="780" y="141.54389090909092" font-size="11" fill="#52514e">40,639 YARN</text>
+<circle cx="770" cy="214.4570909090909" r="4" fill="#eb6834"/>
+<text x="780" y="218.4570909090909" font-size="12" font-weight="600" fill="#0b0b0b">Slowly fading</text>
+<text x="780" y="232.4570909090909" font-size="11" fill="#52514e">22,390 YARN</text>
+<text x="64" y="398" font-size="12" font-weight="600" fill="#0b0b0b">Night by night</text>
+<text x="162" y="398" font-size="11" fill="#52514e">filled = good night, hollow = miss (hollow dots on the lines above), R = out of lives, streak reset</text>
+<text x="56" y="425" font-size="11" fill="#52514e" text-anchor="end">steady</text>
+<rect x="65" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 1: 55/80 tugged (needed 48); streak 1, lives 9</title></rect>
+<rect x="76.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 2: 55/80 tugged (needed 48); streak 2, lives 9</title></rect>
+<rect x="88.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 3: 63/81 tugged (needed 49); streak 3, lives 9</title></rect>
+<rect x="99.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 4: 58/81 tugged (needed 49); streak 4, lives 9</title></rect>
+<rect x="111.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 5: 59/81 tugged (needed 49); streak 5, lives 9</title></rect>
+<rect x="123" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 6: 51/82 tugged (needed 50); streak 6, lives 9</title></rect>
+<rect x="134.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 7: 54/82 tugged (needed 50); streak 7, lives 9</title></rect>
+<rect x="146.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 8: 60/82 tugged (needed 50); streak 8, lives 9</title></rect>
+<rect x="157.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 9: 56/83 tugged (needed 50); streak 9, lives 9</title></rect>
+<rect x="169.39999999999998" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 10: 59/83 tugged (needed 50); streak 10, lives 9</title></rect>
+<rect x="181" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 11: 59/83 tugged (needed 50); streak 11, lives 9</title></rect>
+<rect x="192.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 12: 59/84 tugged (needed 51); streak 12, lives 9</title></rect>
+<rect x="204.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 13: 62/84 tugged (needed 51); streak 13, lives 9</title></rect>
+<rect x="215.79999999999998" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 14: 58/84 tugged (needed 51); streak 14, lives 9</title></rect>
+<rect x="227.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 15: 61/85 tugged (needed 51); streak 15, lives 9</title></rect>
+<rect x="239" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 16: 60/85 tugged (needed 51); streak 16, lives 9</title></rect>
+<rect x="250.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 17: 68/85 tugged (needed 51); streak 17, lives 9</title></rect>
+<rect x="262.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 18: 61/86 tugged (needed 52); streak 18, lives 9</title></rect>
+<rect x="273.79999999999995" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 19: 60/86 tugged (needed 52); streak 19, lives 9</title></rect>
+<rect x="285.9" y="414.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#2a78d6" stroke-width="1.5"><title>Steady community, night 20: 47/86 tugged (needed 52); streak 19, lives 8; 597 YARN burned</title></rect>
+<rect x="297" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 21: 62/87 tugged (needed 53); streak 20, lives 8</title></rect>
+<rect x="308.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 22: 59/87 tugged (needed 53); streak 21, lives 8</title></rect>
+<rect x="320.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 23: 59/87 tugged (needed 53); streak 22, lives 8</title></rect>
+<rect x="331.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 24: 68/88 tugged (needed 53); streak 23, lives 8</title></rect>
+<rect x="343.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 25: 64/88 tugged (needed 53); streak 24, lives 8</title></rect>
+<rect x="355" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 26: 61/88 tugged (needed 53); streak 25, lives 8</title></rect>
+<rect x="366.59999999999997" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 27: 70/89 tugged (needed 54); streak 26, lives 9</title></rect>
+<rect x="378.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 28: 64/89 tugged (needed 54); streak 27, lives 9</title></rect>
+<rect x="389.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 29: 63/89 tugged (needed 54); streak 28, lives 9</title></rect>
+<rect x="401.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 30: 58/90 tugged (needed 54); streak 29, lives 9</title></rect>
+<rect x="413" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 31: 65/90 tugged (needed 54); streak 30, lives 9</title></rect>
+<rect x="424.59999999999997" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 32: 63/90 tugged (needed 54); streak 31, lives 9</title></rect>
+<rect x="436.7" y="414.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#2a78d6" stroke-width="1.5"><title>Steady community, night 33: 53/91 tugged (needed 55); streak 31, lives 8; 645 YARN burned</title></rect>
+<rect x="447.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 34: 59/91 tugged (needed 55); streak 32, lives 8</title></rect>
+<rect x="459.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 35: 66/91 tugged (needed 55); streak 33, lives 8</title></rect>
+<rect x="471" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 36: 65/92 tugged (needed 56); streak 34, lives 8</title></rect>
+<rect x="482.59999999999997" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 37: 63/92 tugged (needed 56); streak 35, lives 8</title></rect>
+<rect x="494.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 38: 66/92 tugged (needed 56); streak 36, lives 8</title></rect>
+<rect x="505.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 39: 62/93 tugged (needed 56); streak 37, lives 8</title></rect>
+<rect x="517.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 40: 70/93 tugged (needed 56); streak 38, lives 9</title></rect>
+<rect x="529" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 41: 72/93 tugged (needed 56); streak 39, lives 9</title></rect>
+<rect x="540.5999999999999" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 42: 66/94 tugged (needed 57); streak 40, lives 9</title></rect>
+<rect x="552.2" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 43: 64/94 tugged (needed 57); streak 41, lives 9</title></rect>
+<rect x="563.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 44: 67/94 tugged (needed 57); streak 42, lives 9</title></rect>
+<rect x="575.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 45: 66/95 tugged (needed 57); streak 43, lives 9</title></rect>
+<rect x="587" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 46: 61/95 tugged (needed 57); streak 44, lives 9</title></rect>
+<rect x="599.1" y="414.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#2a78d6" stroke-width="1.5"><title>Steady community, night 47: 54/95 tugged (needed 57); streak 44, lives 8; 710 YARN burned</title></rect>
+<rect x="610.1999999999999" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 48: 76/96 tugged (needed 58); streak 45, lives 8</title></rect>
+<rect x="621.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 49: 70/96 tugged (needed 58); streak 46, lives 8</title></rect>
+<rect x="633.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 50: 70/96 tugged (needed 58); streak 47, lives 8</title></rect>
+<rect x="645" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 51: 70/97 tugged (needed 59); streak 48, lives 8</title></rect>
+<rect x="656.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 52: 72/97 tugged (needed 59); streak 49, lives 8</title></rect>
+<rect x="668.1999999999999" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 53: 61/97 tugged (needed 59); streak 50, lives 8</title></rect>
+<rect x="679.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 54: 70/98 tugged (needed 59); streak 51, lives 9</title></rect>
+<rect x="691.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 55: 74/98 tugged (needed 59); streak 52, lives 9</title></rect>
+<rect x="703" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 56: 61/98 tugged (needed 59); streak 53, lives 9</title></rect>
+<rect x="714.6" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 57: 62/99 tugged (needed 60); streak 54, lives 9</title></rect>
+<rect x="726.1999999999999" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 58: 74/99 tugged (needed 60); streak 55, lives 9</title></rect>
+<rect x="737.8" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 59: 71/99 tugged (needed 60); streak 56, lives 9</title></rect>
+<rect x="749.4" y="414" width="9.6" height="14" rx="2" fill="#2a78d6"><title>Steady community, night 60: 62/100 tugged (needed 60); streak 57, lives 9</title></rect>
+<text x="770" y="425" font-size="11" fill="#52514e">longest 57 · 3 misses · 0 resets</text>
+<text x="56" y="459" font-size="11" fill="#52514e" text-anchor="end">fading</text>
+<rect x="65" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 1: 67/100 tugged (needed 60); streak 1, lives 9</title></rect>
+<rect x="76.6" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 2: 79/100 tugged (needed 60); streak 2, lives 9</title></rect>
+<rect x="88.2" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 3: 76/100 tugged (needed 60); streak 3, lives 9</title></rect>
+<rect x="99.8" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 4: 77/100 tugged (needed 60); streak 4, lives 9</title></rect>
+<rect x="111.4" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 5: 71/100 tugged (needed 60); streak 5, lives 9</title></rect>
+<rect x="123" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 6: 67/100 tugged (needed 60); streak 6, lives 9</title></rect>
+<rect x="134.6" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 7: 77/100 tugged (needed 60); streak 7, lives 9</title></rect>
+<rect x="146.2" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 8: 69/100 tugged (needed 60); streak 8, lives 9</title></rect>
+<rect x="157.8" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 9: 72/100 tugged (needed 60); streak 9, lives 9</title></rect>
+<rect x="169.39999999999998" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 10: 71/100 tugged (needed 60); streak 10, lives 9</title></rect>
+<rect x="181" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 11: 72/100 tugged (needed 60); streak 11, lives 9</title></rect>
+<rect x="192.6" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 12: 68/100 tugged (needed 60); streak 12, lives 9</title></rect>
+<rect x="204.2" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 13: 69/100 tugged (needed 60); streak 13, lives 9</title></rect>
+<rect x="215.79999999999998" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 14: 76/100 tugged (needed 60); streak 14, lives 9</title></rect>
+<rect x="227.4" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 15: 68/100 tugged (needed 60); streak 15, lives 9</title></rect>
+<rect x="239" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 16: 69/100 tugged (needed 60); streak 16, lives 9</title></rect>
+<rect x="251.1" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 17: 53/100 tugged (needed 60); streak 16, lives 8; 583 YARN burned</title></rect>
+<rect x="262.2" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 18: 67/100 tugged (needed 60); streak 17, lives 8</title></rect>
+<rect x="273.79999999999995" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 19: 60/100 tugged (needed 60); streak 18, lives 8</title></rect>
+<rect x="285.4" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 20: 67/100 tugged (needed 60); streak 19, lives 8</title></rect>
+<rect x="297" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 21: 69/100 tugged (needed 60); streak 20, lives 8</title></rect>
+<rect x="308.6" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 22: 67/100 tugged (needed 60); streak 21, lives 8</title></rect>
+<rect x="320.2" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 23: 62/100 tugged (needed 60); streak 22, lives 8</title></rect>
+<rect x="331.8" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 24: 62/100 tugged (needed 60); streak 23, lives 9</title></rect>
+<rect x="343.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 25: 54/100 tugged (needed 60); streak 23, lives 8; 602 YARN burned</title></rect>
+<rect x="355" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 26: 60/100 tugged (needed 60); streak 24, lives 8</title></rect>
+<rect x="366.59999999999997" y="448" width="9.6" height="14" rx="2" fill="#eb6834"><title>Slowly fading, night 27: 62/100 tugged (needed 60); streak 25, lives 8</title></rect>
+<rect x="378.7" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 28: 54/100 tugged (needed 60); streak 25, lives 7; 590 YARN burned</title></rect>
+<rect x="390.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 29: 52/100 tugged (needed 60); streak 25, lives 6; 567 YARN burned</title></rect>
+<rect x="401.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 30: 54/100 tugged (needed 60); streak 25, lives 5; 545 YARN burned</title></rect>
+<rect x="413.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 31: 53/100 tugged (needed 60); streak 25, lives 4; 524 YARN burned</title></rect>
+<rect x="425.09999999999997" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 32: 55/100 tugged (needed 60); streak 25, lives 3; 504 YARN burned</title></rect>
+<rect x="436.7" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 33: 59/100 tugged (needed 60); streak 25, lives 2; 485 YARN burned</title></rect>
+<rect x="448.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 34: 50/100 tugged (needed 60); streak 25, lives 1; 467 YARN burned</title></rect>
+<rect x="459.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 35: 54/100 tugged (needed 60); streak 0, lives 9; 450 YARN burned</title></rect>
+<text x="464.2" y="445" font-size="9" font-weight="700" fill="#0b0b0b" text-anchor="middle">R</text>
+<rect x="471.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 36: 58/100 tugged (needed 60); streak 0, lives 8; 434 YARN burned</title></rect>
+<rect x="483.09999999999997" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 37: 58/100 tugged (needed 60); streak 0, lives 7; 418 YARN burned</title></rect>
+<rect x="494.7" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 38: 48/100 tugged (needed 60); streak 0, lives 6; 403 YARN burned</title></rect>
+<rect x="506.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 39: 47/100 tugged (needed 60); streak 0, lives 5; 389 YARN burned</title></rect>
+<rect x="517.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 40: 50/100 tugged (needed 60); streak 0, lives 4; 376 YARN burned</title></rect>
+<rect x="529.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 41: 46/100 tugged (needed 60); streak 0, lives 3; 363 YARN burned</title></rect>
+<rect x="541.0999999999999" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 42: 51/100 tugged (needed 60); streak 0, lives 2; 351 YARN burned</title></rect>
+<rect x="552.7" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 43: 54/100 tugged (needed 60); streak 0, lives 1; 340 YARN burned</title></rect>
+<rect x="564.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 44: 53/100 tugged (needed 60); streak 0, lives 9; 329 YARN burned</title></rect>
+<text x="568.5999999999999" y="445" font-size="9" font-weight="700" fill="#0b0b0b" text-anchor="middle">R</text>
+<rect x="575.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 45: 48/100 tugged (needed 60); streak 0, lives 8; 318 YARN burned</title></rect>
+<rect x="587.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 46: 57/100 tugged (needed 60); streak 0, lives 7; 308 YARN burned</title></rect>
+<rect x="599.1" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 47: 42/100 tugged (needed 60); streak 0, lives 6; 299 YARN burned</title></rect>
+<rect x="610.6999999999999" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 48: 55/100 tugged (needed 60); streak 0, lives 5; 290 YARN burned</title></rect>
+<rect x="622.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 49: 47/100 tugged (needed 60); streak 0, lives 4; 281 YARN burned</title></rect>
+<rect x="633.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 50: 37/100 tugged (needed 60); streak 0, lives 3; 273 YARN burned</title></rect>
+<rect x="645.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 51: 42/100 tugged (needed 60); streak 0, lives 2; 266 YARN burned</title></rect>
+<rect x="657.1" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 52: 44/100 tugged (needed 60); streak 0, lives 1; 258 YARN burned</title></rect>
+<rect x="668.6999999999999" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 53: 41/100 tugged (needed 60); streak 0, lives 9; 251 YARN burned</title></rect>
+<text x="672.9999999999999" y="445" font-size="9" font-weight="700" fill="#0b0b0b" text-anchor="middle">R</text>
+<rect x="680.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 54: 36/100 tugged (needed 60); streak 0, lives 8; 244 YARN burned</title></rect>
+<rect x="691.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 55: 38/100 tugged (needed 60); streak 0, lives 7; 238 YARN burned</title></rect>
+<rect x="703.5" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 56: 47/100 tugged (needed 60); streak 0, lives 6; 232 YARN burned</title></rect>
+<rect x="715.1" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 57: 42/100 tugged (needed 60); streak 0, lives 5; 226 YARN burned</title></rect>
+<rect x="726.6999999999999" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 58: 43/100 tugged (needed 60); streak 0, lives 4; 221 YARN burned</title></rect>
+<rect x="738.3" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 59: 43/100 tugged (needed 60); streak 0, lives 3; 215 YARN burned</title></rect>
+<rect x="749.9" y="448.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#eb6834" stroke-width="1.5"><title>Slowly fading, night 60: 34/100 tugged (needed 60); streak 0, lives 2; 210 YARN burned</title></rect>
+<text x="770" y="459" font-size="11" fill="#52514e">longest 25 · 35 misses · 3 resets</text>
+<text x="56" y="493" font-size="11" fill="#52514e" text-anchor="end">weekend</text>
+<rect x="65" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 1: 66/100 tugged (needed 60); streak 1, lives 9</title></rect>
+<rect x="76.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 2: 77/100 tugged (needed 60); streak 2, lives 9</title></rect>
+<rect x="88.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 3: 72/100 tugged (needed 60); streak 3, lives 9</title></rect>
+<rect x="99.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 4: 75/100 tugged (needed 60); streak 4, lives 9</title></rect>
+<rect x="111.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 5: 67/100 tugged (needed 60); streak 5, lives 9</title></rect>
+<rect x="123.5" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 6: 46/100 tugged (needed 60); streak 5, lives 8; 526 YARN burned</title></rect>
+<rect x="135.1" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 7: 52/100 tugged (needed 60); streak 5, lives 7; 504 YARN burned</title></rect>
+<rect x="146.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 8: 70/100 tugged (needed 60); streak 6, lives 7</title></rect>
+<rect x="157.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 9: 72/100 tugged (needed 60); streak 7, lives 7</title></rect>
+<rect x="169.39999999999998" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 10: 72/100 tugged (needed 60); streak 8, lives 7</title></rect>
+<rect x="181" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 11: 75/100 tugged (needed 60); streak 9, lives 7</title></rect>
+<rect x="192.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 12: 70/100 tugged (needed 60); streak 10, lives 7</title></rect>
+<rect x="204.7" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 13: 46/100 tugged (needed 60); streak 10, lives 6; 508 YARN burned</title></rect>
+<rect x="216.29999999999998" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 14: 54/100 tugged (needed 60); streak 10, lives 5; 488 YARN burned</title></rect>
+<rect x="227.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 15: 72/100 tugged (needed 60); streak 11, lives 5</title></rect>
+<rect x="239" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 16: 72/100 tugged (needed 60); streak 12, lives 5</title></rect>
+<rect x="251.1" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 17: 59/100 tugged (needed 60); streak 12, lives 4; 479 YARN burned</title></rect>
+<rect x="262.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 18: 73/100 tugged (needed 60); streak 13, lives 4</title></rect>
+<rect x="273.79999999999995" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 19: 69/100 tugged (needed 60); streak 14, lives 4</title></rect>
+<rect x="285.9" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 20: 54/100 tugged (needed 60); streak 14, lives 3; 471 YARN burned</title></rect>
+<rect x="297.5" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 21: 59/100 tugged (needed 60); streak 14, lives 2; 453 YARN burned</title></rect>
+<rect x="308.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 22: 71/100 tugged (needed 60); streak 15, lives 2</title></rect>
+<rect x="320.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 23: 78/100 tugged (needed 60); streak 16, lives 2</title></rect>
+<rect x="331.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 24: 73/100 tugged (needed 60); streak 17, lives 2</title></rect>
+<rect x="343.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 25: 66/100 tugged (needed 60); streak 18, lives 2</title></rect>
+<rect x="355" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 26: 73/100 tugged (needed 60); streak 19, lives 2</title></rect>
+<rect x="367.09999999999997" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 27: 53/100 tugged (needed 60); streak 19, lives 1; 464 YARN burned</title></rect>
+<rect x="378.7" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 28: 44/100 tugged (needed 60); streak 0, lives 9; 446 YARN burned</title></rect>
+<text x="383" y="479" font-size="9" font-weight="700" fill="#0b0b0b" text-anchor="middle">R</text>
+<rect x="389.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 29: 63/100 tugged (needed 60); streak 1, lives 9</title></rect>
+<rect x="401.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 30: 74/100 tugged (needed 60); streak 2, lives 9</title></rect>
+<rect x="413" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 31: 73/100 tugged (needed 60); streak 3, lives 9</title></rect>
+<rect x="424.59999999999997" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 32: 70/100 tugged (needed 60); streak 4, lives 9</title></rect>
+<rect x="436.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 33: 69/100 tugged (needed 60); streak 5, lives 9</title></rect>
+<rect x="448.3" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 34: 45/100 tugged (needed 60); streak 5, lives 8; 460 YARN burned</title></rect>
+<rect x="459.9" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 35: 51/100 tugged (needed 60); streak 5, lives 7; 443 YARN burned</title></rect>
+<rect x="471" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 36: 78/100 tugged (needed 60); streak 6, lives 7</title></rect>
+<rect x="482.59999999999997" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 37: 75/100 tugged (needed 60); streak 7, lives 7</title></rect>
+<rect x="494.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 38: 66/100 tugged (needed 60); streak 8, lives 7</title></rect>
+<rect x="505.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 39: 70/100 tugged (needed 60); streak 9, lives 7</title></rect>
+<rect x="517.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 40: 68/100 tugged (needed 60); streak 10, lives 7</title></rect>
+<rect x="529.5" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 41: 45/100 tugged (needed 60); streak 10, lives 6; 460 YARN burned</title></rect>
+<rect x="541.0999999999999" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 42: 50/100 tugged (needed 60); streak 10, lives 5; 443 YARN burned</title></rect>
+<rect x="552.2" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 43: 73/100 tugged (needed 60); streak 11, lives 5</title></rect>
+<rect x="563.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 44: 75/100 tugged (needed 60); streak 12, lives 5</title></rect>
+<rect x="575.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 45: 76/100 tugged (needed 60); streak 13, lives 5</title></rect>
+<rect x="587" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 46: 75/100 tugged (needed 60); streak 14, lives 5</title></rect>
+<rect x="598.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 47: 66/100 tugged (needed 60); streak 15, lives 5</title></rect>
+<rect x="610.6999999999999" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 48: 55/100 tugged (needed 60); streak 15, lives 4; 462 YARN burned</title></rect>
+<rect x="622.3" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 49: 52/100 tugged (needed 60); streak 15, lives 3; 446 YARN burned</title></rect>
+<rect x="633.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 50: 63/100 tugged (needed 60); streak 16, lives 3</title></rect>
+<rect x="645" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 51: 65/100 tugged (needed 60); streak 17, lives 3</title></rect>
+<rect x="656.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 52: 77/100 tugged (needed 60); streak 18, lives 3</title></rect>
+<rect x="668.1999999999999" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 53: 71/100 tugged (needed 60); streak 19, lives 3</title></rect>
+<rect x="679.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 54: 63/100 tugged (needed 60); streak 20, lives 3</title></rect>
+<rect x="691.9" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 55: 48/100 tugged (needed 60); streak 20, lives 2; 467 YARN burned</title></rect>
+<rect x="703.5" y="482.5" width="8.6" height="13" rx="2" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.5"><title>Weekend dips, night 56: 54/100 tugged (needed 60); streak 20, lives 1; 451 YARN burned</title></rect>
+<rect x="714.6" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 57: 69/100 tugged (needed 60); streak 21, lives 1</title></rect>
+<rect x="726.1999999999999" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 58: 69/100 tugged (needed 60); streak 22, lives 1</title></rect>
+<rect x="737.8" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 59: 77/100 tugged (needed 60); streak 23, lives 1</title></rect>
+<rect x="749.4" y="482" width="9.6" height="14" rx="2" fill="#1baf7a"><title>Weekend dips, night 60: 73/100 tugged (needed 60); streak 24, lives 1</title></rect>
+<text x="770" y="493" font-size="11" fill="#52514e">longest 24 · 17 misses · 1 reset</text>
+</svg>

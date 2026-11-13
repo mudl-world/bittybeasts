@@ -1,0 +1,52 @@
+{
+  "note": "TESTNET demo accounts. These private keys are public on purpose; the NEAR on them is free testnet NEAR.",
+  "network": "testnet",
+  "root": "bittybeasts-6f61b7.testnet",
+  "accounts": [
+    {
+      "accountId": "demo1.bittybeasts-6f61b7.testnet",
+      "secretKey": "ed25519:3VrD8Vqpghg51M9HNSjtE5jKKwDgSKH8D2WubUhe1aCtCjgdUchimv8Ai3X9Qj19uepJXwdg4cugqRWopwBzTpCL",
+      "beast": {
+        "tokenId": "demo-cat-1",
+        "name": "Mochi",
+        "controllerKey": "ed25519:4x9aniLwTHJMx3wtdHgJocvvQs3AKKXZKb97vbD5F2mtCTXgtzwVT5HFo4v5Z4aDAobjRsY1wBzpm5HjRg8T16Bf",
+        "keychainSecret": "93f0ea7f1389ade18082dde5e6e75fe1"
+      }
+    },
+    {
+      "accountId": "demo2.bittybeasts-6f61b7.testnet",
+      "secretKey": "ed25519:yf6T51WMUPS4tFTQph5dbHB2mJxBmsuaWdJGmybUyVuKTx8fSg4BkmT8qfU1ToVR4eH4irpwcqJnwundmqB9DWw",
+      "beast": {
+        "tokenId": "demo-cat-2",
+        "name": "Biscuit",
+        "controllerKey": "ed25519:yCSt6VVZrjtMYmaXdKieaCVEZPZ4h7WvBTxKDkcXquYy79RxUKq5WJSLdekDWLb556ZgAVQKeU7B137PcPZKqiy",
+        "keychainSecret": "3f410142a3958b2e68459b8e14736632"
+      }
+    },
+    {
+      "accountId": "demo3.bittybeasts-6f61b7.testnet",
+      "secretKey": "ed25519:2wuiHGxM9RULuDYNkfqNkFiigNmKjW8hk4eVoYAAWEprL2Wq2UDFuei9fESW6rsfz7BvE6oj6bVTEPHFamdUvA9p",
+      "beast": {
+        "tokenId": "demo-cat-3",
+        "name": "Noodle",
+        "controllerKey": "ed25519:zV5vcFGqWBPnakGx91CLpKy6ogKy9EGyqgw916cX9LsBHn2hugtxygH2L79dJpNU6EtiAE6txueMSm7ggN8gE1R",
+        "keychainSecret": "c95cc38c7c8f2c76d98fdcfa9bd465f2"
+      }
+    },
+    {
+      "accountId": "demo4.bittybeasts-6f61b7.testnet",
+      "secretKey": "ed25519:3E48xao3cSFbj9YVvYyg7L4hrsUuwa4sPp2ma4BCg1t5YCFi3SUAGb4UrP4WSeRrcdDinFD5AACbS5ZWz5Q2Nhko",
+      "beast": {
+        "tokenId": "demo-cat-4",
+        "name": "Pip",
+        "controllerKey": "ed25519:5FPBzjfnoivTNwwKS4wBC6QUDWjsBtRENPNsfemUkWrAbnJWYJQPhhZW9wFxVc2YBV1RMycT83uxoL8khMkKVa15",
+        "keychainSecret": "399bf848b9d79bc73c1fbb6ac5bbce65"
+      }
+    },
+    {
+      "accountId": "demo5.bittybeasts-6f61b7.testnet",
+      "secretKey": "ed25519:5bo3qtYRN31ifxhFK2c7PXtVaATmyFiyhKfPXvgHbMkXtVujUd2D82PZtRMo4zSSqVUPaNijS8iddjEYfCPdUdrd",
+      "beast": null
+    }
+  ]
+}

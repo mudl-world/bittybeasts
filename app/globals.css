@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+/* Night market identity: deep indigo sky, warm lantern amber, cream paper. */
+@theme {
+  --color-night-950: #06051a;
+  --color-night-900: #0c0a26;
+  --color-night-800: #15123d;
+  --color-night-700: #211d57;
+  --color-night-600: #332d7a;
+  --color-night-500: #4b44a3;
+  --color-mist: #a9a4e0;
+  --color-paper: #fff3dc;
+  --color-lantern: #ffb547;
+  --color-lantern-deep: #ff8a1f;
+  --color-ember: #ff5e3a;
+  --color-moss: #7ed6a0;
+  --color-legend: #ffd95e;
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  --font-title: var(--font-title-face), var(--font-display-face), system-ui, sans-serif;
+  --color-ink: #1a0b2e;
+  --color-gold: #ffc93c;
+  --font-body: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  /* Pixel type needs a little more size to stay readable. */
+  --text-xs: 0.82rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 0.95rem;
+  --text-sm--line-height: 1.4;
+  --text-base: 1.05rem;
+  --animate-flicker: flicker 3.2s ease-in-out infinite;
+  --animate-pop: pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  --animate-rise: rise 0.5s ease-out both;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgb(255 181 71 / 0.75)); }
+  45% { opacity: 0.86; filter: drop-shadow(0 0 3px rgb(255 181 71 / 0.5)); }
+  60% { opacity: 1; filter: drop-shadow(0 0 9px rgb(255 181 71 / 0.85)); }
+}
+@keyframes pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes rise {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* The cat room */
+@keyframes breathe { 0%, 100% { transform: translateY(0) scale(1, 1); } 50% { transform: translateY(-4px) scale(1.01, 0.99); } }
+@keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+@keyframes chomp { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.06, 0.94); } 60% { transform: scale(0.97, 1.03); } }
+@keyframes float-up { from { transform: translateY(0) scale(0.6); opacity: 1; } to { transform: translateY(-140px) scale(1.2); opacity: 0; } }
+.cat-breathe { animation: breathe 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.cat-wiggle { animation: wiggle 0.5s ease-in-out 2; transform-origin: 50% 90%; }
+.cat-chomp { animation: chomp 0.35s ease-in-out 4; transform-origin: 50% 100%; }
+.float-up { animation: float-up 1.4s ease-out forwards; }
+@keyframes ticker { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-night-950);
+  color: var(--color-paper);
+}
+
+body {
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgb(75 68 163 / 0.35), transparent 60%),
+    radial-gradient(900px 500px at 0% 0%, rgb(255 138 31 / 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-night-900) 0%, var(--color-night-950) 70%);
+  background-attachment: fixed;
+}
+
+@layer components {
+/* A faint starfield, pure CSS. */
+.stars::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 70% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 85% 60%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 10%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 20% 55%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 92% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 70%, #fff 50%, transparent 51%);
+  background-size: 420px 420px;
+}
+
+h2, h3, .font-display, .btn, .bubble, h1, .title-3d {
+  font-synthesis: none; /* single-weight chunky fonts: never fake bold */
+}
+h2, h3, .font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Pixel-RPG titles: Silkscreen caps in gold with a hard pixel drop shadow. */
+h1,
+.title-3d {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-shadow: 0.08em 0.08em 0 var(--color-ink), 0 0 18px rgb(255 201 60 / 0.25);
+}
+.title-3d-light { color: var(--color-paper); }
+
+/* Chunky game buttons: thick ink outline, hard drop shadow, press-down on click. */
+/* Buttons are the artist's UI kit (9-slice art): gold, purple and coral glossy pills; square purple
+   for icon buttons. Pressed state swaps to the kit's pressed art. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.6rem;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: var(--color-paper);
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.35);
+  background: none;
+  border-style: solid;
+  border-width: 14px 20px;
+  border-color: transparent;
+  border-image: var(--kit-btn-purple) var(--kit-btn-slice) fill / 14px 20px stretch;
+  transition: transform 0.08s ease, filter 0.15s ease, opacity 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 0.45));
+}
+.btn:hover:not(:disabled) { filter: drop-shadow(0 3px 0 rgb(0 0 0 / 0.45)) brightness(1.08); }
+.btn:active:not(:disabled) { transform: translateY(2px); border-image-source: var(--kit-btn-purple-down); filter: none; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-ghost { border-image-source: var(--kit-btn-purple); }
+.btn-lantern { border-image-source: var(--kit-btn-gold); color: var(--color-ink); text-shadow: 0 1px 0 rgb(255 255 255 / 0.4); }
+.btn-lantern:active:not(:disabled) { border-image-source: var(--kit-btn-gold-down); }
+.btn-danger { border-image-source: var(--kit-btn-coral); color: var(--color-ink); text-shadow: 0 1px 0 rgb(255 255 255 / 0.35); }
+.btn-danger:active:not(:disabled) { border-image-source: var(--kit-btn-coral-down); }
+.btn-sm { min-height: 2.1rem; padding: 0.1rem 0.4rem; font-size: 0.92rem; border-width: 11px 15px; border-image-width: 11px 15px; }
+/* Square icon buttons (the kit's purple tile). Gold stays a gold pill. */
+/* The frame art is drawn 16px wide but the box keeps a thin border, so the icon gets the whole tile. */
+.btn-sq { border-width: 4px; border-image: var(--kit-sq) var(--kit-sq-slice) fill / 16px stretch; padding: 0; }
+.btn-sq:active:not(:disabled) { border-image-source: var(--kit-sq-down); }
+.btn.btn-lantern.btn-sq { border-width: 4px; border-image: var(--kit-btn-gold) var(--kit-btn-slice) fill / 16px stretch; }
+.btn-sm:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--color-ink); }
+
+/* Every panel in the game: the same ink outline + hard shadow as the room's HUD. */
+.card {
+  position: relative;
+  background: none;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 20px;
+  border-image: var(--kit-panel) var(--kit-panel-slice) fill / 20px stretch;
+  filter: drop-shadow(0 12px 24px rgb(0 0 0 / 0.45));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.input {
+  width: 100%;
+  border-radius: 6px;
+  background: #0f0a2a;
+  border: 3px solid var(--color-ink);
+  box-shadow: inset 0 2px 0 rgb(0 0 0 / 0.35);
+  padding: 0.55rem 0.85rem;
+  color: var(--color-paper);
+  outline: none;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+.input:focus { border-color: var(--color-gold); }
+
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.feed-line { animation: ticker 0.35s ease-out both; }
+}
+
+/* Frosted panels floating over full-screen scenes. */
+.glass {
+  background: none;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 18px;
+  border-image: var(--kit-panel) var(--kit-panel-slice) fill / 18px stretch;
+  filter: drop-shadow(0 12px 24px rgb(0 0 0 / 0.45));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Comic speech bubble: thick ink outline, hard shadow, chunky readable type. */
+.bubble {
+  position: relative;
+  background: #fffaf0;
+  color: var(--color-ink);
+  border: 3px solid var(--color-ink);
+  border-radius: 8px;
+  box-shadow: 0 5px 0 var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  padding: 0.7rem 1.1rem;
+}
+.bubble::before,
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-style: solid;
+  border-color: transparent;
+}
+.bubble::before { top: 100%; border-width: 16px 13px 0; border-top-color: var(--color-ink); margin-top: 3px; }
+.bubble::after { top: 100%; border-width: 12px 9px 0; border-top-color: #fffaf0; margin-top: -1px; }
+
+/* RPG dialog box: name tab on top, portrait on the left, text, and a blinking "next" marker. */
+.dialog {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 0.35rem 0.35rem 0.35rem 0.25rem;
+  background: none;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 22px;
+  border-image: var(--kit-panel-lg) var(--kit-panel-lg-slice) fill / 22px stretch;
+  filter: drop-shadow(0 12px 24px rgb(0 0 0 / 0.5));
+  font-family: var(--font-display);
+  color: var(--color-paper);
+}
+.dialog-name {
+  position: absolute;
+  top: -2.4rem;
+  left: 0.6rem;
+  padding: 0.15rem 0.85rem;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  border: 3px solid var(--color-ink);
+  border-radius: 5px;
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.35);
+}
+.dialog-portrait {
+  flex-shrink: 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  background: #2f2370;
+  border: 3px solid var(--color-ink);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px rgb(255 201 60 / 0.4);
+}
+
+/* Progress bars from the kit: a wooden frame and a glossy fill. */
+.kit-bar {
+  position: relative;
+  height: 1.35rem;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 7px 12px;
+  border-image: var(--kit-bar) var(--kit-bar-slice) fill / 7px 12px stretch;
+}
+.kit-bar > span {
+  position: absolute;
+  inset: -4px auto -4px -9px;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 7px 12px;
+  border-image: var(--kit-bar-gold) var(--kit-bar-slice) fill / 7px 12px stretch;
+  min-width: 24px;
+  transition: width 0.7s ease;
+}
+.kit-bar.green > span { border-image-source: var(--kit-bar-green); }
+.kit-bar.ember > span { filter: hue-rotate(-30deg) saturate(1.4); }

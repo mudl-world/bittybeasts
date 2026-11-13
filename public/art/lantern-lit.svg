@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="96" viewBox="0 0 64 96">
+  <rect x="2" y="2" width="60" height="92" rx="5" fill="#5a3a12" stroke="#ffb547" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="50%" y="46.4" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="9" fill="#d8d4ff">lantern lit</text>
+  <text x="50%" y="58.4" text-anchor="middle" font-family="system-ui, sans-serif" font-size="8" fill="#8b86c9">64×96</text>
+</svg>
