@@ -65,18 +65,42 @@ export default function CatRoom() {
         <ColdOpen doneLabel="Into your room" onDone={() => setIntro(false)} />
       </Overlay>
     );
-  if (!session)
-    return (
-      <Overlay>
-        <h1 className="text-center text-3xl font-bold">Your cat is waiting</h1>
-        <EmailSignIn blurb="Sign in with your email and a kitten moves into your room. No passwords, nothing to install." />
-        <DemoPicker />
-      </Overlay>
-    );
+  if (!session) return <Gate />;
   return <Room accountId={session.accountId} />;
 }
 
-/** The empty attic behind a floating panel: for signing in, adopting, loading and the story. */
+/** The sign-in gate. The room is the backdrop, not a wallpaper behind a small box: the two ways in
+    sit side by side across the screen, so the art stays visible and nothing has to wrap. */
+function Gate() {
+  return (
+    <>
+      <Cover ratio={ROOM_RATIO}>
+        <Art slot="room-bg" alt="" className="h-full w-full object-cover" />
+      </Cover>
+      <div className="fixed inset-0 bg-night-950/60" />
+      <div className="fixed left-3 top-3 z-40 sm:left-5 sm:top-5">
+        <WorldMenu />
+      </div>
+      <div className="fixed inset-0 z-30 overflow-y-auto">
+        <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col justify-center gap-6 px-4 py-20 sm:px-8">
+          <header className="text-center">
+            <h1 className="title-3d title-3d-light text-4xl sm:text-5xl">Your cat is waiting</h1>
+            {/* The art behind this is busy, so the line carries its own shadow rather than relying on it. */}
+            <p className="mt-2 text-paper/90 [text-shadow:0_2px_6px_rgb(6_5_26/0.95)]">
+              Sign in to move a kitten into your room, or borrow one and look around first.
+            </p>
+          </header>
+          <div className="grid items-start gap-5 lg:grid-cols-2">
+            <EmailSignIn blurb="Sign in with your email and a kitten moves into your room. No passwords, nothing to install." />
+            <DemoPicker />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/** The empty attic behind a floating panel: for adopting, loading and the story. */
 function Overlay({ children, wide = false }: { children: React.ReactNode; wide?: boolean }) {
   return (
     <>

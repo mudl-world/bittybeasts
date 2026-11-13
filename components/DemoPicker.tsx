@@ -30,16 +30,17 @@ export default function DemoPicker({ compact = false }: { compact?: boolean }) {
         <p className="font-display text-lg font-semibold">Just looking? Borrow a demo cat</p>
         <p className="text-sm text-mist">Shared demo players. Anyone can pick one, so expect other paws on it.</p>
       </div>
-      <div className="flex flex-wrap gap-2">
+      {/* A grid, not a wrapping row: equal-width buttons line up instead of leaving a ragged last line. */}
+      <div className="grid gap-2 sm:grid-cols-2">
         {demos.map((d, i) =>
           d.beast ? (
-            <button key={d.accountId} className="btn btn-ghost" onClick={() => pick(d)}>
+            <button key={d.accountId} className="btn btn-ghost w-full" onClick={() => pick(d)}>
               Play as {d.beast.name}
             </button>
           ) : (
             <button
               key={d.accountId}
-              className="btn btn-ghost"
+              className="btn btn-ghost w-full"
               title="A player with no Beast yet: use it to adopt a wandering Beast"
               onClick={() => pick(d)}
             >
