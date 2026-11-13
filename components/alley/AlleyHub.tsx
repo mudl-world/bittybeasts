@@ -232,7 +232,7 @@ function Hub({ accountId }: { accountId: string }) {
       {/* bottom dock: back to the room, the four places, and Sister Clove */}
       <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-center p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:p-4">
         <div role="tablist" className="flex items-center gap-1 drop-shadow-[0_6px_10px_rgba(0,0,0,0.7)] sm:gap-3">
-          <Link href="/room" className="flex items-center rounded-lg border-[3px] border-transparent p-1 transition hover:-translate-y-0.5 hover:bg-white/5" aria-label="Back to your room" title="Back to your room">
+          <Link href="/room" className="flex items-center rounded-2xl border-[3px] border-transparent px-1 py-1.5 transition hover:-translate-y-0.5 hover:bg-white/5" aria-label="Back to your room" title="Back to your room">
             <Art slot="ui-back" alt="" className="h-11 w-11 sm:h-14 sm:w-14" />
           </Link>
           <span className="h-10 w-[3px] rounded bg-[#1a0b2e]" aria-hidden />
@@ -244,7 +244,7 @@ function Hub({ accountId }: { accountId: string }) {
               aria-label={t.label}
               title={t.label}
               onClick={() => setTab(t.key)}
-              className={`rounded-lg border-[3px] p-1 transition ${
+              className={`rounded-2xl border-[3px] px-1 py-1.5 transition ${
                 tab === t.key ? "border-[#1a0b2e] bg-[#ffc93c] shadow-[0_3px_0_#1a0b2e]" : "border-transparent hover:-translate-y-0.5 hover:bg-white/5"
               }`}
             >
@@ -257,7 +257,7 @@ function Hub({ accountId }: { accountId: string }) {
             aria-label="Ask Sister Clove"
             title="Ask Sister Clove"
             aria-pressed={clove}
-            className={`rounded-lg border-[3px] p-1 transition ${clove ? "border-[#1a0b2e] bg-[#ffc93c] shadow-[0_3px_0_#1a0b2e]" : "border-transparent hover:-translate-y-0.5 hover:bg-white/5"}`}
+            className={`rounded-2xl border-[3px] px-1 py-1.5 transition ${clove ? "border-[#1a0b2e] bg-[#ffc93c] shadow-[0_3px_0_#1a0b2e]" : "border-transparent hover:-translate-y-0.5 hover:bg-white/5"}`}
           >
             <span className="flex h-11 w-11 items-start justify-center overflow-hidden sm:h-14 sm:w-14">
               <Art slot="merchant-clove" alt="" style={{ width: "120%", maxWidth: "none" }} />
