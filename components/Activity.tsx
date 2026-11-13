@@ -25,8 +25,8 @@ type Tx = {
 const METHODS: Record<string, [string, ArtSlot]> = {
   settle_run: ["Prowl settled", "ui-missions"],
   close_night: ["Market night closed", "st-clock"],
-  settle: ["Great Yarn settled (mint or burn)", "st-mint"],
-  tug: ["Tug on the Great Yarn", "item-yarn"],
+  settle: ["Night settled up (YARN created or destroyed)", "st-mint"],
+  tug: ["Checked in for the night", "item-yarn"],
   register_beast: ["New cat made", "cat-happy"],
   wake: ["Cat woke up", "cat-surprised"],
   bind_key: ["Device bound to a cat", "ui-cuddle"],

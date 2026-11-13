@@ -13,7 +13,7 @@ const PLACES: { href: string; label: string; blurb: string; icon: ArtSlot; match
   { href: "/alley?tab=prowl", label: "Missions", blurb: "Prowl the rooftops at night", icon: "ui-missions", match: (p, t) => p.startsWith("/alley") && t !== "lane" },
   { href: "/alley?tab=lane", label: "Lantern Lane", blurb: "Trade with the merchant cats", icon: "ui-lane", match: (p, t) => p.startsWith("/alley") && t === "lane" },
   { href: "/ledger", label: "The Ledger", blurb: "Tonight's news and the Ages", icon: "ui-ledger", match: (p) => p.startsWith("/ledger") },
-  { href: "/yarn", label: "The Great Yarn", blurb: "$YARN and the alley's nine lives", icon: "item-yarn", match: (p) => p.startsWith("/yarn") },
+  { href: "/yarn", label: "$YARN", blurb: "The alley's coin, and its nine lives", icon: "item-yarn", match: (p) => p.startsWith("/yarn") },
   { href: "/activity", label: "On chain", blurb: "Every transaction, live from NEAR", icon: "st-receipt", match: (p) => p.startsWith("/activity") },
   { href: "/fast-forward", label: "Fast-forward", blurb: "A week on the Lane in a minute", icon: "item-lantern", match: (p) => p.startsWith("/fast-forward") },
   { href: "/back-alley", label: "Back Alley", blurb: "For cat owners only", icon: "item-moonstone", match: (p) => p.startsWith("/back-alley") },

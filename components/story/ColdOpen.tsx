@@ -55,7 +55,7 @@ export default function ColdOpen({ onDone, doneLabel = "Into the alley" }: { onD
             <Dialog name={CLOVE.name} portrait="merchant-clove" className="w-full max-w-2xl animate-rise">
               <p>{CLOVE.intro}</p>
               <p className="text-paper/80">
-                Every night the merchants post what they need, the Great Yarn wants its tugs, and the Ledger writes down whatever happened. I&apos;ll point you
+                Every night the merchants post what they need, enough of us have to show up to keep the lanterns lit, and the Ledger writes down whatever happened. I&apos;ll point you
                 at whatever matters most right now.
               </p>
             </Dialog>

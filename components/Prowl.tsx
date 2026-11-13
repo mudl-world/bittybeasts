@@ -558,7 +558,7 @@ function Result({
           <Spinner /> Writing it in the diary…
         </p>
       ) : settle.state === "ok" ? (
-        <Notice kind="ok">Saved to {beast?.name ?? "your Beast"}&apos;s diary. The alley felt that tug.</Notice>
+        <Notice kind="ok">Saved to {beast?.name ?? "your Beast"}&apos;s diary, and counted in tonight&apos;s check-in.</Notice>
       ) : settle.state === "err" ? (
         <Notice kind="err">{settle.text}</Notice>
       ) : null}

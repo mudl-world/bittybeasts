@@ -144,13 +144,13 @@ export function writeLedger(input: {
     if (lost) {
       lead({
         tone: "bad",
-        text: `Missed night. Too few cats tugged the Great Yarn. The alley lost a life${burn ? ` and ${n(burn.amount).toLocaleString()} YARN unravelled from the treasury` : ""}.`,
+        text: `Quiet night. Too few cats came out to play. The alley lost a life${burn ? ` and ${n(burn.amount).toLocaleString()} YARN was destroyed` : ""}.`,
       });
     }
     if (mint) {
       lead({
         tone: "good",
-        text: `Good night on the Lane. ${mint.accounts} cat${mint.accounts === 1 ? "" : "s"} tugged the Great Yarn and ${n(mint.amount).toLocaleString()} fresh YARN was spun.`,
+        text: `Good night on the Lane. ${mint.accounts} cat${mint.accounts === 1 ? "" : "s"} came out to play, and ${n(mint.amount).toLocaleString()} new YARN was shared between them.`,
       });
     }
     if (back) lead({ tone: "good", text: "Seven good nights in a row: the alley won a life back." });

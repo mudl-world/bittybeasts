@@ -37,8 +37,8 @@ export function cloveAdvice(input: {
     out.push({
       text:
         input.alleyLives <= 3
-          ? `The alley's down to ${input.alleyLives} li${input.alleyLives === 1 ? "fe" : "ves"} and the Great Yarn still needs ${input.tugsNeeded} tug${input.tugsNeeded === 1 ? "" : "s"}. One prowl from ${name} is one tug. Please.`
-          : `The Great Yarn needs ${input.tugsNeeded} more tug${input.tugsNeeded === 1 ? "" : "s"} tonight. Any prowl from ${name} counts, and everyone who tugs gets fresh YARN at dawn.`,
+          ? `The alley's down to ${input.alleyLives} li${input.alleyLives === 1 ? "fe" : "ves"}, and ${input.tugsNeeded} more cat${input.tugsNeeded === 1 ? " still needs" : "s still need"} to play tonight. One prowl from ${name} counts. Please.`
+          : `${input.tugsNeeded} more cat${input.tugsNeeded === 1 ? " needs" : "s need"} to play tonight. Any prowl from ${name} counts, and every cat that played gets fresh YARN at dawn.`,
       href: "/alley?tab=prowl",
       cta: "Prowl",
     });

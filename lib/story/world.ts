@@ -12,7 +12,7 @@ export const WORLD = {
   setting:
     "When the city goes to sleep, its back alleys wake up. Strung over the rooftops is the Great Yarn: one enormous ball of thread, and every lantern on Lantern Lane hangs from it. As long as the lanterns burn, the Lane is open. Merchants trade, cats prowl the roofs for anything shiny, and the Gnawers keep to the shadows.",
   greatYarn:
-    "The Great Yarn stays alive only if the alley's cats tug it every night. When enough of them show up, fresh thread spins out to everyone who tugged: that thread is $YARN, the money of the Lane. When too few come, a lantern goes dark and some of the yarn unravels.",
+    "The Great Yarn hangs over the rooftops, and every lantern on the Lane hangs from it. It stays alive only if the cats keep playing: each night a cat that goes prowling, or gets its daily cuddle, counts as showing up. When enough cats show up, new $YARN — the money of the Lane — is made and split between all of them. When too few do, a lantern goes dark and some of the alley's savings are destroyed.",
   beasts:
     "Some nights a spark from the Lane's old furnace lands on a stray, and it wakes up with a mind of its own. It moves into a little room above the Lane with a chain for a tail: nine links, nine lives. It thinks, talks, gets hungry and sulks, and it pays its own way in YARN.",
   nineLives:

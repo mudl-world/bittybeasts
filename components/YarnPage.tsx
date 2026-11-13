@@ -34,8 +34,8 @@ const LOG_LABEL: Record<YarnLogEntry["kind"], string> = {
 type TabKey = "tonight" | "about" | "chart" | "log";
 
 const TABS: { key: TabKey; label: string; hint: string }[] = [
-  { key: "tonight", label: "Tonight", hint: "The streak, the lives and tonight's tugs" },
-  { key: "about", label: "What $YARN is", hint: "The thread, and the rules fixed at launch" },
+  { key: "tonight", label: "Tonight", hint: "The streak, the lives and tonight's check-ins" },
+  { key: "about", label: "What $YARN is", hint: "How it works, and the rules fixed at launch" },
   { key: "chart", label: "Supply", hint: "Modelled supply over 60 nights" },
   { key: "log", label: "Mints & burns", hint: "Every settled night" },
 ];
@@ -88,8 +88,8 @@ export default function YarnPage() {
             $YARN <span className="text-lantern">· the alley&apos;s nine lives</span>
           </h1>
           <p className="max-w-2xl text-paper/90">
-            Over the rooftops hangs the Great Yarn, and every lantern on Lantern Lane hangs from it. $YARN is its thread. Tug it enough
-            each night and it spins; neglect it and it unravels.
+            $YARN is the coin of Lantern Lane. Every night, cats that play check in. If enough of them do, new $YARN is
+            shared out to all of them; if too few turn up, the alley loses a life and some of its savings are destroyed.
           </p>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             <ExplorerLink href={`${CONFIG.explorer}/address/${CONFIG.yarn}`}>{CONFIG.yarn} on NEAR</ExplorerLink>
@@ -137,7 +137,7 @@ export default function YarnPage() {
               <div>
                 <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2 text-sm">
                   <span>
-                    Tonight&apos;s tugs <b className="font-display text-paper">{st.tugs_tonight}</b> / {st.target_tonight}
+                    Checked in tonight <b className="font-display text-paper">{st.tugs_tonight}</b> / {st.target_tonight} needed
                   </span>
                   <Countdown />
                 </div>
@@ -145,7 +145,7 @@ export default function YarnPage() {
                 <p className="mt-1 text-xs text-mist">
                   {pct >= 1
                     ? "Target hit: tonight will mint."
-                    : `${Math.max(0, st.target_tonight - st.tugs_tonight)} more Beasts need to prowl or boop tonight.`}{" "}
+                    : `${Math.max(0, st.target_tonight - st.tugs_tonight)} more cats need to play tonight (a prowl or a cuddle counts).`}{" "}
                   {st.registered_beasts} Beasts registered.
                 </p>
               </div>
@@ -192,12 +192,13 @@ export default function YarnPage() {
           <section className="card flex flex-col gap-3 p-5">
             <h3 className="text-lg font-semibold">What $YARN is</h3>
             <p className="text-sm text-mist">
-              A NEP-141 token on NEAR with no admin. Every finished prowl and every daily boop gives the alley a tug. If enough Beasts tug
-              in a night, fresh YARN is spun for everyone who did. Miss a night and the alley loses a life and a little of the treasury
-              burns. Lose all nine and the streak starts over.
+              A NEP-141 token on NEAR with no admin. A cat checks in for the night by doing something: finishing a prowl, or a
+              daily cuddle. Each cat counts once a night. If enough cats check in, new YARN is created and split between every cat
+              that did. If too few do, the alley loses one of its nine lives and 5% of its savings are destroyed. Lose all nine
+              lives and the count starts again from zero.
             </p>
             <p className="text-sm text-mist">
-              When the alley&apos;s ninth life goes out, the Long Dark ends the Age.{" "}
+              When the last of the nine lives goes out, that era ends and a new one begins.{" "}
               <Link href="/ledger" className="text-lantern underline decoration-dotted underline-offset-4">
                 The Ages so far →
               </Link>
@@ -207,14 +208,14 @@ export default function YarnPage() {
               <div className="mt-1 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
                 <Donut
                   value={params.data.target_bps / 100}
-                  label="Target"
-                  caption="of registered Beasts must tug"
+                  label="Must check in"
+                  caption="of the cats signed up"
                   tone="gold"
                 />
                 <Donut
                   value={params.data.burn_bps / 100}
-                  label="Burn on a miss"
-                  caption="of the treasury"
+                  label="Destroyed on a bad night"
+                  caption="of the alley's savings"
                   tone="ember"
                 />
               </div>
@@ -229,13 +230,13 @@ export default function YarnPage() {
             {params.data ? (
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-white/5">
-                  <Row k="Target" v={`${params.data.target_bps / 100}% of registered Beasts tug in a night`} />
-                  <Row k="Mint per tug" v={`${yarn(params.data.mint_per_tug)} YARN to each tugger on a good night`} />
-                  <Row k="Burn on a miss" v={`${params.data.burn_bps / 100}% of the treasury`} />
-                  <Row k="Alley lives" v={`${params.data.max_lives}`} />
-                  <Row k="Win a life back" v={`every ${params.data.regen_every} good nights in a row`} />
+                  <Row k="How many must check in" v={`${params.data.target_bps / 100}% of the cats signed up`} />
+                  <Row k="Paid per cat" v={`${yarn(params.data.mint_per_tug)} YARN to each cat that checked in, on a good night`} />
+                  <Row k="Destroyed on a bad night" v={`${params.data.burn_bps / 100}% of the alley's savings`} />
+                  <Row k="Lives the alley has" v={`${params.data.max_lives}`} />
+                  <Row k="Wins a life back" v={`after ${params.data.regen_every} good nights in a row`} />
                   <Row k="Night length" v={duration(params.data.night_ms)} />
-                  <Row k="Only caller of tug()" v={params.data.alley} />
+                  <Row k="Only account that can record a check-in" v={params.data.alley} />
                 </tbody>
               </table>
             ) : params.error ? (

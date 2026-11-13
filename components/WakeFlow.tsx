@@ -150,7 +150,7 @@ function ScanAction({ beast, me, tokenId, secret, reload }: { beast: Beast; me: 
       <div className="card mx-auto flex max-w-xl flex-col items-center gap-4 p-6 text-center">
         <Art slot="cat-curious" size={200} className="rounded-3xl" />
         <h1 className="text-3xl font-bold">Boop {beast.name}?</h1>
-        <p className="text-sm text-mist">One boop a day lights a link back on the tail, and gives the whole alley a tug.</p>
+        <p className="text-sm text-mist">One boop a day wins a life back, and checks your cat in for the night.</p>
         <ChainTail lives={beast.lives} legend={beast.legend} size="lg" />
         <button
           className="btn btn-lantern px-10 py-4 text-xl"
@@ -234,7 +234,7 @@ function Celebration({ beast, kind }: { beast: Beast; kind: "wake" | "boop" | "a
           <p className="text-mist">
             <b className="text-paper">{beast.name}</b> · made by {beast.maker} · born {formatDate(beast.born_ms)}
           </p>
-          {kind === "boop" && endLives === startLives && <p className="text-sm text-mist">The alley still felt that tug. Come back tomorrow night.</p>}
+          {kind === "boop" && endLives === startLives && <p className="text-sm text-mist">Your cat is still checked in for tonight. Come back tomorrow night.</p>}
           {kind !== "wake" && <Marks beast={beast} />}
           <div className="mt-2 flex flex-wrap justify-center gap-2">
             <Link href="/alley" className="btn btn-lantern">

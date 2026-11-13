@@ -493,7 +493,7 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
                 await tx.run(
                   "cuddle",
                   () => cuddle(id),
-                  beast.lives < 9 ? `A link lit up again, and ${beast.name}'s cuddle counts as tonight's tug on the Great Yarn.` : `${beast.name} counts as tonight's tug on the Great Yarn.`,
+                  beast.lives < 9 ? `${beast.name} won a life back, and is counted in tonight's check-in.` : `${beast.name} is counted in tonight's check-in.`,
                 )
               )
                 refresh();
