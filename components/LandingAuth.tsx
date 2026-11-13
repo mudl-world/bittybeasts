@@ -35,7 +35,13 @@ export default function LandingAuth() {
         </div>
         <GoogleSignIn onSignedIn={() => router.push("/room")} />
       </div>
-      <DemoPicker />
+      <div className="card flex flex-col gap-3 p-5">
+        <div>
+          <p className="font-display text-lg font-semibold">Just looking? Borrow a cat</p>
+          <p className="text-sm text-mist">Shared demo cats on testnet, so expect other paws on them.</p>
+        </div>
+        <DemoPicker />
+      </div>
     </div>
   );
 }

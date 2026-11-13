@@ -72,6 +72,10 @@ export default function CatRoom() {
 /** The sign-in gate. The room is the backdrop, not a wallpaper behind a small box: the two ways in
     sit side by side across the screen, so the art stays visible and nothing has to wrap. */
 function Gate() {
+  // Two steps, because they are two different decisions: first how you want to play (your own cat
+  // or a borrowed one), then — only if borrowing — which cat. Showing five named cats up front
+  // asked people to choose between strangers.
+  const [step, setStep] = useState<"choose" | "demo">("choose");
   return (
     <>
       <Cover ratio={ROOM_RATIO}>
@@ -82,28 +86,56 @@ function Gate() {
         <WorldMenu />
       </div>
       <div className="fixed inset-0 z-30 overflow-y-auto">
-        <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col justify-center gap-6 px-4 py-20 sm:px-8">
+        <div className="mx-auto flex min-h-full w-full max-w-5xl flex-col justify-center gap-6 px-4 py-20 sm:px-8">
           <header className="text-center">
-            <h1 className="title-3d title-3d-light text-4xl sm:text-5xl">Your cat is waiting</h1>
+            <h1 className="title-3d title-3d-light text-4xl sm:text-5xl">
+              {step === "choose" ? "Your cat is waiting" : "Pick a cat to borrow"}
+            </h1>
             {/* The art behind this is busy, so the line carries its own shadow rather than relying on it. */}
             <p className="mt-2 text-paper/90 [text-shadow:0_2px_6px_rgb(6_5_26/0.95)]">
-              Sign in to move a kitten into your room, or borrow one and look around first.
+              {step === "choose"
+                ? "Start your own cat, or borrow one and look around first."
+                : "These live on testnet and are shared, so expect other paws on them. You can start your own later."}
             </p>
           </header>
-          {/* Equal columns, equal heights: the row stretches and each card fills its cell. */}
-          <div className="grid gap-5 lg:grid-cols-2">
-            <div className="card flex h-full flex-col gap-4 p-5">
-              <div>
-                <h3 className="text-lg font-semibold">Sign in</h3>
-                <p className="text-sm text-mist">A kitten moves into your room. No passwords, nothing to install.</p>
+
+          {step === "choose" ? (
+            <div className="grid gap-5 lg:grid-cols-2">
+              <div className="card flex h-full flex-col gap-4 p-5 text-center">
+                <div className="flex flex-1 flex-col items-center justify-center gap-3">
+                  <Art slot="cat-happy" size={110} alt="" className="rounded-2xl" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Start your own cat</h3>
+                    <p className="mt-1 text-sm text-mist">A kitten of your own moves in, and remembers you. Nothing to install.</p>
+                  </div>
+                </div>
+                <GoogleSignIn label="Continue with Google" />
               </div>
-              {/* Centres the button in whatever height the taller card sets. */}
-              <div className="flex flex-1 items-center">
-                <GoogleSignIn />
+
+              <div className="card flex h-full flex-col gap-4 p-5 text-center">
+                <div className="flex flex-1 flex-col items-center justify-center gap-3">
+                  <Art slot="ui-lane" size={110} alt="" className="rounded-2xl" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Borrow a cat</h3>
+                    <p className="mt-1 text-sm text-mist">Look around straight away with a cat that already has a life behind it.</p>
+                  </div>
+                </div>
+                <button className="btn btn-ghost w-full" onClick={() => setStep("demo")}>
+                  See the cats →
+                </button>
               </div>
             </div>
-            <DemoPicker />
-          </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {/* Above the cats, so the way out is visible without scrolling past them. */}
+              <button className="btn btn-ghost btn-sm self-start" onClick={() => setStep("choose")}>
+                ← Back
+              </button>
+              <div className="card flex flex-col gap-4 p-5">
+                <DemoPicker />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
