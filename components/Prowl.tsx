@@ -541,10 +541,11 @@ const CONTROLS: { art: ArtSlot; name: string; keys: string[]; touch: string; wha
   { art: "ctl-cashout", name: "Cash out", keys: ["Enter"], touch: "tap the pouch", what: "Take the haul home (daring only)" },
 ];
 
-/** A keyboard key, drawn as a key. */
+/** A keyboard key, drawn as a key. Every cap is the same box whatever is written on it, so a
+    column of them lines up on both edges instead of stepping in and out. */
 function Key({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="inline-flex min-w-[2rem] items-center justify-center rounded-md border-[3px] border-[#1a0b2e] bg-[#ffc93c] px-2 py-0.5 font-display text-sm font-bold text-[#2a1600] shadow-[0_2px_0_#1a0b2e]">
+    <kbd className="inline-flex h-8 w-20 items-center justify-center rounded-md border-[3px] border-[#1a0b2e] bg-[#ffc93c] font-display text-sm font-bold leading-none text-[#2a1600] shadow-[0_2px_0_#1a0b2e]">
       {children}
     </kbd>
   );
