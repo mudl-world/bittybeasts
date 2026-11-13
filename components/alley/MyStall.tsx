@@ -19,7 +19,6 @@ import { QUIET } from "@/lib/ui/errors";
 import { ITEM_LABEL, num, yarn } from "@/lib/ui/format";
 import { useAsync } from "@/lib/ui/useAsync";
 import Art from "../Art";
-import Countdown from "../Countdown";
 import Lanterns from "../Lanterns";
 import { Empty, Loading, Notice, Spinner } from "../ui";
 import { DiaryList } from "./Diary";
@@ -53,18 +52,15 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-mist">
-          Your stall sells while you sleep. {beast.name} follows your rules{rent ? <> · rent is <b className="text-paper">{yarn(rent)} YARN</b> a night</> : null}.
-        </p>
-        <Countdown />
-      </div>
+      <p className="text-sm text-mist">
+        Your stall sells while you sleep. {beast.name} follows your rules{rent ? <> · rent is <b className="text-paper">{yarn(rent)} YARN</b> a night</> : null}.
+      </p>
       {blocked && <Notice kind="info">{beast.name} is wandering, so the stall can&apos;t be changed right now.</Notice>}
 
       {/* The stall on the left, its receipts on the right: both fit without scrolling past one to
           reach the other, and the receipts column scrolls on its own when it is long. */}
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-      <div className="flex flex-col gap-4">
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="flex h-full flex-col gap-4 [&>.card]:h-full">
       {!mine ? (
         <div className="card flex flex-col gap-3 p-5">
           <h3 className="text-lg font-semibold">Open a stall on Lantern Lane</h3>
@@ -83,7 +79,8 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
                     }}
                     title={free ? "Free" : `Taken by Beast ${s.token_id}`}
                   >
-                    {tx.pending === `open-${s.slot}` ? <Spinner /> : null}#{s.slot} {free ? "free" : "taken"}
+                    {tx.pending === `open-${s.slot}` ? <Spinner /> : null}#{s.slot}
+                    {!free && <span className="block text-[0.7em] opacity-80">taken</span>}
                   </button>
                 );
               })}
@@ -102,7 +99,7 @@ export default function MyStall({ beast, items, onChanged, onNeedsKey }: Props) 
 
       </div>
 
-      <div className="card flex max-h-[min(70dvh,640px)] flex-col p-4 sm:p-5">
+      <div className="card flex h-full max-h-[min(70dvh,640px)] flex-col p-4 sm:p-5">
         <h3 className="mb-2 shrink-0 text-lg font-semibold">Receipts</h3>
         <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto">
           {history.data ? (
