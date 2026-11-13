@@ -585,13 +585,21 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
       {/* side panel: a tall drawer to the right of the cat (a bottom sheet on phones) */}
       {sheet && (
         <div className="fixed inset-x-0 bottom-[5.25rem] z-50 flex justify-center px-2 md:inset-x-auto md:bottom-auto md:right-5 md:top-24 md:w-[min(400px,32vw)] md:px-0">
-          <div className="glass relative flex max-h-[55dvh] w-full animate-rise flex-col gap-3 overflow-y-auto p-4 sm:p-5 md:max-h-[calc(100dvh-14rem)] md:bg-[rgb(22_15_56/0.96)]">
+          {/* One frame for every sheet: fixed height on desktop so Feed, Wardrobe, Talk and
+              Personality do not resize the drawer as you switch between them. On phones it stays a
+              content-sized bottom sheet, where a fixed height would waste the screen. */}
+          <div className="glass relative flex max-h-[55dvh] w-full animate-rise flex-col gap-3 overflow-y-auto p-4 sm:p-5 md:h-[min(30rem,calc(100dvh-14rem))] md:max-h-none md:bg-[rgb(22_15_56/0.96)]">
             <button onClick={() => setSheet(null)} className="absolute right-2 top-2 transition hover:scale-110" aria-label="Close">
               <Art slot="ui-close" alt="" size={34} />
             </button>
             {tx.note && <Notice kind={tx.note.kind}>{tx.note.text}</Notice>}
       {sheet === "feed" && (
         <Panel title="Feed">
+          {/* The two bars the food moves, so you can see what feeding is for while you do it. */}
+          <div className="flex flex-col gap-2">
+            <Need label="Fullness" value={fullness} color="bg-lantern" warn={fullness < 25 ? "hungry" : undefined} />
+            <Need label="Happiness" value={happiness} color="bg-moss" warn={happiness < 30 ? "lonely" : undefined} />
+          </div>
           <div className="flex flex-wrap gap-2">
             {(["fish", "catnip"] as const).map((food) => {
               const have = items.data?.[food] ?? 0;
@@ -624,13 +632,13 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
               );
             })}
           </div>
-          <p className="text-xs text-mist">
+          <PanelNote>
             Fish fills {beast.name} up; catnip cheers it up. No food? Go on a mission and whip some off the windowsills, or buy from Old Tom and Sister Clove on{" "}
             <Link href="/alley?tab=lane" className="underline decoration-dotted underline-offset-2">
               Lantern Lane
             </Link>
             . Every mission makes {beast.name} a little hungrier.
-          </p>
+          </PanelNote>
         </Panel>
       )}
 
@@ -663,13 +671,13 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
               );
             })}
           </div>
-          <p className="text-xs text-mist">
+          <PanelNote>
             Miso knits the Lane&apos;s hats and scarves; buy them with {beast.name}&apos;s YARN on{" "}
             <Link href="/alley?tab=lane" className="underline decoration-dotted underline-offset-2">
               Lantern Lane
             </Link>
             . Dressing up cheers a cat right up.
-          </p>
+          </PanelNote>
         </Panel>
       )}
 
@@ -758,11 +766,16 @@ function Action({ icon, label, onClick, active }: { icon: ArtSlot; label: string
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex min-h-0 flex-1 flex-col gap-3">
       <h2 className="pr-10 font-display text-lg font-semibold">{title}</h2>
       {children}
     </section>
   );
+}
+
+/** The closing line of a sheet: the "what is this for" note, pinned to the bottom of the frame. */
+function PanelNote({ children }: { children: React.ReactNode }) {
+  return <p className="mt-auto border-t border-white/10 pt-3 text-xs leading-snug text-mist">{children}</p>;
 }
 
 // ---------------------------------------------------------------- talking
@@ -855,10 +868,10 @@ function TalkPanel({
       )}
       {sending && <p className="text-xs text-mist">{beast.name} is thinking inside a sealed enclave… (attesting, then answering)</p>}
       {error && <Notice kind="err">{error}</Notice>}
-      <p className="text-xs text-mist">
+      <PanelNote>
         {beast.name} thinks with NEAR AI in a hardware-sealed enclave. Its personality and memories come only from the Lane&apos;s records, every reply is
         signed by the enclave and checked, and the proof is written into {beast.name}&apos;s diary. {credits > 0 && `${credits} thought${credits === 1 ? "" : "s"} left.`}
-      </p>
+      </PanelNote>
     </Panel>
   );
 }
@@ -874,8 +887,9 @@ function PersonaPanel({ beast, current, onSaved }: { beast: Beast; current: stri
         Who is {beast.name}? This is written into the Lane&apos;s records and shapes every thought {beast.name} has. Leave it empty and {beast.name}&apos;s
         nature comes from its stats.
       </p>
+      {/* Grows into whatever height the frame gives it, so the panel has no dead space. */}
       <textarea
-        className="input min-h-28"
+        className="input min-h-28 flex-1 resize-none"
         maxLength={480}
         placeholder={`e.g. ${beast.name} is a dramatic little thief who pretends not to care but always shares fish with strays.`}
         value={text}
