@@ -431,11 +431,28 @@ function RoomFor({ beast, tick, refresh }: { beast: Beast; tick: number; refresh
       <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center gap-2 p-3 drop-shadow-[0_3px_6px_rgba(0,0,0,0.6)] sm:gap-3 sm:p-4">
         <div className="pointer-events-auto flex min-w-0 items-center gap-2 sm:gap-3">
           <WorldMenu />
+          <Link
+            href={`/beast/${beast.token_id}`}
+            className="btn btn-ghost btn-sq relative h-14 w-14 shrink-0 overflow-visible p-0"
+            aria-label={`${beast.name}'s life story`}
+            title={`${beast.name}'s life story`}
+          >
+            {/* the whole cat, standing in the tile and spilling out of it (as in the alley) */}
+            <Art
+              slot={catSlot(expression)}
+              alt=""
+              className="pointer-events-none absolute left-1/2 max-w-none -translate-x-1/2 drop-shadow-[0_4px_4px_rgba(0,0,0,0.6)]"
+              style={{ width: "50px", bottom: "-8px" }}
+            />
+          </Link>
           {/* Name and tail, then the two needs beside them: no box, so the row keeps one height. */}
           <div className="flex h-14 min-w-0 flex-col justify-center">
             <div className="flex items-center gap-2">
               <span className="title-3d truncate text-lg sm:text-xl">{beast.name}</span>
-              <ChainTail lives={beast.lives} size="sm" legend={beast.legend} />
+              {/* The tail is the first thing to go when the row is tight: the name matters more. */}
+              <span className="hidden sm:inline-flex">
+                <ChainTail lives={beast.lives} size="sm" legend={beast.legend} />
+              </span>
             </div>
           </div>
           <div className="hidden h-14 flex-col justify-center gap-1 md:flex">
