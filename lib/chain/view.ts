@@ -80,6 +80,50 @@ export const getYarnState = () => view<YarnState>(CONFIG.yarn, "state");
 export const getYarnLog = (from = 0, limit = 200) => view<YarnLogEntry[]>(CONFIG.yarn, "log", { from, limit });
 /** How many entries the log holds. The contract pages from the oldest, so the UI needs this to reach the newest. */
 export const getYarnLogLen = () => view<number>(CONFIG.yarn, "log_len", {});
+/** What a Beast's own account says it is: `sharded-item-1.0.0`, the Top Level Accounts draft NEP
+    for NFT collections whose tokens are real NEAR accounts (houseofstake/tla-contracts,
+    docs/sharded-nft-items.md). The account answers for itself; `verifyBeastItem` below checks that
+    answer against the alley's own record before anything trusts it. */
+export type NftItemInfo = {
+  spec: string;
+  init: boolean;
+  status: "Parked" | "Suspended" | "Expired" | "Frozen" | "Active";
+  collection_id: string;
+  token_id: string;
+  owner_id: string | null;
+  rotation_seq: string;
+  rotation_epoch: number;
+};
+
+export const getBeastItemInfo = (beastAccount: string) => view<NftItemInfo>(beastAccount, "nft_item_info", {});
+
+/** Membership, the way the draft NEP asks for it: ask the account what it is, then refuse unless
+    the collection agrees. `collection_id` is only a claim — anyone can name any collection — so the
+    check that matters is that `token_id` is the account we actually queried, and that the alley
+    names the same owner. */
+export async function verifyBeastItem(beastAccount: string): Promise<
+  { ok: true; info: NftItemInfo } | { ok: false; why: string }
+> {
+  let info: NftItemInfo;
+  try {
+    info = await getBeastItemInfo(beastAccount);
+  } catch {
+    return { ok: false, why: "That account does not answer as a sharded NFT item." };
+  }
+  if (info.spec !== "sharded-item-1.0.0") return { ok: false, why: `Unknown item spec ${info.spec}.` };
+  // Requirement 1: the item must name itself, so a contract cannot claim to be a different token.
+  if (info.token_id !== beastAccount) return { ok: false, why: "That account claims to be a different token." };
+  if (info.collection_id !== CONFIG.alley) return { ok: false, why: "That Beast belongs to another collection." };
+  // The claim is only load-bearing once the collection confirms it.
+  const token = await view<{ owner_id: string } | null>(CONFIG.alley, "nft_token", {
+    token_id: beastAccount.split(".")[0],
+  }).catch(() => null);
+  if (!token) return { ok: false, why: "The alley has no such Beast." };
+  if (info.owner_id && token.owner_id !== info.owner_id)
+    return { ok: false, why: "The Beast and the alley disagree about who owns it." };
+  return { ok: true, info };
+}
+
 export const getTuggedTonight = (beastAccount: string) =>
   view<boolean>(CONFIG.yarn, "tugged_tonight", { beast_account: beastAccount });
 

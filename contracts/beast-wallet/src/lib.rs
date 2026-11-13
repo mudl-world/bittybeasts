@@ -36,6 +36,45 @@ pub struct BeastWallet {
     controller: Option<PublicKey>,
     frozen: bool,
     executed: u64,
+    /// The NFT owner this account currently answers to. Set by the alley in the same receipt that
+    /// rotates the controller key, so `nft_item_info` reports the state that actually governs the
+    /// account rather than a cached copy (sharded-item-1.0.0, requirement 4).
+    ///
+    /// Borsh-default so the 13 Beasts already deployed with the five-field state still deserialize:
+    /// they read back as `None` / epoch 0 and fill in on their next control change, rather than
+    /// bricking every existing account the moment this wallet is republished.
+    #[borsh(default)]
+    owner: Option<AccountId>,
+    /// How many times control has rotated, and which generation of stored state that counts in.
+    /// Epoch 0 marks state written before this field existed.
+    #[borsh(default)]
+    rotation_seq: u64,
+    #[borsh(default)]
+    rotation_epoch: u32,
+}
+
+/// `sharded-item-1.0.0`: what this account says about itself as an item of its collection.
+/// Draft NEP from houseofstake/tla-contracts (docs/sharded-nft-items.md), the Top Level Accounts
+/// standard for NFT collections whose tokens are real NEAR accounts — which is what a Beast is.
+#[near(serializers = [json])]
+pub struct NftItemInfo {
+    pub spec: String,
+    pub init: bool,
+    pub status: ItemStatus,
+    pub collection_id: AccountId,
+    pub token_id: String,
+    pub owner_id: Option<AccountId>,
+    pub rotation_seq: near_sdk::json_types::U64,
+    pub rotation_epoch: u32,
+}
+
+#[near(serializers = [json])]
+pub enum ItemStatus {
+    Parked,
+    Suspended,
+    Expired,
+    Frozen,
+    Active,
 }
 
 #[near]
@@ -44,7 +83,7 @@ impl BeastWallet {
     #[init]
     pub fn new(#[serializer(borsh)] alley: AccountId, #[serializer(borsh)] yarn: AccountId) -> Self {
         require!(env::predecessor_account_id() == alley, "Only the alley can initialise a Beast");
-        Self { alley, yarn, controller: None, frozen: false, executed: 0 }
+        Self { alley, yarn, controller: None, frozen: false, executed: 0, owner: None, rotation_seq: 0, rotation_epoch: 1 }
     }
 
     /// Runs calls as this Beast. Signed by the owner's controller key.
@@ -76,6 +115,42 @@ impl BeastWallet {
     }
 
     /// Swaps the controlling key. `None` revokes control entirely (used by nft_transfer).
+    /// What this account is, as an item of its collection (`sharded-item-1.0.0`).
+    ///
+    /// `token_id` comes from `env::current_account_id()`, never from stored state, so a consumer
+    /// can derive the parent from it and catch an item lying about which token it is (requirement
+    /// 1). `collection_id` is only a claim: it confers no authority here (requirement 2), and a
+    /// consumer must confirm it against the alley's own `nft_token` before believing it.
+    pub fn nft_item_info(&self) -> NftItemInfo {
+        let me = env::current_account_id();
+        NftItemInfo {
+            spec: "sharded-item-1.0.0".to_string(),
+            init: self.owner.is_some() && self.controller.is_some(),
+            status: if self.frozen {
+                // A wandering Beast is up for adoption: it holds its things but does nothing.
+                ItemStatus::Frozen
+            } else if self.controller.is_none() {
+                ItemStatus::Parked
+            } else {
+                ItemStatus::Active
+            },
+            collection_id: self.alley.clone(),
+            token_id: me.to_string(),
+            owner_id: self.owner.clone(),
+            rotation_seq: self.rotation_seq.into(),
+            rotation_epoch: self.rotation_epoch,
+        }
+    }
+
+    /// The alley records who owns this Beast now, in the same receipt that rotates the key.
+    pub fn set_owner(&mut self, #[serializer(borsh)] owner: Option<AccountId>) {
+        self.assert_alley();
+        if self.owner != owner {
+            self.rotation_seq = self.rotation_seq.saturating_add(1);
+        }
+        self.owner = owner;
+    }
+
     pub fn set_controller(&mut self, #[serializer(borsh)] public_key: Option<PublicKey>) -> Promise {
         self.assert_alley();
         let me = env::current_account_id();

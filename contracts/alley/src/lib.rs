@@ -527,8 +527,17 @@ impl Alley {
             None,
         );
 
+        // The new owner goes to the Beast's own account too, so its nft_item_info answer matches
+        // the collection's nft_token the moment the adoption lands.
+        let new_owner = self.beasts.get(&token_id).map(|b| b.owner.clone());
         let p = self
             .wallet(&token_id)
+            .function_call(
+                "set_owner".to_string(),
+                near_sdk::borsh::to_vec(&new_owner).unwrap(),
+                NearToken::from_yoctonear(0),
+                GAS_WALLET,
+            )
             .function_call(
                 "set_controller".to_string(),
                 near_sdk::borsh::to_vec(&Some(controller_pk)).unwrap(),
@@ -635,13 +644,24 @@ impl Alley {
     }
 
     /// Borsh args: the beast-wallet carries no JSON parser.
+    ///
+    /// The owner is pushed in the same batch as the key, so the Beast's own `nft_item_info` answer
+    /// reports the state that governs it rather than a cached copy (sharded-item-1.0.0, req. 4).
     pub(crate) fn wallet_set_controller(&self, token_id: &str, pk: Option<PublicKey>) -> Promise {
-        self.wallet(token_id).function_call(
-            "set_controller".to_string(),
-            near_sdk::borsh::to_vec(&pk).unwrap(),
-            NearToken::from_yoctonear(0),
-            GAS_WALLET,
-        )
+        let owner = self.beasts.get(token_id).map(|b| b.owner.clone());
+        self.wallet(token_id)
+            .function_call(
+                "set_owner".to_string(),
+                near_sdk::borsh::to_vec(&owner).unwrap(),
+                NearToken::from_yoctonear(0),
+                GAS_WALLET,
+            )
+            .function_call(
+                "set_controller".to_string(),
+                near_sdk::borsh::to_vec(&pk).unwrap(),
+                NearToken::from_yoctonear(0),
+                GAS_WALLET,
+            )
     }
 
     fn set_frozen(&self, token_id: &str, frozen: bool) -> Promise {
