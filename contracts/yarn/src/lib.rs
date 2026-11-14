@@ -14,6 +14,19 @@
 //! allocation are set once in `new`. There is no owner field and no method that changes them. After
 //! deployment the account's full-access key is deleted (scripts/deploy.ts), so the code cannot be
 //! replaced either.
+//!
+//! That is only half the guarantee, because minting is gated on `tug`, which only the alley may
+//! call: whoever could redeploy the alley could change who mints. So the alley is locked the same
+//! way — `scripts/lock-alley.ts` checks the deployed code matches the local build, then deletes its
+//! keys. Both accounts hold zero access keys on testnet, which anyone can confirm:
+//!
+//! ```text
+//! near account list-keys yarn.bittybeasts-6f61b7.testnet  network-config testnet now
+//! near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now
+//! ```
+//!
+//! Both print an empty table. Neither contract can ever be upgraded again — which also means no
+//! bug in either can ever be fixed. See docs/ARCHITECTURE.md.
 use near_contract_standards::fungible_token::events::{FtBurn, FtMint};
 use near_contract_standards::fungible_token::metadata::{
     FungibleTokenMetadata, FungibleTokenMetadataProvider, FT_METADATA_SPEC,

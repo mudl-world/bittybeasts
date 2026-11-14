@@ -100,15 +100,36 @@ NEP-141, `decimals = 0`, symbol `YARN`. Parameters are constants compiled in and
 - Views: `params()`, `state()` → `{ night, streak, longest, lives, run, tugs_tonight, target_tonight, treasury, total_supply, festival }`, `log(from, limit)` → mint/burn/life entries.
 - Emits NEP-297 `ft_mint` / `ft_burn` events plus `yarn_night` events.
 
+### Who can mint, and why nobody can change that
+
+Minting happens in one place: `settle()` pays the Beasts that tugged. Tugs arrive only through
+`tug`, which only `alley.ROOT` may call, fixed at init. So the honest question is not "does $YARN
+have an admin" but **"who can change the code at either end"** — and the answer is nobody:
+
+| Account | Access keys | Consequence |
+| --- | ---: | --- |
+| `yarn.ROOT` | 0 | parameters are compile-time constants, `params()` reports `admin: null`, and the code can't be replaced |
+| `alley.ROOT` | 0 | the only account that may report a tug runs fixed, published code |
+
+```sh
+near account list-keys yarn.bittybeasts-6f61b7.testnet  network-config testnet now   # empty
+near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now   # empty
+```
+
+`scripts/deploy.ts` deletes $YARN's key after init; `scripts/lock-alley.ts` verifies the deployed
+alley code matches the local build before deleting the alley's. Both are irreversible, and the cost
+is real: **no bug in either contract can ever be fixed.** The known $YARN storage issue is therefore
+permanent on this deployment — a mainnet launch would deploy fresh contracts and lock them only
+after an audit.
+
 ## Server (Next.js route handlers, `app/api/*`)
 
-- `POST /api/auth/start {email}` → sends a 6-digit code (Resend if `RESEND_API_KEY`, else returns `devCode`).
-- `POST /api/auth/verify {email, code, publicKey}` → creates `<hash>.ROOT` with that key, returns `{accountId}`.
+- `POST /api/auth/google {idToken, publicKey}` → verifies the Google ID token (signature against
+  Google's JWKS, issuer, audience, expiry, `email_verified`), then creates `p<hash>.ROOT` with that
+  key and returns `{accountId}`. Sign-in is Google only; the earlier email-code flow was removed.
 - `POST /api/prowl/settle {tokenId, run}` → validates and calls `settle_run` as referee.
 - `POST /api/merchant/quote {merchant, beast, side, item, amount}` → `{quote, signature, price_per, reasoning}` from `lib/economy/pricing.ts` (includes tonight's request bonus from `lib/economy/requests.ts`).
 - `GET|POST /api/keeper` → winds the clock: `alley.close_night`, `yarn.settle`, merchant restocking (`lib/server/keeper.ts`). Rate-limited; every call is public and idempotent.
-- `POST /api/stall/negotiate` → Beast agent applies owner rules, may counter once.
-- `GET /api/state` → aggregated chain state for the UI.
 
 ## Client chain layer (`lib/chain/*`)
 
