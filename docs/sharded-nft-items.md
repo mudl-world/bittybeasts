@@ -52,13 +52,25 @@ then calls the alley's own `nft_token` and refuses if the two disagree about the
 controller key, so `nft_item_info` reports the state that actually governs the account rather than
 a cached copy. Each change of owner bumps `rotation_seq`.
 
-The three owner-tracking fields are `#[borsh(default)]` because Beasts were already deployed with
-the earlier five-field state: they deserialize as `None` / epoch 0 and fill in on their next
-control change, rather than bricking every existing account when the wallet is republished.
+The three owner-tracking fields were written as `#[borsh(default)]`, intended to let Beasts already
+deployed with the earlier five-field state keep deserializing. **That attribute does not exist in
+borsh 1.8.1** (its derive accepts `bound`, `use_discriminant`, `serialize`, `deserialize`, `skip`,
+`init`, `serialize_with`, `deserialize_with`, `crate` — there is no `default`), so the file does not
+compile. Migrating this state safely needs a real mechanism, such as `deserialize_with` or an
+explicit versioned-state enum.
 
 ## Status in this repo
 
-Written and unit-tested, **not yet deployed**. The live Beast accounts still run the previous
-wallet build, so `nft_item_info` does not resolve on chain yet — republishing the global contract
-is what makes it live. Everything else in the NFT path (NEP-171, the one-key control model,
-royalties, approvals) *is* deployed and verifiable on testnet.
+**Written, not compiling, not deployed, and not safe to deploy as it stands.**
+
+Earlier revisions of this document said "written and unit-tested". That was wrong, and worth
+correcting plainly: there is no test for `verifyBeastItem`, and the contract side does not build at
+all because of the `#[borsh(default)]` problem above. The claim was made while the local toolchain
+could not compile contracts, and nothing caught it until the toolchain was fixed.
+
+So `nft_item_info` does not resolve on chain, and republishing the global contract — which swaps the
+code under every existing Beast account at once — must not be attempted until the state migration is
+designed and tested properly.
+
+Everything else in the NFT path (NEP-171, the one-key control model, royalties, approvals) *is*
+deployed and verifiable on testnet, and is unaffected by this.

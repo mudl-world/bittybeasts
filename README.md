@@ -41,7 +41,7 @@ stakes are real without being final.
 | --- | --- |
 | **Live on** | NEAR testnet — `alley.bittybeasts-6f61b7.testnet` |
 | **Contracts** | 3 Rust contracts: NEP-171 + NEP-245 + market, NEP-141, NEP-591 global contract |
-| **Verified on testnet** | 20/20 game checks, 15/15 cat-room checks (incl. 4 NEAR AI checks), 26/26 economy checks |
+| **Verified on testnet** | 20/20 game checks, 13/13 cat-room checks (incl. 3 NEAR AI checks), 26/26 economy checks |
 | **Tracks** | Games With Real Economies · NFTs That Do Something · Memecoins With Mechanics · Grand Prize (NEAR AI) |
 
 ---
@@ -323,7 +323,7 @@ Run against the **live testnet contracts**, not mocks.
 | What | Command | Result |
 | --- | --- | --- |
 | Live testnet, one Beast's whole life | `tsx scripts/e2e.ts` | **20/20 passed** |
-| Cat room on testnet (needs the app running) | `BASE_URL=… tsx scripts/e2e-room.ts` | **15/15 passed**, incl. 4 NEAR AI checks |
+| Cat room on testnet (needs the app running) | `BASE_URL=… tsx scripts/e2e-room.ts` | **13/13 passed**, incl. 3 NEAR AI checks |
 | Economy rules and nightly requests | `tsx scripts/check-economy.ts` | **26/26 passed** |
 | NEAR AI attestation, on its own | `tsx scripts/verify-attestation.ts` | **9/9 passed** against live NEAR AI |
 | Contract unit tests | `cd contracts && cargo test` | 53 tests in source (alley 34, beast-wallet 10, yarn 9) |
