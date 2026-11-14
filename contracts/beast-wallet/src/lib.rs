@@ -40,17 +40,47 @@ pub struct BeastWallet {
     /// rotates the controller key, so `nft_item_info` reports the state that actually governs the
     /// account rather than a cached copy (sharded-item-1.0.0, requirement 4).
     ///
-    /// Borsh-default so the 13 Beasts already deployed with the five-field state still deserialize:
-    /// they read back as `None` / epoch 0 and fill in on their next control change, rather than
-    /// bricking every existing account the moment this wallet is republished.
-    #[borsh(default)]
+    /// Read through `or_default`: Beasts deployed before these three fields existed have state
+    /// that simply ends after `executed`, and hitting the end of the buffer must mean "this is an
+    /// older account", not "brick it". See the note on `or_default` below.
+    #[borsh(deserialize_with = "or_default")]
     owner: Option<AccountId>,
     /// How many times control has rotated, and which generation of stored state that counts in.
-    /// Epoch 0 marks state written before this field existed.
-    #[borsh(default)]
+    /// Epoch 0 marks state written before these fields existed.
+    #[borsh(deserialize_with = "or_default")]
     rotation_seq: u64,
-    #[borsh(default)]
+    #[borsh(deserialize_with = "or_default")]
     rotation_epoch: u32,
+}
+
+/// Read a trailing field that older stored state does not have.
+///
+/// Republishing the global contract swaps the code under every Beast account that already exists,
+/// without migrating their stored state: accounts written before the owner-tracking fields were
+/// added hold exactly `alley, yarn, controller, frozen, executed` and nothing more. Borsh reads
+/// fields in order, so those accounts hit the end of the buffer at `owner`.
+///
+/// Returning the default there — rather than erroring — is what keeps them readable. They report
+/// `owner: None` and epoch 0 until the alley records an owner on the next control change.
+///
+/// Only sound for fields at the END of the struct, and only while every older layout is a strict
+/// prefix of this one. New fields must be appended, never inserted.
+fn or_default<T: Default + near_sdk::borsh::BorshDeserialize, R: std::io::Read>(
+    reader: &mut R,
+) -> Result<T, std::io::Error> {
+    match T::deserialize_reader(reader) {
+        Ok(v) => Ok(v),
+        // borsh rewrites UnexpectedEof as InvalidData("Unexpected length of input") before it
+        // reaches us, so both have to be treated as "the stored state simply ends here".
+        Err(e)
+            if e.kind() == std::io::ErrorKind::UnexpectedEof
+                || (e.kind() == std::io::ErrorKind::InvalidData
+                    && e.to_string().contains("Unexpected length of input")) =>
+        {
+            Ok(T::default())
+        }
+        Err(e) => Err(e),
+    }
 }
 
 /// `sharded-item-1.0.0`: what this account says about itself as an item of its collection.
@@ -311,5 +341,40 @@ mod tests {
         let mut w = wallet_with(7);
         ctx(ME, pk(7));
         let _ = w.execute((0..5).map(|_| call(ALLEY, 0)).collect());
+    }
+
+    /// Republishing the global contract swaps the code under every Beast account that already
+    /// exists, without migrating their stored state. Those accounts hold the original five fields
+    /// and nothing more. This feeds bytes in exactly that layout to the current struct, because
+    /// getting it wrong bricks every deployed Beast at once.
+    #[test]
+    fn state_written_before_the_owner_fields_still_decodes() {
+        use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+
+        let mut old = Vec::new();
+        acc(ALLEY).serialize(&mut old).unwrap();
+        acc(YARN).serialize(&mut old).unwrap();
+        Some(pk(7)).serialize(&mut old).unwrap();
+        false.serialize(&mut old).unwrap();
+        9u64.serialize(&mut old).unwrap();
+
+        // deserialize_reader, not try_from_slice: the latter also rejects a buffer whose length
+        // does not match, which is exactly the case being tested.
+        let w = BeastWallet::deserialize_reader(&mut old.as_slice())
+            .expect("state from before the upgrade must decode");
+        assert_eq!(w.info().2, Some(pk(7)), "the controller key survives");
+        assert_eq!(w.info().4, 9, "the execute counter survives");
+        assert_eq!(w.owner, None, "no owner recorded yet");
+        assert_eq!(w.rotation_seq, 0);
+        assert_eq!(w.rotation_epoch, 0, "epoch 0 marks pre-upgrade state");
+
+        // And such an account answers the standard rather than panicking.
+        testing_env!(VMContextBuilder::new().current_account_id(acc(ME)).build());
+        let info = w.nft_item_info();
+        assert_eq!(info.spec, "sharded-item-1.0.0");
+        assert_eq!(info.token_id, ME, "token_id comes from the account, never from stored state");
+        assert_eq!(info.owner_id, None);
+        assert!(!info.init, "not initialised until the alley records an owner");
+        let _ = borsh::to_vec(&w).expect("and it re-serializes in the new layout");
     }
 }
