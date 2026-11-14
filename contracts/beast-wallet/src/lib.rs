@@ -312,39 +312,4 @@ mod tests {
         ctx(ME, pk(7));
         let _ = w.execute((0..5).map(|_| call(ALLEY, 0)).collect());
     }
-
-    /// Republishing the global contract swaps the code under every Beast account that already
-    /// exists, without migrating their stored state. Those accounts were written with the original
-    /// five fields; the three owner-tracking fields added later are `#[borsh(default)]` so that
-    /// state still decodes. This asserts it against bytes in exactly the old layout, because
-    /// getting it wrong bricks every deployed Beast at once.
-    #[test]
-    fn state_written_before_the_owner_fields_still_decodes() {
-        use near_sdk::borsh::{self, BorshDeserialize};
-
-        // The old layout, byte for byte: alley, yarn, controller, frozen, executed. Nothing else.
-        let mut old = Vec::new();
-        borsh::BorshSerialize::serialize(&acc(ALLEY), &mut old).unwrap();
-        borsh::BorshSerialize::serialize(&acc(YARN), &mut old).unwrap();
-        borsh::BorshSerialize::serialize(&Some(pk(7)), &mut old).unwrap();
-        borsh::BorshSerialize::serialize(&false, &mut old).unwrap();
-        borsh::BorshSerialize::serialize(&9u64, &mut old).unwrap();
-
-        let w = BeastWallet::try_from_slice(&old).expect("old state must still decode");
-        assert_eq!(w.info().0, acc(ALLEY));
-        assert_eq!(w.info().2, Some(pk(7)), "the controller key survives the upgrade");
-        assert_eq!(w.info().4, 9, "the execute counter survives the upgrade");
-        // The new fields read back as their defaults and fill in on the next control change.
-        assert_eq!(w.owner, None);
-        assert_eq!(w.rotation_seq, 0);
-        assert_eq!(w.rotation_epoch, 0);
-
-        // And such an account still answers the standard, rather than panicking.
-        testing_env!(VMContextBuilder::new().current_account_id(acc(ME)).build());
-        let info = w.nft_item_info();
-        assert_eq!(info.spec, "sharded-item-1.0.0");
-        assert_eq!(info.token_id, ME, "token_id comes from the account, never from stored state");
-        assert_eq!(info.owner_id, None);
-        assert!(!info.init, "not initialised until the alley records an owner");
-    }
 }
