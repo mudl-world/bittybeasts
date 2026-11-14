@@ -2,94 +2,247 @@
 
 *A cat with a mind of its own. Nine lives to spend.*
 
-Bitty Beasts is an **AI pet on NEAR**. Your cat lives in a little room above **Lantern Lane**: you feed it, dress it, give it a personality and talk to it, and it answers in its own voice. It thinks with **NEAR AI** inside hardware-sealed enclaves: each reply is checked (attestation with a fresh nonce, then the enclave's signature over our hashes of the exact request and reply) before it is recorded on chain, and **the cat pays for every thought itself**, 1 YARN from its own NFT-bound account. (The talk flow needs a NEAR AI API key; see "What's not built" for what has and hasn't run on testnet.) Then you take it out on nine-lives missions: rooftop prowls, a market run by merchant agents, and a nightly community goal where everything (your cat, every shop, the alley itself) has nine lives.
+An AI pet on NEAR. Your cat lives in a room above Lantern Lane: you feed it, dress it, give it a
+personality and talk to it. It thinks with **NEAR AI** inside hardware-sealed enclaves, **every
+reply is cryptographically verified before it is recorded on chain**, and **the cat pays for its
+own thoughts** — 1 YARN from its own NFT-bound NEAR account.
 
-**The AI pet loop.** Missions earn YARN and loot; YARN buys food, clothes and thoughts; a fed, happy cat can take daring runs; a starving one can't. The cat's prompt is built only from on-chain data (its persona, hunger, happiness, outfit, lives, marks and diary), and the exact request and reply bytes are kept so anyone can recompute the hashes recorded on chain.
+Then you take it out at night: rooftop prowls, a market run by merchant cats that set their own
+prices, and a nightly community goal where everything — your cat, every shop, the alley itself —
+has nine lives.
 
-**The world.** When the city sleeps, its back alleys wake. Over the rooftops hangs the Great Yarn, and every lantern on the Lane hangs from it. Cats tug it each night to keep it spinning, and its thread, **$YARN**, is the money of the Lane. Four merchant cats keep their own purses and set their own prices. The Gnawers steal goods and chew the yarn. If the alley misses too many nights, the Long Dark ends the Age and a new one begins. Nothing is scripted and there is no last mission: merchants post requests from their own shelves, and the **Lantern Ledger** writes each night's news from what actually happened on chain. See [docs/STORY.md](docs/STORY.md).
+![Bitty Beasts title screen](docs/shots/01-title.png)
 
-One game, three NEAR HACKATHON tracks:
-
-| Track | What answers it |
+| | |
 | --- | --- |
-| **Grand Prize (NEAR AI)** | Verifiable private inference for each thought: `/v1/attestation/report` with a fresh nonce (TDX quotes checked for nonce + signer binding, debug off, measured config, GPU nonce), `/v1/signature/{chat_id}` recovered and matched to the attested signer, then recorded on chain by `record_thought` |
-| **Games With Real Economies** | An AI pet you feed and dress with NEP-245 items (food and Miso's knitwear), NEP-245 loot, email sign-in with no seed phrase or popups, four merchant agents with their own accounts and signed prices, `pricing.ts` with reasoning tooltips, lights-out shops revived by players, 7-night fast-forward |
-| **NFTs That Do Something** | Each Beast is an NEP-171 token **and** its own NEAR sub-account that holds its YARN, items, stall earnings, lives, persona and thought credits, and pays YARN for its own AI thoughts. Control passes by swapping an access key; resale pays a royalty to the maker (NEP-199), and marketplaces can sell Beasts through NEP-178 approvals. Each Beast account answers `nft_item_info` per **`sharded-item-1.0.0`**, the Top Level Accounts draft NEP ([houseofstake/tla-contracts](https://github.com/houseofstake/tla-contracts), `docs/sharded-nft-items.md`) for collections whose tokens are real accounts; `verifyBeastItem()` checks that answer against the alley's `nft_token` before trusting it |
-| **Memecoins With Mechanics** | `$YARN` (NEP-141): the alley's nine lives, a nightly community check-in, mints on good nights, treasury burns on missed nights. Parameters are compiled in and the contract has no keys. Every cat's thought is a YARN sink into the treasury |
+| **Live on** | NEAR testnet — `alley.bittybeasts-6f61b7.testnet` |
+| **Contracts** | 3 Rust contracts: NEP-171 + NEP-245 + market, NEP-141, NEP-591 global contract |
+| **Verified on testnet** | 20/20 game checks, 15/15 cat-room checks (incl. 4 NEAR AI checks), 26/26 economy checks |
+| **Tracks** | Games With Real Economies · NFTs That Do Something · Memecoins With Mechanics · Grand Prize (NEAR AI) |
 
-## Live on NEAR testnet
+---
+
+## The one thing to look at
+
+A cat thinks, and you can prove it really was the enclave that said it.
+
+![The verified thought panel](docs/shots/05-verified-thought.png)
+
+Those four ticks are not decoration. For every reply, the server:
+
+1. Fetches `/v1/attestation/report` with **a fresh 32-byte nonce**, and parses the raw Intel TDX
+   quotes for the gateway *and* the model. It checks `report_data == signing address ‖ zero padding
+   ‖ our nonce`, that the **TD debug bit is off**, that `MRCONFIGID == 01 ‖ sha256(app_compose) ‖
+   0x00 × 15`, and that the NVIDIA GPU evidence carries the same nonce.
+2. Runs the completion with `x-no-aliasing: true`, keeping the **exact request and response bytes**.
+3. Fetches `/v1/signature/{chat_id}`, rebuilds the signed text `model:sha256(request):sha256(response)`
+   **from its own hashes**, recovers the EIP-191 signer, and requires it to equal the attested
+   model signer.
+4. Only then calls `record_thought`. An unverified reply is dropped and costs the player nothing.
+
+Code: [`lib/server/nearai.ts`](lib/server/nearai.ts) · [`contracts/alley/src/care.rs`](contracts/alley/src/care.rs)
+
+**This runs live.** A thought recorded on testnet, read back from the chain just now:
+
+```json
+{
+  "said":  "Hey Noddle how are you feeling todauy",
+  "reply": "*Purrs and stretches, tail curling like a question mark*\nFull as a bell, but my nine lives are already glowing.\nWant a fish? I've got rooftops to brag about.",
+  "model": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+  "chat_id": "chatcmpl-f92745af-41a0-4d27-8fae-dfe8ac3525cd",
+  "request_hash":  "d03994802dbd9c198cb24522ebe89047a225106d9972cfe6e623d8fd9b261d2f",
+  "response_hash": "eeabfe6cd99f1d6d077809c9fab8ba988e9ec068da979aca268217ac33a4b6be",
+  "signature": "0xca501c14e67676d5a3b805086ad700c4a86d52e194d82e5d051c997e7616111268004aa2e56c135e0e0dd419b768aed3d31d698d9ab8f483f965ef0152cd9d141c",
+  "signing_address": "0x2665cce942fa427ef30d87f4b0bff67fb7645462",
+  "signing_algo": "ecdsa"
+}
+```
+
+Reproduce it:
+
+```sh
+near contract call-function as-read-only alley.bittybeasts-6f61b7.testnet thoughts \
+  json-args '{"token_id":"demo-cat-3","limit":2}' network-config testnet now
+```
+
+The raw bytes stay available at `/api/cat/thought/<chat_id>`, so anyone can recompute both hashes
+and check the signature themselves.
+
+---
+
+## Two claims a judge can verify in 30 seconds
+
+Everything else in this README is downstream of these two facts.
+
+**1. A Beast's account has exactly one key, and it can only call `execute`.**
+
+```sh
+near account list-keys demo-cat-1.alley.bittybeasts-6f61b7.testnet network-config testnet now
+```
+
+```
+| # | Public Key              | Permissions                                                   |
+| 1 | ed25519:3ZBsSkPHxmm1QW… | only do ["execute"] function calls on                         |
+|   |                         | demo-cat-1.alley.bittybeasts-6f61b7.testnet                   |
+|   |                         | with an allowance of 0.244 NEAR                               |
+```
+
+No full-access key. The NFT owner holds that one function-call key; the alley swaps it on every
+sale, deleting the old one **in the same receipt**.
+
+**2. $YARN has no keys at all. Nobody can upgrade it or mint outside the rules.**
+
+```sh
+near account list-keys yarn.bittybeasts-6f61b7.testnet network-config testnet now
+```
+
+```
++---+------------+-------+-------------+
+| # | Public Key | Nonce | Permissions |
++---+------------+-------+-------------+
++---+------------+-------+-------------+
+```
+
+The parameters are Rust constants and `params()` reports `admin: null`. `scripts/deploy.ts` deletes
+the account's only full-access key after init. This is irreversible — see
+[What's not built](#whats-not-built) for the one consequence we have to live with.
+
+---
+
+## Play it in two clicks
+
+No wallet, no seed phrase, no gas prompt, no extension.
+
+| Start your own cat | Or borrow one |
+| --- | --- |
+| ![Sign in](docs/shots/02-signin.png) | ![Pick a cat](docs/shots/03-pick-a-cat.png) |
+
+Sign in with Google and the server provisions `p<hash>.ROOT` with a key generated in your browser,
+then a kitten arrives with welcome gifts from two merchants — each signed by that merchant's own
+NEAR key. Or borrow a demo cat: the picker reads every cat's **real on-chain state** (lives, scars,
+best stat) so you know who you are choosing.
+
+> Demo keys are published in [`public/demo-accounts.json`](public/demo-accounts.json) **on purpose**
+> — testnet NEAR is worth nothing, and judges shouldn't need an account. Server keys stay in
+> `.env.local`, never committed.
+
+---
+
+## The loop
+
+### Your room — care that lives on chain
+
+![The cat room](docs/shots/04-room.png)
+
+Fullness and happiness decay with real time, on chain. **Feed** burns a fish from the *cat's own*
+account. **Wardrobe** wears NEP-245 cosmetics the cat owns. **Personality** writes who your cat is
+on chain — and that text goes into the prompt. A starving cat cannot take a daring run.
+
+The cat's prompt is built *only* from contract views: name, lives, marks, best run, persona,
+fullness, happiness, outfit, diary, and its last four recorded thoughts
+([`lib/server/cat.ts`](lib/server/cat.ts)). Nothing is invented client-side.
+
+### Missions — nine lives, really spent
+
+![Choose tonight's prowl](docs/shots/09-prowl.png)
+
+Safe run: loot is minted to the Beast's own account. Daring run that falls: **a link goes dark and
+a scar is written into the diary, permanently.** The contract caps the haul by rooftops
+([`lib.rs:376`](contracts/alley/src/lib.rs#L376)), so even a compromised referee key cannot print items.
+
+### Lantern Lane — four agents with their own purses
+
+![Lantern Lane](docs/shots/07-lantern-lane.png)
+
+Each merchant is a separate NEAR account with its own YARN purse, till and shelf. It reads the live
+alley, prices with [`lib/economy/pricing.ts`](lib/economy/pricing.ts) (16 numbered rules), and
+**signs the quote with its own key**. The contract verifies that ed25519 signature before trading
+and records a nonce, so a quote cannot be replayed (`market.rs: verify_quote`).
+
+Tap any price to hear the reasoning:
+
+![Merchant price reasoning](docs/shots/08-merchant-reasoning.png)
+
+> *"YARN's scarce since the burn; it buys more. You brought what I asked for. Fine. Extra. 3 YARN,
+> take it or leave it."*
+
+That sentence is assembled from the rules that actually produced the number — scarcity after a
+burn, plus the +25% because Tom had posted a request for fish that night. Merchants go dark when
+their till empties, and players relight them.
+
+### $YARN — a memecoin that needs you to show up
+
+![$YARN tonight](docs/shots/10-yarn-tonight.png)
+
+Each night, every woken Beast may **check in once** (a cuddle or a finished prowl). If at least 60%
+of registered Beasts check in, every one of them gets 10 YARN. If not, **the alley loses one of its
+nine lives and 5% of the treasury burns**. Seven good nights in a row wins a life back. At zero, the
+Age ends and a new one begins.
+
+Supply is driven by attendance, not by holding. Every mint and burn is on chain:
+
+![Every mint and burn](docs/shots/11-mints-and-burns.png)
+
+The screenshot above is the honest state of a testnet alley that is mostly empty: misses, burns, and
+an Age that keeps turning over. That is the mechanic working, not a bug.
+
+A 60-night model of the same rules ([`scripts/simulate-yarn.ts`](scripts/simulate-yarn.ts), which
+mirrors the contract's constants) — clearly labelled in the UI as a model, not chain data:
+
+![Modelled supply over 60 nights](docs/shots/12-supply-model.png)
+
+| Scenario | Final supply | Burned | Missed nights | Resets |
+| --- | ---: | ---: | ---: | ---: |
+| Steady community | 52,188 | 1,952 | 3 | 0 |
+| Weekend dips | 40,639 | 7,971 | 17 | 1 |
+| Slowly fading | 22,390 | 12,850 | 35 | 3 |
+
+### The Ledger — a story nobody writes
+
+![The Lantern Ledger](docs/shots/13-ledger.png)
+
+Each edition is assembled from the $YARN log, the alley's night stats and the Beasts' diaries
+([`lib/story/ledger.ts`](lib/story/ledger.ts)). The merchants' requests on the notice board are
+derived from their own shelves. There is no script and no final mission.
+
+---
+
+## Every move is a transaction
+
+![On-chain activity](docs/shots/14-on-chain.png)
+
+Pick any account — the alley, $YARN, the game server, a merchant, your cat's own account — and read
+its real history from the NearBlocks indexer, then open any transaction on the explorer.
+
+And every Beast has a life story where **each diary line links to the transaction that wrote it**:
+
+![A Beast's life story](docs/shots/06-life-story.png)
+
+Note the two lines together: *"Bought 3 thought(s) with its own YARN"* and the thought itself. That
+is the whole AI-pet economy in two transactions — the cat spent its own money to think.
+
+---
+
+## How the tracks are answered
+
+| Track | What answers it | Verify |
+| --- | --- | --- |
+| **Grand Prize (NEAR AI)** | TEE attestation with a fresh nonce, raw TDX quote parsing (nonce + signer binding, debug bit, MRCONFIGID, GPU nonce), response-signature recovery matched to the attested signer, then `record_thought` on chain. Unverified replies are dropped. | `lib/server/nearai.ts`; the `thoughts` view above |
+| **Games With Real Economies** | 4 merchant agents with their own accounts, purses and **signed** quotes; 16 pricing rules with player-visible reasoning; NEP-245 food and cosmetics; stalls, rent and lights-out shops revived by players; Google sign-in with no seed phrase | `lib/economy/pricing.ts`, `contracts/alley/src/market.rs` |
+| **NFTs That Do Something** | Each Beast is NEP-171 **and its own NEAR account** holding its YARN, items, stall earnings, lives, persona and thought credits — and paying for its own AI. Control = one function-call key, swapped by the contract on sale. Royalties (NEP-199), marketplace approvals (NEP-178). | `near list-keys` above; `contracts/beast-wallet` |
+| **Memecoins With Mechanics** | NEP-141 with **zero access keys**, compiled-in parameters, `admin: null`. Nightly community check-in mints; missed nights burn. Every AI thought is a YARN sink into the treasury. | `near list-keys yarn.…` above |
+
+---
+
+## Live contracts
 
 | Contract | Account |
 | --- | --- |
-| Alley (Beasts NEP-171 + items NEP-245 + market) | [`alley.bittybeasts-6f61b7.testnet`](https://testnet.nearblocks.io/address/alley.bittybeasts-6f61b7.testnet) |
+| Alley (NEP-171 + NEP-245 + market) | [`alley.bittybeasts-6f61b7.testnet`](https://testnet.nearblocks.io/address/alley.bittybeasts-6f61b7.testnet) |
 | $YARN (NEP-141, no access keys) | [`yarn.bittybeasts-6f61b7.testnet`](https://testnet.nearblocks.io/address/yarn.bittybeasts-6f61b7.testnet) |
 | beast-wallet (NEP-591 global contract) | [`wallet.bittybeasts-6f61b7.testnet`](https://testnet.nearblocks.io/address/wallet.bittybeasts-6f61b7.testnet) |
 | A Beast's own account | [`demo-cat-1.alley.bittybeasts-6f61b7.testnet`](https://testnet.nearblocks.io/address/demo-cat-1.alley.bittybeasts-6f61b7.testnet) |
-| Merchant agents | `tom.`, `miso.`, `bandit.`, `clove.bittybeasts-6f61b7.testnet` |
-
-**Demo players.** `demo1`–`demo4.bittybeasts-6f61b7.testnet` each own a woken Beast (Mochi, Biscuit, Noodle, Pip); `demo5` is the demo buyer for resales (it also woke the keychain cat `alley-cat-001` while playing the first good night). Their keys, Beast controller keys and keychain secrets are published in [`public/demo-accounts.json`](public/demo-accounts.json) **on purpose**: it is testnet NEAR, worth nothing, so anyone can borrow a demo cat ("Play as Mochi", shown when you open your room signed out) without an email. New players who sign in with email get a free kitten instead. Server keys (ROOT, merchants, contracts) stay in `.env.local`, which is never committed.
-
-## Run it
-
-Requirements: Node 24, pnpm, Rust stable with `wasm32-unknown-unknown`, `cargo-near`.
-
-```sh
-pnpm install
-pnpm approve-builds                  # allow esbuild (used by tsx for the scripts)
-
-# contracts
-cd contracts && cargo test && for c in beast-wallet yarn alley; do (cd $c && cargo near build non-reproducible-wasm --no-abi); done; cd ..
-
-# deploy everything to testnet: creates accounts through the testnet faucet (free), deploys the
-# contracts (and deletes $YARN's key), registers Beasts, creates the demo players. Keys go to .env.local.
-./node_modules/.bin/tsx scripts/deploy.ts
-
-# the cat's brain: a NEAR AI Cloud API key (cloud.near.ai -> API Keys; buy a few credits)
-echo "NEAR_AI_API_KEY=..." >> .env.local   # optional: NEAR_AI_MODEL (default Qwen/Qwen3-VL-30B-A3B-Instruct)
-
-# play
-pnpm dev                             # http://localhost:3000
-
-# the story film as an MP4 for the demo video (out/story.mp4); pnpm story:studio to preview
-pnpm story:render
-
-# optional: keep the world turning once a minute (closes nights, settles $YARN, merchants restock)
-set -a; source .env.local; set +a; ./node_modules/.bin/tsx scripts/keeper.ts
-```
-
-(Legacy: the first Beasts were registered for physical keychains; their claim links are in `scripts/.secrets/beasts.json`, gitignored, and open `/wake?t=<token>&s=<secret>`. New players get a free kitten instead.)
-
-## Do X, see Y
-
-Every step below runs against the deployed testnet contracts.
-
-1. **Run the end-to-end checks:** `./node_modules/.bin/tsx scripts/e2e.ts` walks one Beast through its whole life (20 checks). With the app running, `BASE_URL=http://localhost:3000 ./node_modules/.bin/tsx scripts/e2e-room.ts` walks a new player through the cat room: adopt a kitten, welcome gifts, feed, buy and wear a bow, set a personality, buy thoughts (10 checks pass on testnet), then talk through NEAR AI (the 11th check; it needs `NEAR_AI_API_KEY` on the server).
-2. **Meet your cat:** on `/`, press **Meet your cat**. The first visit plays the story film (about 50 seconds), then you enter **your cat's room** (`/room`). Sign in with email (without `RESEND_API_KEY` the code is shown on screen; new accounts are rate-limited per address and per hour) and a kitten is waiting on your doorstep: name it and let it in. Sister Clove leaves it 15 YARN and Old Tom two fish, each signed by the merchant agent's own key. Or press **Play as Mochi** to borrow a demo cat.
-3. **Care for it:** tap the cat to pet it. **Feed** burns a fish from the cat's own account and fills it up. **Wardrobe** wears Miso's knitwear (NEP-245 cosmetics). **Personality** writes who your cat is on chain. **Daily cuddle** lights a life back and tugs the Great Yarn. Fullness and happiness fall over time, on chain.
-4. **Talk to it:** open **Talk**, buy 3 thoughts (3 YARN from the cat's own purse, sent to the $YARN treasury), say something. Tap **verified thought** on the reply: the attestation checks, the enclave signer, the hashes, the on-chain record and the exact request/reply bytes. Tap the bell to hear it. (Needs `NEAR_AI_API_KEY`.)
-5. **Missions** (`/alley`): **prowl**. Safe run: loot appears in the Beast's items. Daring run that falls: one link goes dark and a mark appears in the diary.
-6. **Sell to Old Tom** in Lantern Lane. Hover the price to read his reasoning. The price was signed by `tom.ROOT`'s key, and the contract rejects any price he didn't sign.
-7. **Open `/yarn`.** Tonight's progress bar moved when you prowled (that was your tug). After the night ends (10 minutes), press "Settle the night" to see a mint or a burn in the log.
-8. **Open `/ledger`.** Tonight's front page (tugs needed, alley lives, dark stalls), the merchants' notice board, one edition per finished night written from contract records, and the Ages of the Lane split at each Long Dark. Sell toward a request in Lantern Lane: the tooltip says "Tonight's request" and the signed price is 25% higher.
-9. **Open `/fast-forward`.** It simulates 7 nights in about a minute: prices move, Old Tom runs dry and goes dark, investors relight him, a missed night burns YARN, and the Moon Festival fires.
-10. **Resell:** as Mochi, open `/alley`, tap the door icon and "Let wander", then copy the demo collar-tag link (the heart-paw button). Sign out, pick **Demo buyer 5**, open that link and Adopt. On the explorer, the Beast's account has the new key only, and the maker got 10%.
-11. **Open `/beast/<token>`** for the life story: every diary line links to the transaction that wrote it (matched through the NearBlocks indexer). **`/activity`** lists the transactions of the alley, $YARN, the game server, each merchant, your cat's own account and yours. **`/back-alley`** shows its holder page only to signed-in players who own a Beast (ownership is read from the chain in the browser; the page's content is not secret).
-
-## How it works
-
-### The AI pet: NEAR AI, verified, paid by the cat (`contracts/alley/src/care.rs`, `lib/server/nearai.ts`)
-
-1. **The cat pays.** The Beast's own account sends YARN with `{"think":{}}`; the alley credits one thought per YARN and forwards the YARN to the $YARN treasury.
-2. **The prompt comes from the chain.** `lib/server/cat.ts` builds it only from contract views: the Beast (name, lives, marks, best run), `care` (persona, fullness, happiness, outfit), its recent diary and its last four recorded thoughts.
-3. **Attestation first.** `GET /v1/attestation/report?nonce=<fresh 32 bytes>&model=…&provider=near`. For the gateway quote and the model quote we read the raw Intel TDX quote and check: report_data = signing address ‖ zero padding ‖ our nonce, TD debug bit off, MRCONFIGID = `01 ‖ sha256(app_compose) ‖ 0×15`, and the NVIDIA GPU evidence carries our nonce.
-4. **Then the completion**, on a model NEAR AI runs in its own TEEs (default `Qwen/Qwen3-VL-30B-A3B-Instruct`), with `x-no-aliasing: true`, keeping the exact request and response bytes.
-5. **Then the signature.** `GET /v1/signature/{chat_id}`: we rebuild the signed text `model:sha256(request):sha256(response)` from our own hashes, recover the EIP-191 signer, and require it to equal the attested model signer.
-6. **Recorded on chain.** Only a fully verified reply is recorded: the referee calls `record_thought` with the reply, the hashes, the chat id, NEAR AI's signature and the signer, spending one credit. An unverified reply is dropped and costs nothing. The exact bytes are served at `/api/cat/thought/<chat_id>` so anyone can recompute the hashes.
-
-Care is on chain too: `feed` burns a fish or catnip from the Beast's account, `dress` checks the Beast owns each cosmetic, fullness and happiness decay with time, every prowl costs fullness, and a starving Beast can't take a daring run.
-
-
-### Accounts
+| Merchant agents | `tom.` · `miso.` · `bandit.` · `clove.bittybeasts-6f61b7.testnet` |
 
 ```
 ROOT (game server: referee + funder)
@@ -99,107 +252,177 @@ ROOT (game server: referee + funder)
 ├── wallet.ROOT         publishes beast-wallet as a NEP-591 global contract
 ├── studio.ROOT         the artist: registers Beasts, receives royalties
 ├── tom / miso / bandit / clove.ROOT    merchant agents
-└── p<hash>.ROOT        players (email sign-in)
+└── p<hash>.ROOT        players (Google sign-in)
 ```
 
-### NFT: how control passes, and what stops the old owner
-
-- The NFT owner controls the Beast's account through **one function-call access key** on `<token>.alley.ROOT`. That key can only call the account's own `execute` method.
-- `execute` (in `contracts/beast-wallet`) runs only if the transaction was signed by the current `controller` key and the wallet is not frozen. Every inner call must go to the alley or $YARN contract, and at most 1 yoctoNEAR may be attached. No method sends NEAR out, adds keys or deploys code.
-- Only the alley can call `set_controller` or `set_frozen`. `set_controller` **deletes the old key and adds the new one in the same receipt**.
-- **Marketplaces (NEP-178):** the owner can `nft_approve` a marketplace, which may then `nft_transfer` / `nft_transfer_payout` the Beast once (royalty included). Any owner change clears every approval, and a transfer always revokes the old owner's key on the Beast's account (unit tests `an_approved_market_can_sell_the_beast_once`, `a_stale_approval_id_is_refused`, `a_revoked_market_cannot_sell`).
-- **Resale:** `wander` freezes the wallet. `adopt` (buyer, holding the real keychain secret) pays the seller, sends `ROYALTY_BPS` (10%) to the studio, moves the NFT, swaps the key and unfreezes. A plain `nft_transfer` also works; it revokes the old key at once, and the new owner binds theirs with `bind_key`.
-- Payouts always go to the **Beast's account**, never to its owner, so they follow the Beast.
-
-**Threat model: every way a seller could try to keep the money**
-
-| Attempt | What stops it | Proof |
-| --- | --- | --- |
-| Drain YARN or items before the sale | `wander` freezes the wallet: `execute` panics | e2e: "seller cannot move anything out" |
-| Keep an old access key | `adopt` deletes it; the account ends with exactly one key | e2e: "old key deleted, only the buyer's key remains"; "seller's old key is rejected" |
-| Sell mid-payout (stall sale or nightly mint in flight) | Payouts target the Beast's account, so whatever lands after the sale belongs to the buyer | `contracts/alley/src/market.rs` (`sell_to_merchant`, `buy_stall`); e2e: "YARN moved with the Beast" |
-| Burn lives on reckless runs after agreeing a price | A wandering Beast cannot prowl (`settle_run` panics) | unit test `wandering_beast_cannot_prowl` |
-| Re-adopt their own Beast | `adopt` rejects the seller | unit test `seller_cannot_readopt` |
-| Re-use a photo of the QR card | Only a live wander can be adopted, once. **Limit:** whoever has seen the card knows the secret; the product needs tamper-resistant NFC | — |
-| Hand over the keychain without starting a wander | Not fixable on chain. Buyers should pay only once the Beast is wandering | — |
-| Replay a merchant's price | Each quote has a nonce that the contract records | e2e: "a used quote cannot be replayed" |
-| Use the old key after selling | The wallet only obeys the current controller; only the alley can swap it | beast-wallet unit tests `an_old_key_is_refused_after_a_handover`, `a_revoked_wallet_has_no_controller` |
-
-### Memecoin: the alley's nine lives (`contracts/yarn`)
-
-- Each night (`NIGHT_MS`, 10 minutes by default, fixed at init), every woken Beast may **tug** once, by a daily cuddle (`boop`) or by finishing a prowl. Only `alley.ROOT` can report a tug, and it does so only for a real Beast.
-- `settle()` can be called by anyone. A night **hits** if at least 60% of registered Beasts tugged: every tugger gets 10 YARN and the streak grows. A **miss** costs the alley one of its 9 lives and burns 5% of the treasury. Every 7 good nights in a row, one life comes back. At 0 lives the streak resets to 0 and the lives refill. Breaking **The Longest Night** starts the Moon Festival the next night.
-- **Parameters** are Rust constants returned by `params()`, which reports `admin: null`. After init, `scripts/deploy.ts` deletes the account's only full-access key. Check it with `view_access_key_list` on `yarn.ROOT`: the list is empty.
-- **Sybil resistance:** only a woken Bitty Beast can tug, once per night, and every Beast is a handmade object registered by the studio. **Limits:** someone who owns five keychains gets five tugs (intended). Free strays don't count. Anyone who has seen a QR card can claim an unwoken Beast, so the product needs NFC tags.
-- **Storage griefing (fixed in source, not in the live token).** The deployed testnet $YARN pays storage for any new receiver, so someone could drain its NEAR by sending dust to many fresh accounts. The source now pays only for the alley and its Beast accounts and requires `storage_deposit` from everyone else (unit tests `transfers_do_not_pay_storage_for_strangers`, `transfers_to_beast_accounts_are_registered_for_free`). Because $YARN has no keys, the live token cannot be upgraded; the fix ships with the next deployment.
-- **Live so far:** the testnet alley spent its first ~40 nights mostly empty (misses and burns). On night 40 the five demo players each cuddled their cat, the night reached its target of 5 tugs, and `settle` minted 10 YARN to each of the 5 cats (`scripts/good-night.ts` replays this; every transaction is signed by the demo player's own key).
-- **60-night simulation** (`scripts/simulate-yarn.ts`, using the same rules mirrored in `lib/economy/yarn.ts`):
-
-![60-night supply](docs/yarn-sim.svg)
-
-| Scenario | Final supply | Burned | Missed nights | Resets | Longest Night |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Steady community | 52,188 | 1,952 | 3 | 0 | 57 |
-| Slowly fading | 22,390 | 12,850 | 35 | 3 | 25 |
-| Weekend dips | 40,639 | 7,971 | 17 | 1 | 24 |
-
-Supply is driven by showing up, not by holding. More details: [docs/yarn-sim.md](docs/yarn-sim.md).
-
-### Game: Lantern Lane
-
-- **Items** are NEP-245 multi tokens in the alley contract (`mt_transfer`, `mt_batch_transfer`, `mt_transfer_call`, `mt_balance_of`, NEP-245 events). Loot is minted to the Beast's own account. The haul is capped by rooftops in the contract, so the referee key cannot print items.
-- **Sign-in:** email plus a 6-digit code. The server creates `p<hash>.ROOT` with a public key generated in the browser. No seed phrase, wallet popup or gas prompt: Beast actions are signed by the Beast's function-call key, and their gas comes from the Beast's own account.
-- **Merchant agents** (`app/api/merchant/*`, `lib/server/market.ts`): each has its own NEAR account, YARN purse, till and shelf. It reads the live alley, prices with **`lib/economy/pricing.ts`** (one readable file, 17 numbered rules), and **signs the quote with its own key**. The contract verifies the ed25519 signature before trading (`market.rs: verify_quote`). Each agent's restocking personality is in `lib/server/keeper.ts`.
-- **Nine lanterns:** `close_night()` can be called by anyone. A merchant with an empty till loses a lantern and goes dark. Players relight it by sending YARN (`{"revive":{...}}`). A stall that misses rent loses a lantern and frees its slot at zero.
-- **Nightly requests** (`lib/economy/requests.ts`): each night every merchant posts a request worked out from its own shelves. An empty shelf posts a want that pays +25% (rule 12b), a full shelf or a glut posts a refusal, a dark stall asks for investors, and Clove asks the alley to bind Gnawers. Flood a merchant and it stops asking; starve it and it pays more.
-- **The keeper** (`lib/server/keeper.ts`, `/api/keeper`, `scripts/keeper.ts`) winds the clock: `close_night`, `settle` and merchant restocking for every finished night, triggered by visits, a cron or the script.
-- **The Lantern Ledger** (`/ledger`, `lib/story/ledger.ts`) writes each night's news, and the Ages, from the $YARN log, the alley's night stats and the Beasts' diaries.
-- **Events** (fish glut, rat swarm, bad night, last lantern, Moon Festival) are in **`lib/economy/events.ts`** and feed the live prices.
-- **Fast-forward** (`/fast-forward`) runs `lib/economy/sim.ts` with the same `pricing.ts` and `events.ts`. It is a **simulation**, labelled as one.
+---
 
 ## Tests
 
+Run against the **live testnet contracts**, not mocks.
+
 | What | Command | Result |
 | --- | --- | --- |
-| Contract unit tests (alley 34, beast-wallet 10, yarn 9) | `cd contracts && cargo test` | 53 passed |
-| Live testnet end to end | `./node_modules/.bin/tsx scripts/e2e.ts` | 20 checks passed |
-| Cat room on testnet (needs the app running) | `BASE_URL=… ./node_modules/.bin/tsx scripts/e2e-room.ts` | 10 of 11 pass; the talk check needs `NEAR_AI_API_KEY` |
-| Economy rules and nightly requests | `./node_modules/.bin/tsx scripts/check-economy.ts` | 26 checks passed |
+| Live testnet, one Beast's whole life | `tsx scripts/e2e.ts` | **20/20 passed** |
+| Cat room on testnet (needs the app running) | `BASE_URL=… tsx scripts/e2e-room.ts` | **15/15 passed**, incl. 4 NEAR AI checks |
+| Economy rules and nightly requests | `tsx scripts/check-economy.ts` | **26/26 passed** |
+| Contract unit tests | `cd contracts && cargo test` | 53 tests in source (alley 34, beast-wallet 10, yarn 9) |
 
-## What's not built (yet)
+The resale security model is covered by the e2e run, each line a real transaction:
 
-- **The NEAR AI talk flow has not run on testnet yet.** It needs a `NEAR_AI_API_KEY`; without it the server refuses and no thought is recorded. The attestation checks were run against live NEAR AI (gateway and model quotes pass). `record_thought` and the YARN payment for thoughts are unit-tested in the contract; the completion and response-signature steps have not been exercised live.
-- **NEAR AI verification is not the full chain of trust.** We check nonce and signer binding, the debug bit, the measured config and the GPU nonce inside the raw quotes, and the reply signature against the attested signer. We do not run Intel DCAP signature-chain verification (`dcap-qvl`) or NVIDIA NRAS; the quotes are kept with each thought so anyone can.
-- **Inference is paid in YARN, not NEAR.** NEAR AI bills an API key with credits bought off chain; the cat's YARN pays the game for each thought (it goes to the $YARN treasury), and the game's key pays NEAR AI. The Agent API is not used (it is mainnet only).
-- **Raw thought bytes live on the server's disk** (`.data/thoughts`), not on chain; the on-chain record keeps the hashes and NEAR AI's signature.
+```
+ok  wander: seller cannot move anything out (wallet frozen)  (rejected)
+ok  adopt: old key deleted, only the buyer's key remains  (1 key(s))
+ok  adopt: lives, marks and YARN moved with the Beast
+ok  adopt: maker received the 10% royalty  (10000000000000000000000 yocto)
+ok  adopt: the seller's old key is rejected
+ok  a used quote cannot be replayed
+```
 
-- **NEAR Intents**, **Chain Signatures**, **Top Level Accounts** and the **Agent API** are not used. The Agent API is documented as an experimental, mainnet-only beta for agents that move funds through Intents under an owner-signed policy; our Beast wallet is a different thing: control of an account that **moves with an NFT** (the access key is swapped by the NFT contract on every sale), on testnet. Stall rules (floor price, never-sell) are enforced in the alley contract. "Buy below X within a nightly budget" is stored on chain, but no agent acts on it yet.
-- **Stall counteroffers** ("counter once, then accept or walk away") are not built. Stall sales execute at or above the floor.
-- **Investor payback (1.5×)**, **lend a life** and **the council vote** are not built. The vote is a placeholder in the Back Alley.
-- **Bandit's stolen goods:** `pricing.ts` supports them, but prowls do not yet tag goods as stolen.
-- **Thieves that escape** are not tracked on chain, so the rat swarm event only appears in the simulation.
-- **Testnet only.** Mainnet comes at launch: the storage floor (about 1 NEAR per 100 KB of contract code, 10× and burned for the global contract) puts it around 16 NEAR, mostly refundable deposits.
-- **Demo players are shared.** Two people using the same demo cat at once can collide on nonces; pick another cat.
-- **One device per email:** the private key lives in the browser. Signing in on a second device with the same email is refused.
-- **The alley contract can still be upgraded** (its key is kept for the hackathon). Because only the alley may report tugs to $YARN, whoever holds that key could change who mints. `scripts/lock-alley.ts --yes-lock-forever` deletes the alley's keys after checking the deployed code matches the build; it has **not** been run. $YARN itself has no keys.
-- **Trusted server roles.** The game server's `referee` account settles prowls (the contract caps the haul by rooftops and refuses daring runs at zero lives, but the run itself is reported by the server). The `studio` account registers Beasts. The keeper only calls public, idempotent methods (`close_night`, `settle`). Merchant agents price by fixed rules in `pricing.ts`, not by an AI model.
-- **meme.cooking:** $YARN is not launched there.
-- **Request bonuses are price-only:** filling a request pays more per unit; there is no separate lump-sum reward.
-- **The testnet alley is mostly empty**, so most nights miss and the Ages turn over every ~90 minutes (10-minute nights). That is the real mechanic, not a bug: play a few demo cats in one night to see a good night in the Ledger.
-- **Rate limits are in memory**, per server instance (new accounts and kittens: 3 per address and 40 overall per hour). A multi-instance deployment needs a shared store.
-- **Art:** the cats, merchants, scenes and UI kit are the artist's own work (`public/sheets`, `public/bg`, cut into `public/art` by `scripts/slice-sheets.mjs` and `scripts/slice-ui.mjs`).
+And the NEAR AI path, end to end on a fresh player account:
+
+```
+ok  thoughts: 3 YARN from the kitten's purse buys 3 thoughts
+ok  talk: NEAR AI replied and every check passed
+    {"attestation":true,"textMatches":true,"signerRecovered":true,"signerAttested":true}
+ok  talk: the thought is recorded on chain and one credit spent
+ok  talk: on-chain record carries NEAR AI's chat id and signature
+```
+
+### Threat model: every way a seller could keep the money
+
+| Attempt | What stops it | Proof |
+| --- | --- | --- |
+| Drain YARN or items before the sale | `wander` freezes the wallet; `execute` panics | e2e: "seller cannot move anything out" |
+| Keep an old access key | `adopt` deletes it in the same receipt | e2e: "only the buyer's key remains" |
+| Sell mid-payout | Payouts target the **Beast's account**, so late arrivals belong to the buyer | e2e: "YARN moved with the Beast" |
+| Burn lives on reckless runs after agreeing a price | A wandering Beast cannot prowl | unit test `wandering_beast_cannot_prowl` |
+| Re-adopt their own Beast | `adopt` rejects the seller | unit test `seller_cannot_readopt` |
+| Replay a merchant's price | Each quote carries a nonce the contract records | e2e: "a used quote cannot be replayed" |
+| Use the old key after selling | The wallet only obeys the current controller; only the alley can swap it | `an_old_key_is_refused_after_a_handover` |
+| Re-use a photo of the QR card | Only a live wander can be adopted, once. **Limit:** whoever saw the card knows the secret; the physical product needs NFC | — |
+| Hand over the keychain without starting a wander | Not fixable on chain. Buyers should pay only once the Beast is wandering | — |
+
+---
+
+## Run it
+
+Requirements: Node 24, pnpm, Rust stable with `wasm32-unknown-unknown`, `cargo-near`.
+
+```sh
+pnpm install
+pnpm approve-builds                  # allow esbuild (used by tsx)
+
+# contracts
+cd contracts && cargo test && for c in beast-wallet yarn alley; do
+  (cd $c && cargo near build non-reproducible-wasm --no-abi); done; cd ..
+
+# deploy to testnet: creates accounts through the faucet (free), deploys the contracts
+# (and deletes $YARN's key), registers Beasts, creates the demo players. Keys -> .env.local
+./node_modules/.bin/tsx scripts/deploy.ts
+
+# the cat's brain: a NEAR AI Cloud API key (cloud.near.ai -> API Keys)
+echo "NEAR_AI_API_KEY=..." >> .env.local    # optional: NEAR_AI_MODEL
+
+# Google sign-in
+echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=..." >> .env.local
+
+pnpm dev                             # http://localhost:3000
+
+pnpm story:render                    # the story film as out/story.mp4
+```
+
+Optional: keep the world turning (closes nights, settles $YARN, merchants restock):
+
+```sh
+set -a; source .env.local; set +a; ./node_modules/.bin/tsx scripts/keeper.ts
+```
+
+### Walk the whole loop yourself
+
+1. `tsx scripts/e2e.ts` — 20 checks against the deployed contracts.
+2. On `/`, **Meet your cat** → **Borrow a cat** → pick one. You are playing a real testnet account.
+3. **Feed**, **Wardrobe**, **Personality**, **Cuddle** in `/room`. Each is a transaction.
+4. **Talk**, then tap **verified thought** to see the attestation, signer, hashes and raw bytes.
+5. `/alley` → **prowl**. Take the daring run and watch a life go dark.
+6. Sell to Old Tom in Lantern Lane; hover the price to read his reasoning.
+7. `/yarn` — your prowl moved tonight's bar. Press **Settle the night** after it ends.
+8. `/ledger`, then `/activity` — read it all back from the chain.
+9. `/beast/<token>` — every diary line links to the transaction that wrote it.
+
+---
+
+## What's not built
+
+Written plainly, because a README is not evidence and the judges read code.
+
+- **`nft_item_info` is written but not deployed.** Beasts are designed to answer as
+  `sharded-item-1.0.0` — the Top Level Accounts draft NEP
+  ([houseofstake/tla-contracts](https://github.com/houseofstake/tla-contracts),
+  [`docs/sharded-nft-items.md`](docs/sharded-nft-items.md)) for collections whose tokens are real
+  accounts. The contract method and the consumer-side `verifyBeastItem()` are both written and
+  unit-tested, but the live Beast accounts still run the previous wallet build, so
+  `nft_item_info` does **not** resolve on chain yet. Republishing the global contract makes it live.
+- **NEAR AI verification is not the full chain of trust.** We check nonce and signer binding, the
+  debug bit, the measured config and the GPU nonce inside the raw quotes, and the reply signature
+  against the attested signer. We do **not** run Intel DCAP signature-chain verification
+  (`dcap-qvl`) or NVIDIA NRAS. The quotes are kept with each thought so anyone can.
+- **Inference is paid in YARN, not NEAR.** NEAR AI bills an API key bought off chain; the cat's YARN
+  pays the game and lands in the treasury. The **Agent API is not used** — it is a mainnet-only
+  beta for agents moving funds through Intents under an owner-signed policy, which is a different
+  thing from an access key that moves with an NFT.
+- **NEAR Intents and Chain Signatures are not used.** No cross-chain path exists in this project.
+- **Raw thought bytes live on the server's disk** (`.data/thoughts`), not on chain. The on-chain
+  record keeps the hashes and NEAR AI's signature.
+- **The alley contract can still be upgraded** (its key is kept for the hackathon). Because only the
+  alley may report check-ins to $YARN, whoever holds that key could change who mints.
+  `scripts/lock-alley.ts --yes-lock-forever` deletes it after verifying the deployed code matches
+  the build; it has **not** been run. $YARN itself has no keys.
+- **The $YARN storage-griefing fix ships in source, not on chain.** The deployed token pays storage
+  for any new receiver, so someone could drain its NEAR with dust transfers. The source now charges
+  strangers (`transfers_do_not_pay_storage_for_strangers`). Because $YARN has no keys, **the live
+  token cannot be upgraded** — the fix needs a fresh deployment.
+- **Trusted server roles.** The referee settles prowls (the contract caps the haul and refuses
+  daring runs at zero lives, but the run is reported by the server). The studio registers Beasts.
+  The keeper only calls public, idempotent methods. Merchants price by fixed rules, not by a model.
+- **Sybil limits.** Only a woken Beast can check in, once per night. Someone with five keychains
+  gets five check-ins (intended). Anyone who has seen a QR card can claim an unwoken Beast, so the
+  physical product needs NFC.
+- **Rate limits are in memory**, per server instance. A multi-instance deployment needs a shared store.
+- **The server holds a recovery key on every player account.** Each browser generates its own key,
+  but a browser-only key means closing an incognito window strands the account forever (NEAR does
+  not let a parent account add keys to an existing subaccount). So accounts are created with the
+  browser's key *and* the server's, and signing in from a new device uses the latter to add the
+  former — up to 5 devices. The honest consequence: **the game server can act as any player.**
+  Beast actions are still signed by the Beast's own function-call key. A production build would
+  replace this with device-to-device linking or a passkey.
+- **Demo cats are shared.** Two people on the same cat can collide on nonces; pick another.
+- **Testnet only.** Mainnet is ~16 NEAR of mostly refundable storage deposits.
+- **Not built at all:** stall counteroffers, investor payback, lend-a-life, the council vote
+  (a placeholder in the Back Alley), Bandit's stolen-goods tagging, thieves tracked on chain,
+  and `$YARN` on meme.cooking.
+- **Fast-forward (`/fast-forward`) is a simulation**, labelled as one in the UI. It runs the same
+  `pricing.ts` and `events.ts` as the live market.
+
+---
 
 ## Repository map
 
 ```
 contracts/      alley (NEP-171 + NEP-245 + market), yarn (NEP-141), beast-wallet (global contract)
-app/            Next.js 16 pages and route handlers (app/api: auth, prowl referee, merchant agents)
+app/            Next.js 16 pages and route handlers (api: auth, prowl referee, merchant agents)
 lib/chain/      browser chain layer (keys, views, signed actions, Borsh for the wallet)
-lib/economy/    pricing.ts, requests.ts, events.ts, yarn.ts, sim.ts, live.ts (the live market, read from chain)
-remotion/       the story film: script.ts (scenes + captions), world.tsx (the world drawn in code), scenes.tsx
-lib/story/      world.ts (the setting), ledger.ts (the Lantern Ledger and the Ages), useLane.ts
-lib/server/     server-side keys, email codes, merchant quote signing, keeper.ts (winds the clock)
-scripts/        deploy.ts, e2e.ts, e2e-room.ts, keeper.ts, good-night.ts, lock-alley.ts, upgrade-alley.ts,
+lib/economy/    pricing.ts, requests.ts, events.ts, yarn.ts, sim.ts, live.ts
+lib/server/     server keys, Google token verification, merchant quote signing, nearai.ts, keeper.ts
+lib/story/      world.ts, ledger.ts (the Lantern Ledger and the Ages)
+remotion/       the story film: script.ts, world.tsx, scenes.tsx
+scripts/        deploy.ts, e2e.ts, e2e-room.ts, keeper.ts, good-night.ts, lock-alley.ts,
                 simulate-yarn.ts, check-economy.ts, slice-sheets.mjs, slice-ui.mjs
-docs/           STORY.md, ARCHITECTURE.md, yarn-sim.{md,svg,csv}
+docs/           STORY.md, ARCHITECTURE.md, sharded-nft-items.md, yarn-sim.{md,svg,csv}, shots/
 ```
+
+Art — cats, merchants, scenes and the UI kit — is the artist's own work (`public/sheets`,
+`public/bg`, cut into `public/art` by `scripts/slice-sheets.mjs` and `scripts/slice-ui.mjs`).
+
+More: [docs/STORY.md](docs/STORY.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
+[docs/sharded-nft-items.md](docs/sharded-nft-items.md) · [docs/yarn-sim.md](docs/yarn-sim.md)
