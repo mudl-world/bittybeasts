@@ -58,15 +58,9 @@ export async function provisionPlayer(request: Request, email: string, publicKey
       .then(() => true)
       .catch(() => false);
     if (!canRecover) {
-      return json(
-        {
-          error:
-            "This account was created on a device whose key is gone, and it has no server recovery key, " +
-            "so it can't be reopened. Sign in with a different address (you+anything@gmail.com works), " +
-            "or borrow a demo cat.",
-        },
-        409,
-      );
+      // Kept short and jargon-free on purpose: lib/ui/errors.ts replaces anything over 160
+      // characters (or containing chain words) with a generic fallback, which would hide this.
+      return json({ error: "This old account can't be reopened. Sign in with a different email, or borrow a demo cat." }, 409);
     }
 
     const keyCount = await rpc()
