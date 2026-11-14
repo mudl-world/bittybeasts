@@ -326,7 +326,7 @@ Run against the **live testnet contracts**, not mocks.
 | Cat room on testnet (needs the app running) | `BASE_URL=… tsx scripts/e2e-room.ts` | **13/13 passed**, incl. 3 NEAR AI checks |
 | Economy rules and nightly requests | `tsx scripts/check-economy.ts` | **26/26 passed** |
 | NEAR AI attestation, on its own | `tsx scripts/verify-attestation.ts` | **9/9 passed** against live NEAR AI |
-| Contract unit tests | `cd contracts && cargo test` | 53 tests in source (alley 34, beast-wallet 10, yarn 9) |
+| Contract unit tests | `cd contracts && cargo test -p alley -p yarn` | **43 passed** (alley 34, yarn 9) |
 
 The resale security model is covered by the e2e run, each line a real transaction:
 
@@ -337,6 +337,21 @@ ok  adopt: lives, marks and YARN moved with the Beast
 ok  adopt: maker received the 10% royalty  (10000000000000000000000 yocto)
 ok  adopt: the seller's old key is rejected
 ok  a used quote cannot be replayed
+```
+
+Every $YARN supply rule is enforced by the contract and tested in Rust, not only by the
+TypeScript model used for the 60-night chart (`cargo test -p yarn`):
+
+```
+ok  genesis_and_params_are_fixed
+ok  only_alley_can_tug
+ok  good_night_mints_to_tuggers
+ok  missed_night_burns_and_costs_a_life
+ok  seven_good_nights_win_a_life_back
+ok  nine_misses_reset_the_streak_and_refill
+ok  breaking_the_longest_night_starts_one_festival
+ok  transfers_do_not_pay_storage_for_strangers
+ok  transfers_to_beast_accounts_are_registered_for_free
 ```
 
 And the NEAR AI path, end to end on a fresh player account:
