@@ -51,6 +51,21 @@ async function info(account: string) {
   }
 }
 
+/** Every Beast in the collection, so the after-check covers what the publish actually changed. */
+async function allBeasts(): Promise<string[]> {
+  const total = Number((await provider.callFunction({ contractId: ALLEY, method: "nft_total_supply", args: {} })) ?? 0);
+  const out: string[] = [];
+  for (let from = 0; from < total; from += 50) {
+    const page = (await provider.callFunction({
+      contractId: ALLEY,
+      method: "nft_tokens",
+      args: { from_index: String(from), limit: 50 },
+    })) as { token_id: string }[];
+    out.push(...page.map((t) => `${t.token_id}.${ALLEY}`));
+  }
+  return out;
+}
+
 async function sampleBeasts(limit: number): Promise<string[]> {
   const tokens = (await provider.callFunction({ contractId: ALLEY, method: "nft_tokens", args: { from_index: "0", limit } })) as {
     token_id: string;
@@ -90,18 +105,25 @@ async function main() {
   });
   console.log(`  tx ${out.transaction.hash}`);
 
-  console.log("\nAfter:");
+  // Check every Beast, not the sample: the sample was only there to show the "before" state, and
+  // a republish changes all of them at once. A Beast whose state stopped decoding would panic on
+  // `info`, taking its owner's YARN and items with it.
+  console.log("\nAfter (every Beast):");
+  const all = await allBeasts();
   let broke = 0;
-  for (const b of beasts) {
+  let answering = 0;
+  for (const b of all) {
     const [ok, item] = await Promise.all([info(b), itemInfo(b)]);
     if (!ok) broke++;
+    if (item) answering++;
     const spec = item ? `${item.spec} owner=${item.owner_id ?? "null"} status=${JSON.stringify(item.status)}` : "MISSING";
     console.log(`  ${b.padEnd(46)} state:${ok ? "ok" : "FAIL"}  ${spec}`);
   }
+  console.log(`\n  ${all.length} Beasts · ${all.length - broke} still readable · ${answering} answering nft_item_info`);
   console.log(
     broke === 0
-      ? "\nEvery sampled Beast still deserializes, and now answers nft_item_info.\n"
-      : `\n${broke} Beast(s) failed to read back. Investigate before touching anything else.\n`,
+      ? "\nEvery Beast still deserializes, and now answers the sharded-item standard.\n"
+      : `\n${broke} Beast(s) failed to read back. Their stored state no longer decodes under the new\ncode — republish the previous wasm under ${WALLET} to put them back.\n`,
   );
   process.exit(broke === 0 ? 0 : 1);
 }
