@@ -52,25 +52,37 @@ then calls the alley's own `nft_token` and refuses if the two disagree about the
 controller key, so `nft_item_info` reports the state that actually governs the account rather than
 a cached copy. Each change of owner bumps `rotation_seq`.
 
-The three owner-tracking fields were written as `#[borsh(default)]`, intended to let Beasts already
-deployed with the earlier five-field state keep deserializing. **That attribute does not exist in
-borsh 1.8.1** (its derive accepts `bound`, `use_discriminant`, `serialize`, `deserialize`, `skip`,
-`init`, `serialize_with`, `deserialize_with`, `crate` — there is no `default`), so the file does not
-compile. Migrating this state safely needs a real mechanism, such as `deserialize_with` or an
-explicit versioned-state enum.
+The three owner-tracking fields are read through `deserialize_with = "or_default"`. Accounts
+created before those fields existed hold exactly `alley, yarn, controller, frozen, executed`, so
+borsh runs out of buffer at `owner`; `or_default` returns the default there instead of erroring,
+which is what keeps those accounts readable after the global contract is republished.
+
+(`#[borsh(default)]` does **not** work — borsh 1.8.1 has no such attribute, and an earlier revision
+of this file claimed it did.)
 
 ## Status in this repo
 
-**Written, not compiling, not deployed, and not safe to deploy as it stands.**
+**Live on testnet.** The global contract was republished on 15 Nov 2026, which swapped the code
+under every existing Beast account in one transaction. All 25 Beasts still deserialize and now
+answer `nft_item_info`:
 
-Earlier revisions of this document said "written and unit-tested". That was wrong, and worth
-correcting plainly: there is no test for `verifyBeastItem`, and the contract side does not build at
-all because of the `#[borsh(default)]` problem above. The claim was made while the local toolchain
-could not compile contracts, and nothing caught it until the toolchain was fixed.
+```sh
+near contract call-function as-read-only \
+  demo-cat-1.alley.bittybeasts-6f61b7.testnet nft_item_info json-args '{}' \
+  network-config testnet now
+```
 
-So `nft_item_info` does not resolve on chain, and republishing the global contract — which swaps the
-code under every existing Beast account at once — must not be attempted until the state migration is
-designed and tested properly.
+```json
+{"spec":"sharded-item-1.0.0","init":false,"status":"Active",
+ "collection_id":"alley.bittybeasts-6f61b7.testnet",
+ "token_id":"demo-cat-1.alley.bittybeasts-6f61b7.testnet",
+ "owner_id":null,"rotation_seq":"0","rotation_epoch":0}
+```
 
-Everything else in the NFT path (NEP-171, the one-key control model, royalties, approvals) *is*
-deployed and verifiable on testnet, and is unaffected by this.
+`owner_id` is null and `rotation_epoch` 0 on every existing Beast, which is the honest answer: the
+deployed alley predates `set_owner`, so no owner has been recorded on an item account. It is also
+why `init` is false. Consumers must not treat `owner_id` as authoritative anyway —
+`verifyBeastItem()` confirms ownership against the alley's own `nft_token`, which is the check the
+draft NEP actually asks for.
+
+`scripts/republish-wallet.ts` performs the republish and re-checks every Beast afterwards.

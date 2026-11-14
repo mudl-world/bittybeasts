@@ -28,7 +28,9 @@ const ROOT = env.NEXT_PUBLIC_ROOT_ACCOUNT;
 const WALLET = `wallet.${ROOT}`;
 const ALLEY = `alley.${ROOT}`;
 const WASM = resolve(ROOT_DIR, "contracts/target/near/beast_wallet/beast_wallet.wasm");
-const provider = new JsonRpcProvider({ url: "https://rpc.testnet.near.org" });
+// test.rpc.fastnear.com, not rpc.testnet.near.org: the latter is deprecated and rate-limits a
+// burst of per-account reads, which made the after-check report working Beasts as broken.
+const provider = new JsonRpcProvider({ url: "https://test.rpc.fastnear.com" });
 const publish = process.argv.includes("--publish");
 
 /** Ask a Beast account what it is. Returns null when the method isn't deployed yet. */
@@ -113,11 +115,15 @@ async function main() {
   let broke = 0;
   let answering = 0;
   for (const b of all) {
-    const [ok, item] = await Promise.all([info(b), itemInfo(b)]);
+    // Sequential, with a pause: a burst of reads gets rate-limited, and a throttled read is
+    // indistinguishable from a broken Beast unless you slow down.
+    const ok = await info(b);
+    const item = await itemInfo(b);
     if (!ok) broke++;
     if (item) answering++;
     const spec = item ? `${item.spec} owner=${item.owner_id ?? "null"} status=${JSON.stringify(item.status)}` : "MISSING";
     console.log(`  ${b.padEnd(46)} state:${ok ? "ok" : "FAIL"}  ${spec}`);
+    await new Promise((r) => setTimeout(r, 250));
   }
   console.log(`\n  ${all.length} Beasts · ${all.length - broke} still readable · ${answering} answering nft_item_info`);
   console.log(
