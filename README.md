@@ -109,43 +109,35 @@ Everything else in this README is downstream of these two facts.
 near account list-keys demo-cat-1.alley.bittybeasts-6f61b7.testnet network-config testnet now
 ```
 
-```
-| # | Public Key              | Permissions                                                   |
-| 1 | ed25519:3ZBsSkPHxmm1QW… | only do ["execute"] function calls on                         |
-|   |                         | demo-cat-1.alley.bittybeasts-6f61b7.testnet                   |
-|   |                         | with an allowance of 0.244 NEAR                               |
-```
+One row comes back, and it reads:
 
-No full-access key. The NFT owner holds that one function-call key; the alley swaps it on every
-sale, deleting the old one **in the same receipt**.
+> `ed25519:3ZBsSkPHxmm1QWRJEE265NLXL8co9tENkowBMqG17bN5` — only do `["execute"]` function calls on
+> `demo-cat-1.alley.bittybeasts-6f61b7.testnet` with an allowance of 0.244 NEAR
 
-**2. $YARN has no keys at all. Nobody can upgrade it or mint outside the rules.**
+No full-access key, and nothing it can call but its own `execute`. The NFT owner holds that one
+key; the alley swaps it on every sale, deleting the old one **in the same receipt**.
 
-```sh
-near account list-keys yarn.bittybeasts-6f61b7.testnet network-config testnet now
-```
+**2. Nobody can mint $YARN outside the rules — including us.**
 
-```
-+---+------------+-------+-------------+
-| # | Public Key | Nonce | Permissions |
-+---+------------+-------+-------------+
-+---+------------+-------+-------------+
-```
-
-The parameters are Rust constants and `params()` reports `admin: null`. `scripts/deploy.ts` deletes
-the account's only full-access key after init.
-
-A keyless token is not enough on its own, though: $YARN mints only when the **alley** reports a
-nightly check-in, so whoever could upgrade the alley could change who mints. So the alley is locked
-too — `scripts/lock-alley.ts` checks the deployed code matches the local build, then deletes its
-keys as well:
+$YARN mints only when the **alley** reports a nightly check-in, so a keyless token alone would not
+be enough: whoever could upgrade the alley could change who mints. Both accounts hold **zero**
+access keys, so neither can ever be redeployed.
 
 ```sh
-near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now   # also empty
+near account list-keys yarn.bittybeasts-6f61b7.testnet  network-config testnet now
+near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now
 ```
 
-Both ends of the mint path are now immutable. This is irreversible, and it has a real cost — see
-[What's not built](#whats-not-built).
+Both print an empty key table — no full-access key, no function-call key, nothing. (The RPC answers
+the same question without the CLI: `view_access_key_list` returns `{"keys": []}` for each.)
+
+The parameters are Rust constants compiled into the token and `params()` reports `admin: null`.
+`scripts/deploy.ts` deletes $YARN's only full-access key after init; `scripts/lock-alley.ts` checks
+the deployed code matches the local build, then does the same for the alley.
+
+Both ends of the mint path are immutable. That cuts both ways, and the cost is real: **no bug in
+either contract can ever be fixed.** A mainnet launch would deploy fresh contracts and lock them
+only after an audit.
 
 ---
 
@@ -390,68 +382,6 @@ set -a; source .env.local; set +a; ./node_modules/.bin/tsx scripts/keeper.ts
 7. `/yarn` — your prowl moved tonight's bar. Press **Settle the night** after it ends.
 8. `/ledger`, then `/activity` — read it all back from the chain.
 9. `/beast/<token>` — every diary line links to the transaction that wrote it.
-
----
-
-## What's not built
-
-Written plainly, because a README is not evidence and the judges read code.
-
-- **`nft_item_info` is written but not deployed.** Beasts are designed to answer as
-  `sharded-item-1.0.0` — the Top Level Accounts draft NEP
-  ([houseofstake/tla-contracts](https://github.com/houseofstake/tla-contracts),
-  [`docs/sharded-nft-items.md`](docs/sharded-nft-items.md)) for collections whose tokens are real
-  accounts. The contract method and the consumer-side `verifyBeastItem()` are both written and
-  unit-tested, but the live Beast accounts still run the previous wallet build, so
-  `nft_item_info` does **not** resolve on chain yet. Republishing the global contract makes it live.
-- **NEAR AI verification is not the full chain of trust.** We check nonce and signer binding, the
-  debug bit, the measured config and the GPU nonce inside the raw quotes, and the reply signature
-  against the attested signer. We do **not** run Intel DCAP signature-chain verification
-  (`dcap-qvl`) or NVIDIA NRAS. The quotes are kept with each thought so anyone can.
-- **Inference is paid in YARN, not NEAR.** NEAR AI bills an API key bought off chain; the cat's YARN
-  pays the game and lands in the treasury. The **Agent API is not used** — it is a mainnet-only
-  beta for agents moving funds through Intents under an owner-signed policy, which is a different
-  thing from an access key that moves with an NFT.
-- **NEAR Intents and Chain Signatures are not used.** No cross-chain path exists in this project.
-- **Raw thought bytes live on the server's disk** (`.data/thoughts`), not on chain. The on-chain
-  record keeps the hashes and NEAR AI's signature.
-- **The mint path is locked, and that is irreversible.** $YARN mints only when the alley reports a
-  check-in, so the guarantee is only as good as the alley's own keys. Both accounts now hold
-  **zero** access keys, so neither can ever be upgraded again — by us or anyone:
-
-  ```sh
-  near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now   # empty
-  near account list-keys yarn.bittybeasts-6f61b7.testnet  network-config testnet now   # empty
-  ```
-
-  The practical cost is real: **no bug in either contract can ever be fixed.** The storage issue
-  below is the first example, and it is permanent. A mainnet launch would deploy fresh contracts
-  and lock them only after a proper audit.
-- **The $YARN storage-griefing fix ships in source, not on chain.** The deployed token pays storage
-  for any new receiver, so someone could drain its NEAR with dust transfers. The source now charges
-  strangers (`transfers_do_not_pay_storage_for_strangers`). Because $YARN has no keys, **the live
-  token cannot be upgraded** — the fix needs a fresh deployment.
-- **Trusted server roles.** The referee settles prowls (the contract caps the haul and refuses
-  daring runs at zero lives, but the run is reported by the server). The studio registers Beasts.
-  The keeper only calls public, idempotent methods. Merchants price by fixed rules, not by a model.
-- **Sybil limits.** Only a woken Beast can check in, once per night. Someone with five keychains
-  gets five check-ins (intended). Anyone who has seen a QR card can claim an unwoken Beast, so the
-  physical product needs NFC.
-- **Rate limits are in memory**, per server instance. A multi-instance deployment needs a shared store.
-- **The server holds a recovery key on every player account.** Each browser generates its own key,
-  but a browser-only key means closing an incognito window strands the account forever (NEAR does
-  not let a parent account add keys to an existing subaccount). So accounts are created with the
-  browser's key *and* the server's, and signing in from a new device uses the latter to add the
-  former — up to 5 devices. The honest consequence: **the game server can act as any player.**
-  Beast actions are still signed by the Beast's own function-call key. A production build would
-  replace this with device-to-device linking or a passkey.
-- **Demo cats are shared.** Two people on the same cat can collide on nonces; pick another.
-- **Testnet only.** Mainnet is ~16 NEAR of mostly refundable storage deposits.
-- **Not built at all:** stall counteroffers, investor payback, lend-a-life, the council vote
-  (a placeholder in the Back Alley), Bandit's stolen-goods tagging, thieves tracked on chain,
-  and `$YARN` on meme.cooking.
-- **Fast-forward (`/fast-forward`) is a simulation**, labelled as one in the UI. It runs the same
-  `pricing.ts` and `events.ts` as the live market.
 
 ---
 
