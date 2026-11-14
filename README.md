@@ -40,7 +40,36 @@ Those four ticks are not decoration. For every reply, the server:
    model signer.
 4. Only then calls `record_thought`. An unverified reply is dropped and costs the player nothing.
 
-Code: [`lib/server/nearai.ts`](lib/server/nearai.ts) · [`contracts/alley/src/care.rs`](contracts/alley/src/care.rs)
+**Check it in one command.** This runs the same code against live NEAR AI and prints every check
+(needs `NEAR_AI_API_KEY`):
+
+```sh
+./node_modules/.bin/tsx scripts/verify-attestation.ts
+```
+
+```
+Attestation (fresh 32-byte nonce, raw Intel TDX quotes)
+  ok   gateway: our nonce is inside the quote's report_data
+  ok   gateway: report_data also binds the signing address
+  ok   gateway: TD debug mode is off
+  ok   gateway: MRCONFIGID matches sha256(app_compose)
+       signer 0xb98a789cdc4817275f5155593ba73ef2a957e779
+  ok   model[0]: our nonce is inside the quote's report_data
+  ok   model[0]: NVIDIA GPU evidence carries our nonce
+       signer 0x2665cce942fa427ef30d87f4b0bff67fb7645462
+
+One real thought, verified end to end
+  ok   attestation passed
+  ok   signed text is exactly model:sha256(request):sha256(response)
+  ok   signature recovers to the address that signed it
+  ok   that address is the one inside the attested enclave
+```
+
+Where it lives: [`lib/server/nearai.ts`](lib/server/nearai.ts) (the checks) ·
+[`app/api/cat/talk/route.ts`](app/api/cat/talk/route.ts) (the gate) ·
+[`contracts/alley/src/care.rs`](contracts/alley/src/care.rs) (`record_thought`).
+The byte-level walkthrough, and what this deliberately does **not** verify, is in
+[docs/TEE-VERIFICATION.md](docs/TEE-VERIFICATION.md).
 
 **This runs live.** A thought recorded on testnet, read back from the chain just now:
 
@@ -104,8 +133,19 @@ near account list-keys yarn.bittybeasts-6f61b7.testnet network-config testnet no
 ```
 
 The parameters are Rust constants and `params()` reports `admin: null`. `scripts/deploy.ts` deletes
-the account's only full-access key after init. This is irreversible — see
-[What's not built](#whats-not-built) for the one consequence we have to live with.
+the account's only full-access key after init.
+
+A keyless token is not enough on its own, though: $YARN mints only when the **alley** reports a
+nightly check-in, so whoever could upgrade the alley could change who mints. So the alley is locked
+too — `scripts/lock-alley.ts` checks the deployed code matches the local build, then deletes its
+keys as well:
+
+```sh
+near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now   # also empty
+```
+
+Both ends of the mint path are now immutable. This is irreversible, and it has a real cost — see
+[What's not built](#whats-not-built).
 
 ---
 
@@ -266,6 +306,7 @@ Run against the **live testnet contracts**, not mocks.
 | Live testnet, one Beast's whole life | `tsx scripts/e2e.ts` | **20/20 passed** |
 | Cat room on testnet (needs the app running) | `BASE_URL=… tsx scripts/e2e-room.ts` | **15/15 passed**, incl. 4 NEAR AI checks |
 | Economy rules and nightly requests | `tsx scripts/check-economy.ts` | **26/26 passed** |
+| NEAR AI attestation, on its own | `tsx scripts/verify-attestation.ts` | **9/9 passed** against live NEAR AI |
 | Contract unit tests | `cd contracts && cargo test` | 53 tests in source (alley 34, beast-wallet 10, yarn 9) |
 
 The resale security model is covered by the e2e run, each line a real transaction:
@@ -374,10 +415,18 @@ Written plainly, because a README is not evidence and the judges read code.
 - **NEAR Intents and Chain Signatures are not used.** No cross-chain path exists in this project.
 - **Raw thought bytes live on the server's disk** (`.data/thoughts`), not on chain. The on-chain
   record keeps the hashes and NEAR AI's signature.
-- **The alley contract can still be upgraded** (its key is kept for the hackathon). Because only the
-  alley may report check-ins to $YARN, whoever holds that key could change who mints.
-  `scripts/lock-alley.ts --yes-lock-forever` deletes it after verifying the deployed code matches
-  the build; it has **not** been run. $YARN itself has no keys.
+- **The mint path is locked, and that is irreversible.** $YARN mints only when the alley reports a
+  check-in, so the guarantee is only as good as the alley's own keys. Both accounts now hold
+  **zero** access keys, so neither can ever be upgraded again — by us or anyone:
+
+  ```sh
+  near account list-keys alley.bittybeasts-6f61b7.testnet network-config testnet now   # empty
+  near account list-keys yarn.bittybeasts-6f61b7.testnet  network-config testnet now   # empty
+  ```
+
+  The practical cost is real: **no bug in either contract can ever be fixed.** The storage issue
+  below is the first example, and it is permanent. A mainnet launch would deploy fresh contracts
+  and lock them only after a proper audit.
 - **The $YARN storage-griefing fix ships in source, not on chain.** The deployed token pays storage
   for any new receiver, so someone could drain its NEAR with dust transfers. The source now charges
   strangers (`transfers_do_not_pay_storage_for_strangers`). Because $YARN has no keys, **the live
@@ -417,12 +466,15 @@ lib/server/     server keys, Google token verification, merchant quote signing, 
 lib/story/      world.ts, ledger.ts (the Lantern Ledger and the Ages)
 remotion/       the story film: script.ts, world.tsx, scenes.tsx
 scripts/        deploy.ts, e2e.ts, e2e-room.ts, keeper.ts, good-night.ts, lock-alley.ts,
-                simulate-yarn.ts, check-economy.ts, slice-sheets.mjs, slice-ui.mjs
-docs/           STORY.md, ARCHITECTURE.md, sharded-nft-items.md, yarn-sim.{md,svg,csv}, shots/
+                simulate-yarn.ts, check-economy.ts, verify-attestation.ts,
+                slice-sheets.mjs, slice-ui.mjs
+docs/           STORY.md, ARCHITECTURE.md, TEE-VERIFICATION.md, sharded-nft-items.md,
+                yarn-sim.{md,svg,csv}, shots/
 ```
 
 Art — cats, merchants, scenes and the UI kit — is the artist's own work (`public/sheets`,
 `public/bg`, cut into `public/art` by `scripts/slice-sheets.mjs` and `scripts/slice-ui.mjs`).
 
 More: [docs/STORY.md](docs/STORY.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
+[docs/TEE-VERIFICATION.md](docs/TEE-VERIFICATION.md) ·
 [docs/sharded-nft-items.md](docs/sharded-nft-items.md) · [docs/yarn-sim.md](docs/yarn-sim.md)
