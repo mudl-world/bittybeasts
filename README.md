@@ -13,6 +13,30 @@ has nine lives.
 
 ![Bitty Beasts title screen](docs/shots/01-title.png)
 
+## Where this came from
+
+[Illia Polosukhin](https://x.com/ilblackdragon/status/2106269343881519444) sketched an idea on X:
+
+> **AI Tamagochi** — use @near_ai to run verifiable inference from prompt encoded onchain, have
+> each character as NFT with some $NEAR attached that pays for it's inference, add gamification
+> with feeding, dressing. Can add all kinds of things on top with battle arena, competitions, etc.
+
+We built it. Every clause of that sentence is a thing you can do in this game, and the first three
+are the parts we cared most about getting right:
+
+| The idea | What we built |
+| --- | --- |
+| verifiable inference from @near_ai | Every reply is checked against a fresh-nonce TEE attestation before it counts. A reply that fails verification is thrown away. |
+| prompt encoded onchain | The cat's personality, mood, hunger, scars and diary all live in the contract. The prompt is assembled from those, and nothing else. |
+| each character as NFT | Each cat is an NEP-171 token **and** its own NEAR account. |
+| with some $NEAR attached that pays for its inference | The cat holds its own balance and spends it to think — not your wallet, the cat's. It pays in $YARN rather than $NEAR, so the cost of thinking is part of the game's economy. |
+| gamification with feeding, dressing | Fullness and happiness decay on chain. Food and clothes are NEP-245 tokens the cat owns. |
+| battle arena, competitions | Not built. Rooftop prowls and a nightly community goal instead. |
+
+The one deliberate change: **nine lives.** A Tamagotchi dies and you start again. A cat on this
+street can lose a life on a bad jump, and the scar is written into its diary forever — so the
+stakes are real without being final.
+
 | | |
 | --- | --- |
 | **Live on** | NEAR testnet — `alley.bittybeasts-6f61b7.testnet` |
@@ -22,9 +46,10 @@ has nine lives.
 
 ---
 
-## The one thing to look at
+## How we know the cat really said that
 
-A cat thinks, and you can prove it really was the enclave that said it.
+An AI pet is easy to fake: any server can call a model and tell you a cat said it. Here you can
+check. Every reply is proved to have come from the sealed hardware it claims, before it counts.
 
 ![The verified thought panel](docs/shots/05-verified-thought.png)
 
@@ -99,9 +124,9 @@ and check the signature themselves.
 
 ---
 
-## Two claims a judge can verify in 30 seconds
+## Who actually owns the cat
 
-Everything else in this README is downstream of these two facts.
+Two things make this ownership rather than a database row, and both are visible on chain.
 
 **1. A Beast's account has exactly one key, and it can only call `execute`.**
 
@@ -155,8 +180,8 @@ NEAR key. Or borrow a demo cat: the picker reads every cat's **real on-chain sta
 best stat) so you know who you are choosing.
 
 > Demo keys are published in [`public/demo-accounts.json`](public/demo-accounts.json) **on purpose**
-> — testnet NEAR is worth nothing, and judges shouldn't need an account. Server keys stay in
-> `.env.local`, never committed.
+> — testnet NEAR is worth nothing, and nobody should need to make an account just to look around.
+> Server keys stay in `.env.local`, never committed.
 
 ---
 
@@ -255,9 +280,11 @@ is the whole AI-pet economy in two transactions — the cat spent its own money 
 
 ---
 
-## How the tracks are answered
+## What we entered, and what carries it
 
-| Track | What answers it | Verify |
+One game, four tracks. Each row is a part of the build, not a separate project.
+
+| Track | What answers it | Where to look |
 | --- | --- | --- |
 | **Grand Prize (NEAR AI)** | TEE attestation with a fresh nonce, raw TDX quote parsing (nonce + signer binding, debug bit, MRCONFIGID, GPU nonce), response-signature recovery matched to the attested signer, then `record_thought` on chain. Unverified replies are dropped. | `lib/server/nearai.ts`; the `thoughts` view above |
 | **Games With Real Economies** | 4 merchant agents with their own accounts, purses and **signed** quotes; 16 pricing rules with player-visible reasoning; NEP-245 food and cosmetics; stalls, rent and lights-out shops revived by players; Google sign-in with no seed phrase | `lib/economy/pricing.ts`, `contracts/alley/src/market.rs` |
